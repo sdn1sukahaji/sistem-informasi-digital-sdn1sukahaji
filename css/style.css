@@ -1,1 +1,37 @@
+/* Mengimpor font elegan (Poppins) */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
 
+body {
+  font-family: 'Poppins', sans-serif;
+  background-color: #f8f9fa; /* Warna latar sangat soft */
+  color: #2c3e50; /* Warna teks kebiruan elegan */
+}
+
+/* Warna Khas SDN 1 Sukahaji (Tema Biru Pendidikan & Emas) */
+.bg-primary-school { background-color: #0f4c81; color: #fff; }
+.text-primary-school { color: #0f4c81; }
+.btn-school { 
+  background-color: #0f4c81; 
+  color: white; 
+  border-radius: 8px; 
+  padding: 10px 24px; 
+  font-weight: 500; 
+  transition: 0.3s; 
+}
+.btn-school:hover { background-color: #0a3356; color: white; transform: translateY(-2px); }
+
+/* Animasi & Shadow Halus */
+.card-soft {
+  border: none;
+  border-radius: 15px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+  transition: transform 0.3s ease;
+}
+.card-soft:hover { transform: translateY(-5px); }
+
+/* Tinggi area hero/banner landing page */
+.hero-section {
+  min-height: 80vh;
+  display: flex;
+  align-items: center;
+}
