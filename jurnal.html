@@ -1,0 +1,940 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jurnal 7KAIH | SDN 1 Sukahaji</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        /* Gaya Kalender Siswa */
+        .calendar-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 10px; }
+        .calendar-day-name { text-align: center; font-weight: 600; color: #0f4c81; padding-bottom: 10px; }
+        .calendar-cell { border: 1px solid #e0e0e0; border-radius: 12px; min-height: 100px; padding: 10px; display: flex; flex-direction: column; background-color: #fff; transition: all 0.2s ease; position: relative; }
+        .calendar-cell .date-num { font-weight: bold; font-size: 1.1rem; margin-bottom: 5px; }
+        .calendar-cell .status-text { font-size: 0.75rem; margin-top: auto; text-align: center; padding: 4px; border-radius: 6px; }
+        
+        .cell-active { cursor: pointer; box-shadow: 0 4px 6px rgba(0,0,0,0.02); }
+        .cell-active:hover { border-color: #0f4c81; transform: translateY(-2px); box-shadow: 0 6px 12px rgba(15, 76, 129, 0.1); }
+        .cell-active .status-text { background-color: #e9ecef; color: #495057; }
+        
+        .cell-locked { background-color: #f8f9fa; color: #adb5bd; cursor: not-allowed; }
+        .cell-locked .status-text { background-color: transparent; color: #adb5bd; }
+        
+        .cell-completed { background-color: #d1e7dd; border-color: #badbcc; color: #0f5132; cursor: pointer; }
+        .cell-completed .status-text { background-color: #198754; color: white; }
+        
+        .cell-validated { background-color: #cfe2ff; border-color: #b6d4fe; color: #084298; cursor: pointer; }
+        .cell-validated .status-text { background-color: #0d6efd; color: white; }
+
+        .cell-draft { background-color: #fff3cd; border-color: #ffecb5; color: #664d03; cursor: pointer; }
+        .cell-draft .status-text { background-color: #ffc107; color: #000; }
+        
+        /* Kartu Input Siswa */
+        .radio-card { border: 2px solid #e9ecef; border-radius: 12px; padding: 12px 10px; text-align: center; cursor: pointer; transition: all 0.25s ease; background-color: #fff; color: #6c757d; height: 100%; display: block; }
+        .radio-card:hover { background-color: #f8f9fa; border-color: #ced4da; }
+        .radio-card i { font-size: 1.8rem; margin-bottom: 8px; display: block; }
+        
+        .btn-check:checked + .card-ya { border-color: #198754; background-color: #d1e7dd; color: #0f5132; }
+        .btn-check:checked + .card-tidak { border-color: #dc3545; background-color: #f8d7da; color: #842029; }
+
+        .reason-input { display: none; margin-top: 15px; border-radius: 8px; background-color: #f8f9fa; border-color: #e9ecef;}
+        .reason-input:focus { background-color: #fff; border-color: #dc3545; box-shadow: 0 0 0 0.25rem rgba(220, 53, 69, 0.25); }
+        
+        /* Loader Overlay */
+        .loader-overlay {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(255,255,255,0.85); display: flex; flex-direction: column;
+            justify-content: center; align-items: center; z-index: 10; border-radius: 15px;
+        }
+
+        /* Gaya Panel Guru */
+        .stat-card { border-radius: 16px; border: none; transition: transform 0.2s; }
+        .stat-card:hover { transform: translateY(-3px); }
+        .item-review-row { border-bottom: 1px solid #eee; padding: 10px 0; }
+        .item-review-row:last-child { border-bottom: none; }
+    </style>
+</head>
+<body class="bg-light">
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary-school shadow-sm sticky-top">
+        <div class="container-fluid px-4">
+            <a class="navbar-brand fw-bold" href="dashboard.html">
+                <i class="fas fa-arrow-left me-2"></i>Kembali ke Dashboard
+            </a>
+            <div class="d-flex align-items-center text-white">
+                <!-- Tombol Beralih Mode khusus Admin/Guru/Kepsek -->
+                <button id="btnSwitchMode" class="btn btn-warning btn-sm rounded-pill px-3 me-3 fw-semibold d-none" onclick="toggleViewMode()">
+                    <i class="fas fa-exchange-alt me-1"></i> <span id="switchModeText">Mode Simulasi Siswa</span>
+                </button>
+                <div class="text-end d-none d-md-block">
+                    <div class="fw-bold" id="userNameDisplay">Pengguna</div>
+                    <small class="text-warning" id="userRoleBadge">Jurnal 7KAIH</small>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4 mb-5">
+
+        <!-- ======================================================= -->
+        <!-- BAGIAN 1: TAMPILAN GURU / KEPSEK / ADMIN (VALIDASI)     -->
+        <!-- ======================================================= -->
+        <div id="viewGuru" class="d-none">
+            
+            <!-- Ringkasan Statistik Cepat -->
+            <div class="row g-3 mb-4">
+                <div class="col-6 col-md-3">
+                    <div class="card stat-card bg-white p-3 shadow-sm border-start border-primary border-4">
+                        <small class="text-muted fw-semibold">Total Laporan</small>
+                        <h3 class="fw-bold text-primary-school mb-0 mt-1" id="statTotal">0</h3>
+                    </div>
+                </div>
+                <div class="col-6 col-md-3">
+                    <div class="card stat-card bg-white p-3 shadow-sm border-start border-warning border-4">
+                        <small class="text-muted fw-semibold">Menunggu Validasi</small>
+                        <h3 class="fw-bold text-warning mb-0 mt-1" id="statMenunggu">0</h3>
+                    </div>
+                </div>
+                <div class="col-6 col-md-3">
+                    <div class="card stat-card bg-white p-3 shadow-sm border-start border-success border-4">
+                        <small class="text-muted fw-semibold">Sudah Disetujui</small>
+                        <h3 class="fw-bold text-success mb-0 mt-1" id="statDisetujui">0</h3>
+                    </div>
+                </div>
+                <div class="col-6 col-md-3">
+                    <div class="card stat-card bg-white p-3 shadow-sm border-start border-secondary border-4">
+                        <small class="text-muted fw-semibold">Masih Draf</small>
+                        <h3 class="fw-bold text-secondary mb-0 mt-1" id="statDraf">0</h3>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Panel Filter & Tabel Validasi -->
+            <div class="card card-soft border-0 p-4 rounded-4 shadow-sm position-relative">
+                
+                <!-- Loader Guru -->
+                <div id="guruLoader" class="loader-overlay d-none">
+                    <div class="spinner-border text-primary-school mb-2" role="status"></div>
+                    <div class="text-muted fw-semibold">Memuat Antrean Jurnal Siswa...</div>
+                </div>
+
+                <div class="d-flex flex-wrap justify-content-between align-items-center mb-3">
+                    <div>
+                        <h4 class="fw-bold text-primary-school mb-0"><i class="fas fa-clipboard-check me-2 text-warning"></i>Panel Validasi Jurnal 7KAIH</h4>
+                        <p class="text-muted small mb-0">Periksa kepatuhan siswa dan berikan motivasi harian.</p>
+                    </div>
+                    <button class="btn btn-school btn-sm rounded-pill px-3 mt-2 mt-md-0" onclick="loadDataGuru()">
+                        <i class="fas fa-sync-alt me-1"></i> Muat Ulang Data
+                    </button>
+                </div>
+
+                <!-- Baris Filter -->
+                <div class="row g-2 mb-4 bg-light p-3 rounded-3">
+                    <div class="col-md-4">
+                        <label class="form-label small fw-semibold mb-1">Filter Tanggal</label>
+                        <div class="input-group input-group-sm">
+                            <input type="date" id="filterTanggal" class="form-control" onchange="loadDataGuru()">
+                            <button class="btn btn-outline-secondary" type="button" onclick="resetFilterTanggal()">Semua Tanggal</button>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label small fw-semibold mb-1">Filter Kelas / Rombel</label>
+                        <select id="filterKelas" class="form-select form-select-sm" onchange="loadDataGuru()">
+                            <option value="SEMUA">Semua Kelas</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label small fw-semibold mb-1">Status Laporan</label>
+                        <select id="filterStatus" class="form-select form-select-sm" onchange="loadDataGuru()">
+                            <option value="SEMUA">Semua Status</option>
+                            <option value="Menunggu">Menunggu Validasi</option>
+                            <option value="Disetujui">Sudah Disetujui</option>
+                            <option value="Draf">Masih Draf</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Tabel Data Jurnal Siswa -->
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Tanggal</th>
+                                <th>Nama Siswa</th>
+                                <th>Kelas</th>
+                                <th class="text-center">Kepatuhan (Ya/Tidak)</th>
+                                <th class="text-center">Status</th>
+                                <th>Catatan Guru</th>
+                                <th class="text-end">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabelJurnalGuru">
+                            <tr>
+                                <td colspan="7" class="text-center text-muted py-4">Memuat data...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+        </div>
+
+
+        <!-- ======================================================= -->
+        <!-- BAGIAN 2: TAMPILAN SISWA / ORTU (KALENDER PENGISIAN)    -->
+        <!-- ======================================================= -->
+        <div id="viewSiswa" class="d-none">
+            <div class="card card-soft border-0 p-4 rounded-4 shadow-sm position-relative">
+                
+                <!-- Loading Indicator Siswa -->
+                <div id="calendarLoader" class="loader-overlay d-none">
+                    <div class="spinner-border text-primary-school mb-2" role="status"></div>
+                    <div class="text-muted fw-semibold">Menyinkronkan Data dengan Server...</div>
+                </div>
+
+                <div class="calendar-header">
+                    <div>
+                        <h4 class="fw-bold text-primary-school mb-0" id="monthYearDisplay">Bulan Tahun</h4>
+                        <p class="text-muted small mb-0">Pilih tanggal untuk mengisi jurnal harian.</p>
+                    </div>
+                    <div>
+                        <button class="btn btn-outline-secondary btn-sm" onclick="changeMonth(-1)"><i class="fas fa-chevron-left"></i></button>
+                        <button class="btn btn-outline-secondary btn-sm ms-1" onclick="changeMonth(1)"><i class="fas fa-chevron-right"></i></button>
+                    </div>
+                </div>
+                <div class="calendar-grid" id="calendarDaysName">
+                    <div class="calendar-day-name">Sen</div><div class="calendar-day-name">Sel</div><div class="calendar-day-name">Rab</div>
+                    <div class="calendar-day-name">Kam</div><div class="calendar-day-name">Jum</div><div class="calendar-day-name">Sab</div><div class="calendar-day-name">Min</div>
+                </div>
+                <div class="calendar-grid mt-2" id="calendarGrid"></div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- ======================================================= -->
+    <!-- MODAL 1: FORM PENGISIAN JURNAL (SISWA)                  -->
+    <!-- ======================================================= -->
+    <div class="modal fade" id="jurnalModal" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
+            <div class="modal-content border-0 rounded-4 shadow-lg">
+                <div class="modal-header bg-primary-school text-white border-0 py-3">
+                    <h5 class="modal-title fw-bold"><i class="fas fa-book-open text-warning me-2"></i>Jurnal 7KAIH</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-3 p-md-4 bg-light">
+                    
+                    <div class="alert alert-info border-0 rounded-3 shadow-sm mb-3 text-center">
+                        <i class="fas fa-calendar-alt me-2"></i> Laporan Jurnal untuk: <strong id="modalDateDisplay" class="fs-5"></strong>
+                    </div>
+
+                    <!-- Kotak Feedback/Catatan Guru (Muncul jika sudah divalidasi/dikomentari guru) -->
+                    <div id="boxCatatanGuruSiswa" class="alert alert-success border-0 rounded-3 shadow-sm mb-4 d-none">
+                        <div class="fw-bold"><i class="fas fa-comment-dots me-1"></i> Catatan / Motivasi dari Guru:</div>
+                        <div id="teksCatatanGuruSiswa" class="mt-1 fst-italic"></div>
+                    </div>
+
+                    <form id="formJurnal">
+                        <!-- 1. Bangun Pagi -->
+                        <div class="card border-0 shadow-sm rounded-4 mb-4 p-3 bg-white">
+                            <h6 class="fw-bold mb-3"><i class="fas fa-sun text-warning me-2"></i> 1. Bangun Pagi (Pukul 04.30 - 05.00)</h6>
+                            <div class="row g-3">
+                                <div class="col-6">
+                                    <input type="radio" class="btn-check" name="bp_status" id="bpYa" value="Ya" onchange="toggleReason('bp_alasan', false)">
+                                    <label class="radio-card card-ya" for="bpYa"><i class="fas fa-smile-beam"></i> <span class="fw-bold">YA</span></label>
+                                </div>
+                                <div class="col-6">
+                                    <input type="radio" class="btn-check" name="bp_status" id="bpTidak" value="Tidak" onchange="toggleReason('bp_alasan', true)">
+                                    <label class="radio-card card-tidak" for="bpTidak"><i class="fas fa-frown"></i> <span class="fw-bold">TIDAK</span></label>
+                                </div>
+                            </div>
+                            <input type="text" class="form-control reason-input p-3" name="bp_alasan" id="bp_alasan" placeholder="Tulis alasan jujurmu mengapa bangun kesiangan...">
+                        </div>
+
+                        <!-- 2. Ibadah (Shalat 5 Waktu) -->
+                        <div class="card border-0 shadow-sm rounded-4 mb-4 p-3 bg-white">
+                            <h6 class="fw-bold mb-3"><i class="fas fa-praying-hands text-success me-2"></i> 2. Ibadah (Shalat 5 Waktu)</h6>
+                            <p class="text-muted small mb-3">Tandai waktu shalat yang kamu kerjakan hari ini.</p>
+                            
+                            <!-- Subuh -->
+                            <div class="mb-4">
+                                <span class="fw-semibold d-block mb-2 text-primary-school">Shalat Subuh</span>
+                                <div class="row g-2">
+                                    <div class="col-6"><input type="radio" class="btn-check" name="ss_status" id="sbYa" value="Ya" onchange="toggleReason('ss_alasan', false)"><label class="radio-card card-ya py-2" for="sbYa"><i class="fas fa-check-circle fs-4 mb-1"></i> YA</label></div>
+                                    <div class="col-6"><input type="radio" class="btn-check" name="ss_status" id="sbTidak" value="Tidak" onchange="toggleReason('ss_alasan', true)"><label class="radio-card card-tidak py-2" for="sbTidak"><i class="fas fa-times-circle fs-4 mb-1"></i> TIDAK</label></div>
+                                </div>
+                                <input type="text" class="form-control reason-input" name="ss_alasan" id="ss_alasan" placeholder="Alasan tidak shalat Subuh...">
+                            </div>
+
+                            <!-- Dzuhur -->
+                            <div class="mb-4">
+                                <span class="fw-semibold d-block mb-2 text-primary-school">Shalat Dzuhur</span>
+                                <div class="row g-2">
+                                    <div class="col-6"><input type="radio" class="btn-check" name="sd_status" id="dzYa" value="Ya" onchange="toggleReason('sd_alasan', false)"><label class="radio-card card-ya py-2" for="dzYa"><i class="fas fa-check-circle fs-4 mb-1"></i> YA</label></div>
+                                    <div class="col-6"><input type="radio" class="btn-check" name="sd_status" id="dzTidak" value="Tidak" onchange="toggleReason('sd_alasan', true)"><label class="radio-card card-tidak py-2" for="dzTidak"><i class="fas fa-times-circle fs-4 mb-1"></i> TIDAK</label></div>
+                                </div>
+                                <input type="text" class="form-control reason-input" name="sd_alasan" id="sd_alasan" placeholder="Alasan tidak shalat Dzuhur...">
+                            </div>
+
+                            <!-- Ashar -->
+                            <div class="mb-4">
+                                <span class="fw-semibold d-block mb-2 text-primary-school">Shalat Ashar</span>
+                                <div class="row g-2">
+                                    <div class="col-6"><input type="radio" class="btn-check" name="sa_status" id="asYa" value="Ya" onchange="toggleReason('sa_alasan', false)"><label class="radio-card card-ya py-2" for="asYa"><i class="fas fa-check-circle fs-4 mb-1"></i> YA</label></div>
+                                    <div class="col-6"><input type="radio" class="btn-check" name="sa_status" id="asTidak" value="Tidak" onchange="toggleReason('sa_alasan', true)"><label class="radio-card card-tidak py-2" for="asTidak"><i class="fas fa-times-circle fs-4 mb-1"></i> TIDAK</label></div>
+                                </div>
+                                <input type="text" class="form-control reason-input" name="sa_alasan" id="sa_alasan" placeholder="Alasan tidak shalat Ashar...">
+                            </div>
+
+                            <!-- Maghrib -->
+                            <div class="mb-4">
+                                <span class="fw-semibold d-block mb-2 text-primary-school">Shalat Maghrib</span>
+                                <div class="row g-2">
+                                    <div class="col-6"><input type="radio" class="btn-check" name="sm_status" id="mgYa" value="Ya" onchange="toggleReason('sm_alasan', false)"><label class="radio-card card-ya py-2" for="mgYa"><i class="fas fa-check-circle fs-4 mb-1"></i> YA</label></div>
+                                    <div class="col-6"><input type="radio" class="btn-check" name="sm_status" id="mgTidak" value="Tidak" onchange="toggleReason('sm_alasan', true)"><label class="radio-card card-tidak py-2" for="mgTidak"><i class="fas fa-times-circle fs-4 mb-1"></i> TIDAK</label></div>
+                                </div>
+                                <input type="text" class="form-control reason-input" name="sm_alasan" id="sm_alasan" placeholder="Alasan tidak shalat Maghrib...">
+                            </div>
+
+                            <!-- Isya -->
+                            <div class="mb-2">
+                                <span class="fw-semibold d-block mb-2 text-primary-school">Shalat Isya</span>
+                                <div class="row g-2">
+                                    <div class="col-6"><input type="radio" class="btn-check" name="si_status" id="isYa" value="Ya" onchange="toggleReason('si_alasan', false)"><label class="radio-card card-ya py-2" for="isYa"><i class="fas fa-check-circle fs-4 mb-1"></i> YA</label></div>
+                                    <div class="col-6"><input type="radio" class="btn-check" name="si_status" id="isTidak" value="Tidak" onchange="toggleReason('si_alasan', true)"><label class="radio-card card-tidak py-2" for="isTidak"><i class="fas fa-times-circle fs-4 mb-1"></i> TIDAK</label></div>
+                                </div>
+                                <input type="text" class="form-control reason-input" name="si_alasan" id="si_alasan" placeholder="Alasan tidak shalat Isya...">
+                            </div>
+                        </div>
+
+                        <!-- 3. Olahraga -->
+                        <div class="card border-0 shadow-sm rounded-4 mb-4 p-3 bg-white">
+                            <h6 class="fw-bold mb-3"><i class="fas fa-running text-info me-2"></i> 3. Berolahraga</h6>
+                            <div class="row g-3">
+                                <div class="col-6"><input type="radio" class="btn-check" name="ol_status" id="olYa" value="Ya" onchange="toggleReason('ol_alasan', false)"><label class="radio-card card-ya" for="olYa"><i class="fas fa-thumbs-up"></i> <span class="fw-bold">YA</span></label></div>
+                                <div class="col-6"><input type="radio" class="btn-check" name="ol_status" id="olTidak" value="Tidak" onchange="toggleReason('ol_alasan', true)"><label class="radio-card card-tidak" for="olTidak"><i class="fas fa-thumbs-down"></i> <span class="fw-bold">TIDAK</span></label></div>
+                            </div>
+                            <input type="text" class="form-control reason-input p-3" name="ol_alasan" id="ol_alasan" placeholder="Alasan tidak berolahraga hari ini...">
+                        </div>
+
+                        <!-- 4. Makan Sehat -->
+                        <div class="card border-0 shadow-sm rounded-4 mb-4 p-3 bg-white">
+                            <h6 class="fw-bold mb-3"><i class="fas fa-utensils text-danger me-2"></i> 4. Makan Sehat & Bergizi</h6>
+                            <div class="row g-3">
+                                <div class="col-6"><input type="radio" class="btn-check" name="mk_status" id="mkYa" value="Ya" onchange="toggleReason('mk_alasan', false)"><label class="radio-card card-ya" for="mkYa"><i class="fas fa-apple-alt"></i> <span class="fw-bold">YA</span></label></div>
+                                <div class="col-6"><input type="radio" class="btn-check" name="mk_status" id="mkTidak" value="Tidak" onchange="toggleReason('mk_alasan', true)"><label class="radio-card card-tidak" for="mkTidak"><i class="fas fa-hamburger"></i> <span class="fw-bold">TIDAK</span></label></div>
+                            </div>
+                            <input type="text" class="form-control reason-input p-3" name="mk_alasan" id="mk_alasan" placeholder="Alasan mengapa tidak makan sehat...">
+                        </div>
+
+                        <!-- 5. Gemar Belajar -->
+                        <div class="card border-0 shadow-sm rounded-4 mb-4 p-3 bg-white">
+                            <h6 class="fw-bold mb-3"><i class="fas fa-book-reader text-primary me-2"></i> 5. Gemar Belajar (Mengulang Pelajaran)</h6>
+                            <div class="row g-3">
+                                <div class="col-6"><input type="radio" class="btn-check" name="bl_status" id="blYa" value="Ya" onchange="toggleReason('bl_alasan', false)"><label class="radio-card card-ya" for="blYa"><i class="fas fa-user-graduate"></i> <span class="fw-bold">YA</span></label></div>
+                                <div class="col-6"><input type="radio" class="btn-check" name="bl_status" id="blTidak" value="Tidak" onchange="toggleReason('bl_alasan', true)"><label class="radio-card card-tidak" for="blTidak"><i class="fas fa-gamepad"></i> <span class="fw-bold">TIDAK</span></label></div>
+                            </div>
+                            <input type="text" class="form-control reason-input p-3" name="bl_alasan" id="bl_alasan" placeholder="Alasan tidak belajar di rumah...">
+                        </div>
+
+                        <!-- 6. Bermasyarakat -->
+                        <div class="card border-0 shadow-sm rounded-4 mb-4 p-3 bg-white">
+                            <h6 class="fw-bold mb-3"><i class="fas fa-hands-helping text-secondary me-2"></i> 6. Bermasyarakat (Membantu Orang Tua/Sesama)</h6>
+                            <div class="row g-3">
+                                <div class="col-6"><input type="radio" class="btn-check" name="ms_status" id="msYa" value="Ya" onchange="toggleReason('ms_alasan', false)"><label class="radio-card card-ya" for="msYa"><i class="fas fa-hand-holding-heart"></i> <span class="fw-bold">YA</span></label></div>
+                                <div class="col-6"><input type="radio" class="btn-check" name="ms_status" id="msTidak" value="Tidak" onchange="toggleReason('ms_alasan', true)"><label class="radio-card card-tidak" for="msTidak"><i class="fas fa-user-alt-slash"></i> <span class="fw-bold">TIDAK</span></label></div>
+                            </div>
+                            <input type="text" class="form-control reason-input p-3" name="ms_alasan" id="ms_alasan" placeholder="Alasan tidak membantu hari ini...">
+                        </div>
+
+                        <!-- 7. Tidur Cepat -->
+                        <div class="card border-0 shadow-sm rounded-4 mb-2 p-3 bg-white">
+                            <h6 class="fw-bold mb-3"><i class="fas fa-moon text-primary-school me-2"></i> 7. Tidur Cepat (Maksimal Pukul 21.00)</h6>
+                            <div class="row g-3">
+                                <div class="col-6"><input type="radio" class="btn-check" name="td_status" id="tdYa" value="Ya" onchange="toggleReason('td_alasan', false)"><label class="radio-card card-ya" for="tdYa"><i class="fas fa-bed"></i> <span class="fw-bold">YA</span></label></div>
+                                <div class="col-6"><input type="radio" class="btn-check" name="td_status" id="tdTidak" value="Tidak" onchange="toggleReason('td_alasan', true)"><label class="radio-card card-tidak" for="tdTidak"><i class="fas fa-mobile-alt"></i> <span class="fw-bold">TIDAK</span></label></div>
+                            </div>
+                            <input type="text" class="form-control reason-input p-3" name="td_alasan" id="td_alasan" placeholder="Alasan begadang/tidur larut malam...">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer border-0 bg-white py-3">
+                    <button type="button" class="btn btn-outline-secondary rounded-pill px-4" data-bs-dismiss="modal">Tutup</button>
+                    <button type="button" id="btnDraft" class="btn btn-warning text-dark rounded-pill px-4 fw-semibold" onclick="simpanJurnal('Draf')">
+                        <i class="fas fa-save me-1"></i> Simpan Draf
+                    </button>
+                    <button type="button" id="btnKirim" class="btn btn-school rounded-pill px-4 fw-semibold" onclick="simpanJurnal('Menunggu')">
+                        <i class="fas fa-paper-plane me-1"></i> Kirim Laporan
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ======================================================= -->
+    <!-- MODAL 2: PERIKSA & VALIDASI JURNAL (KHUSUS GURU)        -->
+    <!-- ======================================================= -->
+    <div class="modal fade" id="validasiModal" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
+            <div class="modal-content border-0 rounded-4 shadow-lg">
+                <div class="modal-header bg-primary-school text-white border-0 py-3">
+                    <h5 class="modal-title fw-bold"><i class="fas fa-user-check text-warning me-2"></i>Validasi Jurnal Siswa</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-4 bg-light">
+                    
+                    <!-- Info Siswa -->
+                    <div class="card border-0 shadow-sm rounded-3 p-3 mb-3 bg-white">
+                        <div class="row align-items-center">
+                            <div class="col-md-7">
+                                <h5 class="fw-bold text-primary-school mb-1" id="valNamaSiswa">Nama Siswa</h5>
+                                <div class="text-muted small">NISN/ID: <span id="valNisn"></span> | Kelas: <strong id="valKelas"></strong></div>
+                            </div>
+                            <div class="col-md-5 text-md-end mt-2 mt-md-0">
+                                <span class="badge bg-info text-dark px-3 py-2 rounded-pill" id="valTanggal">Tanggal</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Rincian 11 Kebiasaan -->
+                    <div class="card border-0 shadow-sm rounded-3 p-3 mb-3 bg-white">
+                        <h6 class="fw-bold border-bottom pb-2 mb-2 text-primary-school">Rincian Pelaksanaan 7KAIH</h6>
+                        <div id="valRincianList"></div>
+                    </div>
+
+                    <!-- Input Catatan Guru -->
+                    <div class="card border-0 shadow-sm rounded-3 p-3 bg-white">
+                        <label class="form-label fw-bold text-primary-school"><i class="fas fa-pen-fancy me-1 text-warning"></i> Catatan / Motivasi Guru</label>
+                        <textarea id="valCatatanInput" class="form-control" rows="3" placeholder="Berikan apresiasi atau motivasi membangun untuk siswa ini..."></textarea>
+                    </div>
+
+                </div>
+                <div class="modal-footer border-0 bg-white py-3">
+                    <button type="button" class="btn btn-outline-secondary rounded-pill px-4" data-bs-dismiss="modal">Batal</button>
+                    <button type="button" id="btnKembalikanDraf" class="btn btn-outline-warning text-dark rounded-pill px-4 fw-semibold" onclick="simpanValidasiGuru('Draf')">
+                        <i class="fas fa-undo me-1"></i> Minta Perbaiki (Draf)
+                    </button>
+                    <button type="button" id="btnSetujuiJurnal" class="btn btn-success rounded-pill px-4 fw-semibold" onclick="simpanValidasiGuru('Disetujui')">
+                        <i class="fas fa-check-double me-1"></i> Setujui Jurnal
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Cek Sesi Login
+        const sessionData = localStorage.getItem('userSession');
+        if (!sessionData) window.location.href = 'login.html';
+        const user = JSON.parse(sessionData);
+        
+        document.getElementById('userNameDisplay').textContent = user.nama;
+        document.getElementById('userRoleBadge').textContent = `Role: ${user.role}`;
+
+        const API_URL = 'https://script.google.com/macros/s/AKfycbyfseRl94qmA0TaX1ODw3sr8Car6i0uf-3WEBKcJ8cDILdi459vW0CCqo28L3iGgHhVww/exec';
+
+        // Variabel Global Siswa
+        let currentDate = new Date();
+        let activeMonth = currentDate.getMonth();
+        let activeYear = currentDate.getFullYear();
+        let selectedDateElement = null; 
+        const jurnalModal = new bootstrap.Modal(document.getElementById('jurnalModal'));
+        let serverDataJurnal = {}; 
+
+        // Variabel Global Guru
+        const validasiModal = new bootstrap.Modal(document.getElementById('validasiModal'));
+        let dataAntreanGuru = [];
+        let activeValidationId = null;
+        let currentMode = ''; // 'GURU' atau 'SISWA'
+
+        // =========================================================
+        // INISIALISASI TAMPILAN BERDASARKAN ROLE
+        // =========================================================
+        function initPageByRole() {
+            const role = String(user.role).toUpperCase();
+            if (role === 'GURU' || role === 'ADMIN' || role === 'KEPSEK') {
+                // Tampilkan tombol switch mode agar Admin/Guru bisa mencoba kalender siswa juga
+                document.getElementById('btnSwitchMode').classList.remove('d-none');
+                activateMode('GURU');
+            } else {
+                activateMode('SISWA');
+            }
+        }
+
+        function activateMode(mode) {
+            currentMode = mode;
+            if (mode === 'GURU') {
+                document.getElementById('viewGuru').classList.remove('d-none');
+                document.getElementById('viewSiswa').classList.add('d-none');
+                document.getElementById('switchModeText').textContent = 'Simulasi Kalender Siswa';
+                loadDataGuru();
+            } else {
+                document.getElementById('viewGuru').classList.add('d-none');
+                document.getElementById('viewSiswa').classList.remove('d-none');
+                document.getElementById('switchModeText').textContent = 'Kembali ke Panel Guru';
+                loadDataBulanIni(activeMonth, activeYear);
+            }
+        }
+
+        function toggleViewMode() {
+            if (currentMode === 'GURU') {
+                activateMode('SISWA');
+            } else {
+                activateMode('GURU');
+            }
+        }
+
+        // =========================================================
+        // LOGIKA PANEL GURU (VALIDASI & MONITORING)
+        // =========================================================
+        function resetFilterTanggal() {
+            document.getElementById('filterTanggal').value = '';
+            loadDataGuru();
+        }
+
+        function loadDataGuru() {
+            const loader = document.getElementById('guruLoader');
+            loader.classList.remove('d-none');
+
+            const tgl = document.getElementById('filterTanggal').value || 'SEMUA';
+            const kls = document.getElementById('filterKelas').value || 'SEMUA';
+            const stat = document.getElementById('filterStatus').value || 'SEMUA';
+
+            const url = `${API_URL}?action=baca_jurnal_guru&tanggal=${encodeURIComponent(tgl)}&kelas=${encodeURIComponent(kls)}&status=${encodeURIComponent(stat)}&_t=${Date.now()}`;
+
+            fetch(url, { method: 'GET', mode: 'cors', redirect: 'follow' })
+            .then(res => res.json())
+            .then(resData => {
+                loader.classList.add('d-none');
+                if (resData.status === 'success') {
+                    dataAntreanGuru = resData.data || [];
+                    populateDropdownKelas(resData.daftar_kelas || [], kls);
+                    renderTabelGuru(dataAntreanGuru);
+                    updateStatistikGuru(dataAntreanGuru);
+                } else {
+                    alert("Gagal memuat data validasi: " + resData.message);
+                }
+            })
+            .catch(err => {
+                loader.classList.add('d-none');
+                console.error(err);
+                alert("Koneksi gagal saat memuat data guru.");
+            });
+        }
+
+        function populateDropdownKelas(daftarKelas, selectedKelas) {
+            const select = document.getElementById('filterKelas');
+            select.innerHTML = '<option value="SEMUA">Semua Kelas</option>';
+            daftarKelas.forEach(k => {
+                let opt = document.createElement('option');
+                opt.value = k;
+                opt.textContent = k;
+                if (k === selectedKelas) opt.selected = true;
+                select.appendChild(opt);
+            });
+        }
+
+        function updateStatistikGuru(list) {
+            let total = list.length;
+            let menunggu = list.filter(item => item.status_validasi === 'Menunggu').length;
+            let disetujui = list.filter(item => item.status_validasi === 'Disetujui').length;
+            let draf = list.filter(item => item.status_validasi === 'Draf').length;
+
+            document.getElementById('statTotal').textContent = total;
+            document.getElementById('statMenunggu').textContent = menunggu;
+            document.getElementById('statDisetujui').textContent = disetujui;
+            document.getElementById('statDraf').textContent = draf;
+        }
+
+        function renderTabelGuru(list) {
+            const tbody = document.getElementById('tabelJurnalGuru');
+            tbody.innerHTML = '';
+
+            if (list.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="7" class="text-center text-muted py-4"><i class="fas fa-folder-open fs-3 d-block mb-2"></i>Belum ada data jurnal untuk filter ini.</td></tr>`;
+                return;
+            }
+
+            list.forEach((item, idx) => {
+                let badgeStatus = '';
+                if (item.status_validasi === 'Disetujui') {
+                    badgeStatus = `<span class="badge bg-success rounded-pill px-3"><i class="fas fa-check-double me-1"></i>Disetujui</span>`;
+                } else if (item.status_validasi === 'Menunggu') {
+                    badgeStatus = `<span class="badge bg-warning text-dark rounded-pill px-3"><i class="fas fa-clock me-1"></i>Menunggu</span>`;
+                } else {
+                    badgeStatus = `<span class="badge bg-secondary rounded-pill px-3"><i class="fas fa-pen me-1"></i>Draf</span>`;
+                }
+
+                let tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td class="fw-semibold">${item.tanggal}</td>
+                    <td>
+                        <div class="fw-bold text-primary-school">${item.nama_siswa}</div>
+                        <small class="text-muted">${item.nisn}</small>
+                    </td>
+                    <td><span class="badge bg-light text-dark border">${item.kelas}</span></td>
+                    <td class="text-center">
+                        <span class="badge bg-success-subtle text-success border border-success-subtle me-1">${item.jumlah_ya} Ya</span>
+                        <span class="badge ${item.jumlah_tidak > 0 ? 'bg-danger-subtle text-danger border border-danger-subtle' : 'bg-light text-muted'}">${item.jumlah_tidak} Tidak</span>
+                    </td>
+                    <td class="text-center">${badgeStatus}</td>
+                    <td><small class="text-muted fst-italic">${item.catatan_validator || '-'}</small></td>
+                    <td class="text-end">
+                        <button class="btn btn-sm btn-outline-primary rounded-pill px-3" onclick="bukaModalValidasi(${idx})">
+                            <i class="fas fa-search me-1"></i> Periksa
+                        </button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function bukaModalValidasi(index) {
+            const item = dataAntreanGuru[index];
+            activeValidationId = item.id_jurnal;
+
+            document.getElementById('valNamaSiswa').textContent = item.nama_siswa;
+            document.getElementById('valNisn').textContent = item.nisn;
+            document.getElementById('valKelas').textContent = item.kelas;
+            document.getElementById('valTanggal').textContent = `Tanggal Jurnal: ${item.tanggal}`;
+            document.getElementById('valCatatanInput').value = item.catatan_validator || '';
+
+            const daftarLabel = [
+                { key: 'bp', label: '1. Bangun Pagi (04.30 - 05.00)' },
+                { key: 'ss', label: '2a. Ibadah - Shalat Subuh' },
+                { key: 'sd', label: '2b. Ibadah - Shalat Dzuhur' },
+                { key: 'sa', label: '2c. Ibadah - Shalat Ashar' },
+                { key: 'sm', label: '2d. Ibadah - Shalat Maghrib' },
+                { key: 'si', label: '2e. Ibadah - Shalat Isya' },
+                { key: 'ol', label: '3. Berolahraga' },
+                { key: 'mk', label: '4. Makan Sehat & Bergizi' },
+                { key: 'bl', label: '5. Gemar Belajar' },
+                { key: 'ms', label: '6. Bermasyarakat / Membantu Ortu' },
+                { key: 'td', label: '7. Tidur Cepat (Maks 21.00)' }
+            ];
+
+            const container = document.getElementById('valRincianList');
+            container.innerHTML = '';
+
+            daftarLabel.forEach(d => {
+                let st = item.detail[`${d.key}_status`] || '-';
+                let al = item.detail[`${d.key}_alasan`] || '';
+
+                let badge = st === 'Ya' 
+                    ? `<span class="badge bg-success"><i class="fas fa-check me-1"></i>YA</span>`
+                    : (st === 'Tidak' ? `<span class="badge bg-danger"><i class="fas fa-times me-1"></i>TIDAK</span>` : `<span class="badge bg-secondary">Belum Diisi</span>`);
+
+                let alasanHtml = (st === 'Tidak') 
+                    ? `<div class="mt-1 small text-danger bg-danger-subtle p-2 rounded-2"><i class="fas fa-exclamation-circle me-1"></i><strong>Alasan:</strong> ${al || 'Tidak menulis alasan'}</div>` 
+                    : '';
+
+                container.innerHTML += `
+                    <div class="item-review-row">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="fw-semibold small">${d.label}</span>${badge}
+                        </div>
+                        ${alasanHtml}
+                    </div>
+                `;
+            });
+
+            validasiModal.show();
+        }
+
+        function simpanValidasiGuru(statusBaru) {
+            const catatan = document.getElementById('valCatatanInput').value.trim();
+            const btnSetuju = document.getElementById('btnSetujuiJurnal');
+            const btnDraf = document.getElementById('btnKembalikanDraf');
+            const origSetuju = btnSetuju.innerHTML;
+
+            btnSetuju.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Menyimpan...';
+            btnSetuju.disabled = true;
+            btnDraf.disabled = true;
+
+            const params = new URLSearchParams();
+            params.append('action', 'validasi_jurnal');
+            params.append('id_jurnal', activeValidationId);
+            params.append('status_validasi', statusBaru);
+            params.append('validator_nip', user.id_relasi);
+            params.append('catatan_validator', catatan);
+
+            const url = `${API_URL}?${params.toString()}&_t=${Date.now()}`;
+
+            fetch(url, { method: 'GET', mode: 'cors', redirect: 'follow' })
+            .then(res => res.json())
+            .then(data => {
+                btnSetuju.innerHTML = origSetuju;
+                btnSetuju.disabled = false;
+                btnDraf.disabled = false;
+
+                if (data.status === 'success') {
+                    validasiModal.hide();
+                    loadDataGuru();
+                } else {
+                    alert("Gagal memvalidasi: " + data.message);
+                }
+            })
+            .catch(err => {
+                console.error(err);
+                btnSetuju.innerHTML = origSetuju;
+                btnSetuju.disabled = false;
+                btnDraf.disabled = false;
+                alert("Koneksi gagal saat menyimpan validasi.");
+            });
+        }
+
+
+        // =========================================================
+        // LOGIKA KALENDER SISWA
+        // =========================================================
+        function loadDataBulanIni(month, year) {
+            const loader = document.getElementById('calendarLoader');
+            loader.classList.remove('d-none');
+            
+            const tahunBulanStr = `${year}-${String(month+1).padStart(2, '0')}`;
+            const url = `${API_URL}?action=baca_jurnal_bulanan&nisn=${encodeURIComponent(user.id_relasi)}&tahun_bulan=${tahunBulanStr}&_t=${Date.now()}`;
+            
+            fetch(url, { method: 'GET', mode: 'cors', redirect: 'follow' })
+            .then(res => res.json())
+            .then(resData => {
+                loader.classList.add('d-none');
+                if(resData.status === 'success') {
+                    serverDataJurnal = resData.data || {};
+                    renderCalendar(month, year);
+                } else {
+                    alert("Gagal memuat riwayat: " + resData.message);
+                    renderCalendar(month, year); 
+                }
+            })
+            .catch(err => {
+                loader.classList.add('d-none');
+                console.error(err);
+                renderCalendar(month, year);
+            });
+        }
+
+        function renderCalendar(month, year) {
+            const grid = document.getElementById('calendarGrid');
+            grid.innerHTML = ''; 
+            const firstDay = new Date(year, month, 1).getDay(); 
+            const daysInMonth = new Date(year, month + 1, 0).getDate(); 
+            let startOffset = firstDay === 0 ? 6 : firstDay - 1; 
+
+            const monthNames = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
+            document.getElementById('monthYearDisplay').textContent = `${monthNames[month]}${year}`;
+
+            for (let i = 0; i < startOffset; i++) {
+                grid.innerHTML += `<div class="calendar-cell cell-locked border-0"></div>`;
+            }
+
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            const limitDate = new Date(today);
+            limitDate.setDate(limitDate.getDate() - 3);
+
+            for (let day = 1; day <= daysInMonth; day++) {
+                let cellDate = new Date(year, month, day);
+                let dateStr = `${year}-${String(month+1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+                let cell = document.createElement('div');
+                cell.className = 'calendar-cell shadow-sm';
+                cell.id = `cell-${dateStr}`;
+
+                let dateHtml = `<div class="date-num">${day}</div>`;
+                let statusHtml = ``;
+
+                if (cellDate > today) {
+                    cell.classList.add('cell-locked');
+                    statusHtml = `<div class="status-text"><i class="fas fa-lock text-muted"></i> Belum Waktunya</div>`;
+                } 
+                else if (cellDate < limitDate) {
+                    cell.classList.add('cell-locked');
+                    statusHtml = `<div class="status-text"><i class="fas fa-times-circle text-muted"></i> Ditutup</div>`;
+                } 
+                else {
+                    let dataHariIni = serverDataJurnal[dateStr];
+                    
+                    if (dataHariIni) {
+                        let stat = dataHariIni.status_validasi;
+                        if (stat === 'Disetujui') {
+                            cell.classList.add('cell-validated');
+                            statusHtml = `<div class="status-text"><i class="fas fa-check-double"></i> Disetujui Guru</div>`;
+                        } else if (stat === 'Menunggu') {
+                            cell.classList.add('cell-completed');
+                            statusHtml = `<div class="status-text"><i class="fas fa-check-circle"></i> Terkirim</div>`;
+                        } else if (stat === 'Draf') {
+                            cell.classList.add('cell-draft');
+                            statusHtml = `<div class="status-text"><i class="fas fa-pen"></i> Draf Tersimpan</div>`;
+                        } else {
+                            cell.classList.add('cell-active');
+                            statusHtml = `<div class="status-text"><i class="fas fa-edit text-primary-school"></i> Isi Laporan</div>`;
+                        }
+                    } else {
+                        cell.classList.add('cell-active');
+                        statusHtml = `<div class="status-text"><i class="fas fa-edit text-primary-school"></i> Isi Laporan</div>`;
+                    }
+                    cell.onclick = () => openForm(dateStr, day, monthNames[month], year, cell, serverDataJurnal[dateStr]);
+                }
+                cell.innerHTML = dateHtml + statusHtml;
+                grid.appendChild(cell);
+            }
+        }
+
+        function changeMonth(step) {
+            activeMonth += step;
+            if (activeMonth < 0) { activeMonth = 11; activeYear--; }
+            if (activeMonth > 11) { activeMonth = 0; activeYear++; }
+            loadDataBulanIni(activeMonth, activeYear);
+        }
+
+        function openForm(dateStr, day, monthName, year, cellElement, existingData) {
+            selectedDateElement = { str: dateStr, element: cellElement };
+            document.getElementById('modalDateDisplay').textContent = `${day} ${monthName} ${year}`;
+            
+            document.getElementById('formJurnal').reset();
+            document.querySelectorAll('.reason-input').forEach(input => { input.style.display = 'none'; });
+            
+            document.getElementById('btnDraft').style.display = 'inline-block';
+            document.getElementById('btnKirim').style.display = 'inline-block';
+            document.getElementById('boxCatatanGuruSiswa').classList.add('d-none');
+
+            if (existingData) {
+                const keys = ['bp', 'ss', 'sd', 'sa', 'sm', 'si', 'ol', 'mk', 'bl', 'ms', 'td'];
+                
+                keys.forEach(k => {
+                    let status = existingData[`${k}_status`];
+                    let alasan = existingData[`${k}_alasan`];
+                    
+                    if(status) {
+                        let radioBtn = document.querySelector(`input[name="${k}_status"][value="${status}"]`);
+                        if(radioBtn) radioBtn.checked = true;
+                        
+                        if(status === 'Tidak') {
+                            let inputAlasan = document.getElementById(`${k}_alasan`);
+                            inputAlasan.style.display = 'block';
+                            inputAlasan.value = alasan || '';
+                        }
+                    }
+                });
+
+                // Tampilkan Catatan Guru jika ada
+                if (existingData.catatan_validator) {
+                    document.getElementById('boxCatatanGuruSiswa').classList.remove('d-none');
+                    document.getElementById('teksCatatanGuruSiswa').textContent = `"${existingData.catatan_validator}"`;
+                }
+
+                if (existingData.status_validasi === 'Menunggu' || existingData.status_validasi === 'Disetujui') {
+                    document.getElementById('btnDraft').style.display = 'none';
+                    document.getElementById('btnKirim').style.display = 'none';
+                }
+            }
+
+            jurnalModal.show();
+        }
+
+        function toggleReason(inputId, show) {
+            const inputEl = document.getElementById(inputId);
+            inputEl.style.display = show ? 'block' : 'none';
+            if(show) {
+                inputEl.style.opacity = '0';
+                setTimeout(() => {
+                    inputEl.style.transition = 'opacity 0.3s';
+                    inputEl.style.opacity = '1';
+                    inputEl.focus();
+                }, 10);
+            } else {
+                inputEl.value = '';
+            }
+        }
+
+        function simpanJurnal(statusValidasi) {
+            const dateStr = selectedDateElement.str;
+            const nisnUser = user.id_relasi;
+
+            const getRadioVal = (name) => {
+                let r = document.querySelector(`input[name="${name}"]:checked`);
+                return r ? r.value : "";
+            };
+
+            const params = new URLSearchParams();
+            params.append('action', 'simpan_jurnal');
+            params.append('tanggal_jurnal', dateStr);
+            params.append('nisn', nisnUser);
+            params.append('kelas', '');
+            params.append('status_validasi', statusValidasi);
+
+            const keys = ['bp', 'ss', 'sd', 'sa', 'sm', 'si', 'ol', 'mk', 'bl', 'ms', 'td'];
+            let isLengkap = true;
+            let draftObj = { status_validasi: statusValidasi };
+
+            keys.forEach(k => {
+                let val = getRadioVal(`${k}_status`);
+                let alasanVal = document.getElementById(`${k}_alasan`).value;
+                params.append(`${k}_status`, val);
+                params.append(`${k}_alasan`, alasanVal);
+                
+                draftObj[`${k}_status`] = val;
+                draftObj[`${k}_alasan`] = alasanVal;
+                
+                if(!val) isLengkap = false;
+            });
+
+            if (statusValidasi === 'Menunggu' && !isLengkap) {
+                alert("Peringatan: Mohon isi seluruh pilihan (Ya/Tidak) sebelum Mengirim Laporan!");
+                return;
+            }
+
+            const btnDraft = document.getElementById('btnDraft');
+            const btnKirim = document.getElementById('btnKirim');
+            const originalDraftText = btnDraft.innerHTML;
+            const originalKirimText = btnKirim.innerHTML;
+            
+            if (statusValidasi === 'Menunggu') {
+                btnKirim.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Mengirim...';
+            } else {
+                btnDraft.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Menyimpan...';
+            }
+            btnDraft.disabled = true;
+            btnKirim.disabled = true;
+
+            const url = `${API_URL}?${params.toString()}&_t=${Date.now()}`;
+
+            fetch(url, { method: 'GET', mode: 'cors', redirect: 'follow' })
+            .then(response => {
+                if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+                return response.json(); 
+            })
+            .then(data => {
+                btnDraft.innerHTML = originalDraftText;
+                btnKirim.innerHTML = originalKirimText;
+                btnDraft.disabled = false;
+                btnKirim.disabled = false;
+
+                if(data.status === 'success') {
+                    serverDataJurnal[dateStr] = draftObj;
+                    renderCalendar(activeMonth, activeYear);
+                    jurnalModal.hide();
+                    alert("Berhasil: " + data.message);
+                } else {
+                    alert("Gagal: " + data.message);
+                }
+            })
+            .catch(error => {
+                console.error(error);
+                btnDraft.innerHTML = originalDraftText;
+                btnKirim.innerHTML = originalKirimText;
+                btnDraft.disabled = false;
+                btnKirim.disabled = false;
+                alert("Koneksi gagal. Coba lagi.");
+            });
+        }
+
+        // Jalankan inisialisasi saat halaman dimuat
+        initPageByRole();
+    </script>
+</body>
+</html>
