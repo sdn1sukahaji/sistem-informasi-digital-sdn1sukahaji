@@ -35,3 +35,62 @@ body {
   display: flex;
   align-items: center;
 }
+
+/* ========================================= */
+        /* PERBAIKAN TAMPILAN RESPONSIVE (MOBILE)    */
+        /* ========================================= */
+        
+        /* Membuat wadah kalender bisa digeser (scroll) ke samping di layar HP */
+        .calendar-wrapper {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch; /* Efek scroll halus di iOS */
+            padding-bottom: 10px;
+            margin-top: 15px;
+        }
+
+        /* Menjaga bentuk kalender agar tidak hancur */
+        .calendar-inner {
+            min-width: 550px; /* Lebar minimal agar kotak tetap proporsional */
+        }
+
+        @media (max-width: 768px) {
+            /* Mengurangi padding pada card utama agar layar lebih lega */
+            #viewSiswa .card-soft {
+                padding: 15px !important;
+            }
+            
+            /* Menyesuaikan ukuran kotak kalender */
+            .calendar-grid {
+                gap: 5px;
+            }
+            
+            .calendar-cell {
+                min-height: 80px;
+                padding: 6px;
+            }
+            
+            .calendar-cell .date-num {
+                font-size: 1rem;
+            }
+            
+            .calendar-cell .status-text {
+                font-size: 0.65rem;
+                padding: 3px;
+                white-space: normal; /* Memastikan teks bisa turun ke bawah */
+                line-height: 1.2;
+            }
+
+            .calendar-day-name {
+                font-size: 0.85rem;
+                padding-bottom: 5px;
+            }
+
+            /* Perbaikan untuk form radio di Modal agar tidak terlalu sesak */
+            .radio-card {
+                padding: 8px 5px;
+            }
+            .radio-card i {
+                font-size: 1.4rem;
+                margin-bottom: 4px;
+            }
+        }
