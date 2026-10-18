@@ -4,11 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sistem Informasi Digital | SDN 1 Sukahaji</title>
-    <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Custom CSS -->
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
@@ -16,19 +13,21 @@
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-light bg-white py-3 shadow-sm fixed-top">
         <div class="container">
-            <a class="navbar-brand fw-bold text-primary-school" href="#">
+            <a class="navbar-brand fw-bold text-primary-school" href="index.html">
                 <i class="fas fa-graduation-cap me-2"></i>SDN 1 Sukahaji
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
+                <ul class="navbar-nav ms-auto align-items-center">
                     <li class="nav-item"><a class="nav-link active" href="index.html">Beranda</a></li>
                     <li class="nav-item"><a class="nav-link" href="#fitur">Fitur</a></li>
-                    <li class="nav-item"><a class="nav-link" href="layanan.html">Pusat Layanan & Penjaminan Mutu Satuan Pendidikan</a></li>
+                    <li class="nav-item"><a class="nav-link fw-bold text-primary-school" href="layanan.html">Pusat Layanan Publik</a></li>
                     <li class="nav-item ms-lg-3 mt-2 mt-lg-0">
-                        <a href="login.html" class="btn btn-school px-4">Login Portal</a>               
+                        <a href="login.html" id="btnNavPortal" class="btn btn-school px-4 rounded-pill">
+                            <i class="fas fa-sign-in-alt me-1"></i> Login Portal
+                        </a>
                     </li>
                 </ul>
             </div>
@@ -43,22 +42,24 @@
                     <span class="badge bg-primary-school text-white mb-3 px-3 py-2 rounded-pill">Platform Pendidikan Digital</span>
                     <h1 class="fw-bold mb-4" style="font-size: 3rem;">Membangun Generasi <span class="text-warning">Hebat</span> & Berkarakter</h1>
                     <p class="lead text-muted mb-4">Selamat datang di Sistem Informasi Digital Terpadu SDN 1 Sukahaji. Tempat kolaborasi antara Guru, Siswa, dan Orang Tua untuk mewujudkan pendidikan terbaik.</p>
-                    <a href="login.html" class="btn btn-school btn-lg px-4 py-3"><i class="fas fa-sign-in-alt me-2"></i> Masuk Sekarang</a>
+                    <div class="d-flex flex-wrap gap-2">
+                        <a href="login.html" id="btnHeroPortal" class="btn btn-school btn-lg px-4 py-3"><i class="fas fa-sign-in-alt me-2"></i> Masuk Sekarang</a>
+                        <a href="layanan.html" class="btn btn-outline-primary btn-lg px-4 py-3 rounded-3"><i class="fas fa-globe me-2"></i> Layanan Publik</a>
+                    </div>
                 </div>
                 <div class="col-lg-6 mt-5 mt-lg-0 text-center">
-                    <!-- Ilustrasi Placeholder (nanti bisa diganti gambar dari Google Drive Anda) -->
                     <img src="https://img.freepik.com/free-vector/back-school-concept-with-students_23-2148589251.jpg" alt="Ilustrasi Sekolah" class="img-fluid rounded-4 shadow-lg w-75">
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Fitur Unggulan (Termasuk 7KAIH) -->
+    <!-- Fitur Unggulan -->
     <section id="fitur" class="py-5 bg-white">
         <div class="container py-5">
             <div class="text-center mb-5">
                 <h2 class="fw-bold text-primary-school">Fitur Unggulan Kami</h2>
-                <p class="text-muted">Fasilitas digital untuk mendukung kegiatan belajar mengajar</p>
+                <p class="text-muted">Fasilitas digital untuk mendukung kegiatan belajar mengajar & penjaminan mutu</p>
             </div>
             <div class="row g-4">
                 <div class="col-md-4">
@@ -70,16 +71,16 @@
                 </div>
                 <div class="col-md-4">
                     <div class="card card-soft p-4 h-100 text-center">
-                        <div class="display-4 text-primary-school mb-3"><i class="fas fa-chart-line"></i></div>
-                        <h4 class="fw-bold">Pantau Perkembangan</h4>
-                        <p class="text-muted">Orang tua dapat memantau aktivitas dan validasi karakter anak langsung dari rumah.</p>
+                        <div class="display-4 text-danger mb-3"><i class="fas fa-shield-heart"></i></div>
+                        <h4 class="fw-bold">Rumah Sarengseh</h4>
+                        <p class="text-muted">Saluran aspirasi, konseling, keselamatan sekolah, dan perlindungan siswa yang aman dan responsif.</p>
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="card card-soft p-4 h-100 text-center">
-                        <div class="display-4 text-success mb-3"><i class="fas fa-database"></i></div>
-                        <h4 class="fw-bold">Integrasi Data</h4>
-                        <p class="text-muted">Data tersinkronisasi rapi untuk Kepala Sekolah dan Guru untuk pelaporan evaluasi sekolah.</p>
+                        <div class="display-4 text-success mb-3"><i class="fas fa-photo-video"></i></div>
+                        <h4 class="fw-bold">Panggung Suka Karya</h4>
+                        <p class="text-muted">Etalase karya inovatif siswa, komunitas belajar guru Bale Sahakarya, dan transparansi anggaran Pojok Buka Citra.</p>
                     </div>
                 </div>
             </div>
@@ -89,10 +90,30 @@
     <!-- Footer -->
     <footer class="bg-primary-school text-white text-center py-4">
         <div class="container">
-            <p class="mb-0">&copy; 2024 SDN 1 Sukahaji. Dibuat dengan semangat memajukan pendidikan.</p>
+            <p class="mb-0">&copy; 2026 SDN 1 Sukahaji. Dibuat dengan semangat memajukan pendidikan.</p>
         </div>
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Deteksi otomatis: Jika pengguna masih login, ubah tombol "Login Portal" menjadi "Ruang Kerja"
+        const activeSession = localStorage.getItem('userSession');
+        if (activeSession) {
+            try {
+                const u = JSON.parse(activeSession);
+                const namaSingkat = u.nama ? u.nama.split(' ')[0] : 'Akun';
+                const btnNav = document.getElementById('btnNavPortal');
+                const btnHero = document.getElementById('btnHeroPortal');
+                if (btnNav) {
+                    btnNav.href = 'dashboard.html';
+                    btnNav.innerHTML = `<i class="fas fa-th-large me-1"></i> Ruang Kerja (${namaSingkat})`;
+                }
+                if (btnHero) {
+                    btnHero.href = 'dashboard.html';
+                    btnHero.innerHTML = `<i class="fas fa-th-large me-2"></i> Kembali ke Ruang Kerja`;
+                }
+            } catch (e) {}
+        }
+    </script>
 </body>
 </html>
