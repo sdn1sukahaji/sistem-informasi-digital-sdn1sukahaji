@@ -8,13 +8,27 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="css/style.css">
     <style>
-        .menu-card { cursor: pointer; transition: all 0.25s ease; border: 2px solid transparent; }
+        .menu-card { cursor: pointer; transition: all 0.25s ease; border: 2px solid transparent; position: relative; }
         .menu-card:hover { transform: translateY(-5px); border-color: #0f4c81; }
         .menu-card.active-panel { border-color: #0f4c81; background-color: #f0f7ff; }
         .step-badge { font-size: 0.78rem; padding: 5px 12px; border-radius: 50px; font-weight: 600; }
         .timeline-box { border-left: 3px solid #0f4c81; padding-left: 12px; margin-top: 8px; background: #f8f9fa; border-radius: 0 8px 8px 0; padding: 8px 12px; }
         .timeline-kepsek { border-left-color: #dc3545; background: #fff5f5; }
-        .thumb-mini { width: 55px; height: 42px; object-fit: cover; border-radius: 6px; border: 1px solid #dee2e6; }
+        .thumb-mini { width: 52px; height: 40px; object-fit: cover; border-radius: 6px; border: 1px solid #dee2e6; }
+        
+        /* Gaya Lonceng & Dropdown Notifikasi */
+        .notif-dropdown-menu { width: 340px; max-height: 400px; overflow-y: auto; border-radius: 14px; }
+        .notif-item { border-bottom: 1px solid #f1f1f1; padding: 10px 14px; cursor: pointer; transition: background 0.2s; white-space: normal; }
+        .notif-item:hover { background-color: #f0f7ff; }
+        .notif-item:last-child { border-bottom: none; }
+        .card-notif-badge { position: absolute; top: 14px; right: 14px; font-size: 0.75rem; padding: 5px 10px; }
+        
+        @keyframes bellRing {
+            0%, 100% { transform: rotate(0); }
+            20%, 60% { transform: rotate(12deg); }
+            40%, 80% { transform: rotate(-12deg); }
+        }
+        .bell-active { animation: bellRing 1.2s ease infinite; color: #ffc107 !important; }
     </style>
 </head>
 <body class="bg-light">
@@ -26,9 +40,28 @@
                 <i class="fas fa-graduation-cap me-2 text-warning"></i>Portal SDN 1 Sukahaji
             </a>
             <div class="d-flex align-items-center text-white">
+                <!-- Tombol Halaman Publik -->
                 <a href="layanan.html" class="btn btn-warning btn-sm rounded-pill px-3 me-2 fw-semibold text-dark">
-                    <i class="fas fa-globe me-1"></i> Lihat Halaman Publik
+                    <i class="fas fa-globe me-1"></i> <span class="d-none d-sm-inline">Halaman Publik</span>
                 </a>
+
+                <!-- Dropdown Lonceng Notifikasi Terpadu -->
+                <div class="dropdown me-3">
+                    <button class="btn btn-outline-light btn-sm rounded-circle position-relative" style="width: 36px; height: 36px;" data-bs-toggle="dropdown" aria-expanded="false" title="Notifikasi Aktivitas">
+                        <i class="fas fa-bell" id="bellIcon"></i>
+                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger d-none" id="notifTotalBadge">0</span>
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-end shadow-lg border-0 p-0 notif-dropdown-menu">
+                        <div class="p-3 bg-primary-school text-white d-flex justify-content-between align-items-center rounded-top-3">
+                            <span class="fw-bold small"><i class="fas fa-bell me-2 text-warning"></i>Notifikasi & Tindak Lanjut</span>
+                            <button class="btn btn-sm text-white p-0" onclick="muatNotifikasi(event)" title="Segarkan Notifikasi"><i class="fas fa-sync-alt"></i></button>
+                        </div>
+                        <div id="notifListContainer">
+                            <div class="p-4 text-center text-muted small">Memeriksa aktivitas terbaru...</div>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="text-end me-3 d-none d-md-block">
                     <div class="fw-bold small" id="userNameDisplay">Memuat...</div>
                     <small class="text-warning" id="userRoleDisplay">Memuat...</small>
@@ -48,6 +81,9 @@
                     <h4 class="fw-bold text-primary-school mb-1">Selamat Datang, <span id="welcomeName"></span>!</h4>
                     <p class="text-muted small mb-0">Ruang Kerja Terpadu SDN 1 Sukahaji | Otoritas Akses: <strong id="welcomeRole" class="text-warning bg-dark px-2 py-1 rounded"></strong></p>
                 </div>
+                <div class="mt-2 mt-md-0">
+                    <a href="index.html" class="btn btn-outline-primary btn-sm rounded-pill px-3"><i class="fas fa-home me-1"></i> Ke Beranda Utama</a>
+                </div>
             </div>
         </div>
 
@@ -56,6 +92,7 @@
             <!-- Modul 1: Jurnal 7KAIH -->
             <div class="col-md-4">
                 <div class="card card-soft menu-card h-100 border-0 p-4 text-center rounded-4 shadow-sm d-flex flex-column" onclick="window.location.href='jurnal.html'">
+                    <span class="badge bg-danger rounded-pill card-notif-badge d-none" id="badgeCardJurnal">0 Menunggu</span>
                     <div class="fs-1 text-warning mb-2"><i class="fas fa-book-open"></i></div>
                     <h5 class="fw-bold text-primary-school">Jurnal 7KAIH</h5>
                     <p class="text-muted small mb-3">Isi kalender harian, validasi kelas, dan cetak rekapitulasi laporan 7KAIH.</p>
@@ -63,9 +100,10 @@
                 </div>
             </div>
 
-            <!-- Modul 2: Rumah Sarengseh (Semua Role) -->
+            <!-- Modul 2: Rumah Sarengseh -->
             <div class="col-md-4">
                 <div class="card card-soft menu-card h-100 border-0 p-4 text-center rounded-4 shadow-sm d-flex flex-column" id="cardMenuSarengseh" onclick="bukaPanel('SARENGSEH')">
+                    <span class="badge bg-danger rounded-pill card-notif-badge d-none" id="badgeCardAduan">0 Aduan</span>
                     <div class="fs-1 text-danger mb-2"><i class="fas fa-shield-heart"></i></div>
                     <h5 class="fw-bold text-primary-school">Rumah Sarengseh</h5>
                     <p class="text-muted small mb-3">Layanan Pengaduan TPPK, Konseling BK, Kotak Aspirasi, & Keselamatan Sarpras.</p>
@@ -73,9 +111,10 @@
                 </div>
             </div>
 
-            <!-- Modul 3: Panggung Suka Karya (Khusus Guru, Kepsek, Admin) -->
+            <!-- Modul 3: Panggung Suka Karya (Guru, Kepsek, Admin) -->
             <div class="col-md-4 d-none" id="colMenuGaleri">
                 <div class="card card-soft menu-card h-100 border-0 p-4 text-center rounded-4 shadow-sm d-flex flex-column" id="cardMenuGaleri" onclick="bukaPanel('GALERI')">
+                    <span class="badge bg-success rounded-pill card-notif-badge d-none" id="badgeCardGaleri">0 Karya</span>
                     <div class="fs-1 text-success mb-2"><i class="fas fa-photo-video"></i></div>
                     <h5 class="fw-bold text-primary-school">Panggung Suka Karya</h5>
                     <p class="text-muted small mb-3">Input dokumentasi kegiatan (Slide 4 Foto / Video) & Persetujuan Publikasi.</p>
@@ -91,8 +130,9 @@
             <div class="card border-0 shadow-sm rounded-4 p-4 bg-white">
                 <div class="d-flex flex-wrap justify-content-between align-items-center border-bottom pb-3 mb-4">
                     <div>
-                        <span class="badge bg-danger-subtle text-danger mb-1">Aman, Nyaman, Silih Asih</span>
+                        <span class="badge bg-danger-subtle text-danger mb-1" id="badgeScopeAduan">Aman, Nyaman, Silih Asih</span>
                         <h4 class="fw-bold text-primary-school mb-0"><i class="fas fa-shield-heart text-danger me-2"></i>Ruang Kerja Rumah Sarengseh</h4>
+                        <p class="text-muted small mb-0" id="subJudulAduan">Pantau dan tindak lanjuti laporan pengaduan secara terukur.</p>
                     </div>
                     <div class="d-flex gap-2 mt-2 mt-md-0">
                         <button class="btn btn-danger btn-sm rounded-pill px-3 fw-semibold" id="btnTambahAduan" onclick="bukaModalFormAduan()">
@@ -134,7 +174,7 @@
 
                 <!-- Filter Kategori -->
                 <div class="row g-2 mb-3">
-                    <div class="col-md-4">
+                    <div class="col-md-5">
                         <select id="filterKategoriAduan" class="form-select form-select-sm" onchange="muatDataAduan()">
                             <option value="SEMUA">Semua Kategori Layanan (4 Layanan)</option>
                             <option value="TPPK (Anti-Perundungan & Kekerasan)">1. Layanan Pengaduan TPPK</option>
@@ -155,7 +195,7 @@
                                 <th style="width: 190px;">Kategori Layanan</th>
                                 <th>Deskripsi & Riwayat Tindak Lanjut</th>
                                 <th class="text-center" style="width: 130px;">Progres Status</th>
-                                <th class="text-end" style="width: 140px;">Aksi</th>
+                                <th class="text-end" style="width: 165px;">Aksi</th>
                             </tr>
                         </thead>
                         <tbody id="tbodyAduan">
@@ -193,7 +233,7 @@
                         <thead class="table-light">
                             <tr>
                                 <th style="width: 105px;">Tgl Kegiatan</th>
-                                <th style="width: 220px;">Media (Pratinjau)</th>
+                                <th style="width: 220px;">Media & Apresiasi</th>
                                 <th>Judul & Deskripsi Kegiatan</th>
                                 <th style="width: 150px;">Penulis (Guru)</th>
                                 <th class="text-center" style="width: 130px;">Status Publikasi</th>
@@ -235,7 +275,7 @@
                         <label class="form-label fw-semibold small">Ceritakan Kronologi / Saran / Laporan Anda <span class="text-danger">*</span></label>
                         <textarea id="aduDeskripsi" class="form-control" rows="5" placeholder="Tuliskan secara jelas kejadian, lokasi, waktu, atau aspirasi yang ingin disampaikan..."></textarea>
                     </div>
-                    <small class="text-muted fst-italic"><i class="fas fa-lock me-1"></i> Identitas dan isi laporan Anda bersifat rahasia dan hanya dapat dilihat oleh pihak berwenang sekolah.</small>
+                    <small class="text-muted fst-italic"><i class="fas fa-lock me-1"></i> Identitas dan isi laporan Anda bersifat rahasia dan hanya diteruskan kepada Wali Kelas Anda serta Kepala Sekolah.</small>
                 </div>
                 <div class="modal-footer border-0 bg-light">
                     <button type="button" class="btn btn-outline-secondary rounded-pill px-3" data-bs-dismiss="modal">Batal</button>
@@ -328,7 +368,7 @@
                     <div class="p-3 bg-light rounded-3 border mb-3">
                         <div class="small fw-bold text-primary-school mb-2">
                             <i class="fas fa-link me-1"></i> Tautan (Link) Media Google Drive
-                            <span class="fw-normal text-muted d-block">Pastikan akses file di Google Drive sudah diatur ke <strong>"Siapa saja yang memiliki link" (Anyone with the link)</strong>.</span>
+                            <span class="fw-normal text-muted d-block">Pastikan akses file di Google Drive diatur ke <strong>"Siapa saja yang memiliki link" (Anyone with the link)</strong>.</span>
                         </div>
                         <div class="row g-2">
                             <div class="col-md-6">
@@ -416,12 +456,13 @@
         const user = JSON.parse(sessionData || '{}');
 
         const roleUpper = String(user.role || '').toUpperCase().trim();
+        const penugasanUser = String(user.penugasan || '').trim();
         const isSiswa = (roleUpper === 'SISWA' || roleUpper === 'ORTU');
         const isKepsek = (roleUpper.includes('KEPSEK') || roleUpper.includes('KEPALA SEKOLAH'));
         const isAdmin = (roleUpper === 'ADMIN');
         const isGuru = (!isSiswa && !isKepsek && !isAdmin);
 
-        const labelRole = user.penugasan ? `${user.role} (${user.penugasan})` : user.role;
+        const labelRole = penugasanUser ? `${user.role} (${penugasanUser})` : user.role;
         document.getElementById('userNameDisplay').textContent = user.nama;
         document.getElementById('userRoleDisplay').textContent = labelRole;
         document.getElementById('welcomeName').textContent = user.nama;
@@ -432,9 +473,16 @@
             document.getElementById('colMenuGaleri').classList.remove('d-none');
         }
 
-        // Jika Guru atau Kepsek, sembunyikan tombol "Buat Aduan Siswa" (kecuali Admin & Siswa)
-        if (isGuru || isKepsek) {
+        // Sesuaikan keterangan cakupan aduan untuk Guru Kelas
+        if (isGuru) {
             document.getElementById('btnTambahAduan').classList.add('d-none');
+            if (/^kelas\s*[1-6]/i.test(penugasanUser)) {
+                document.getElementById('badgeScopeAduan').textContent = `Khusus Siswa ${penugasanUser}`;
+                document.getElementById('subJudulAduan').textContent = `Menampilkan laporan pengaduan khusus dari siswa ${penugasanUser}.`;
+            }
+        } else if (isKepsek) {
+            document.getElementById('btnTambahAduan').classList.add('d-none');
+            document.getElementById('badgeScopeAduan').textContent = `Seluruh Kelas (Kelas 1 - 6)`;
         }
 
         let listAduanGlobal = [];
@@ -444,6 +492,61 @@
         const modalTLAduan = new bootstrap.Modal(document.getElementById('modalTindakLanjutAduan'));
         const modalFormGaleri = new bootstrap.Modal(document.getElementById('modalFormGaleri'));
         const modalValGaleri = new bootstrap.Modal(document.getElementById('modalValidasiGaleri'));
+
+        // =========================================================================
+        // 1. SISTEM NOTIFIKASI REAL-TIME
+        // =========================================================================
+        function muatNotifikasi(event) {
+            if (event) event.stopPropagation();
+            const container = document.getElementById('notifListContainer');
+            const url = `${API_URL}?action=cek_notifikasi&role=${encodeURIComponent(user.role)}&id_relasi=${encodeURIComponent(user.id_relasi)}&penugasan=${encodeURIComponent(penugasanUser)}&_t=${Date.now()}`;
+
+            fetch(url).then(r => r.json()).then(res => {
+                if (res.status !== 'success') return;
+                const c = res.counts || { jurnal: 0, aduan: 0, galeri: 0, total: 0 };
+                const items = res.items || [];
+
+                // Update Lonceng Utama
+                const totalBadge = document.getElementById('notifTotalBadge');
+                const bellIcon = document.getElementById('bellIcon');
+                if (c.total > 0) {
+                    totalBadge.textContent = c.total;
+                    totalBadge.classList.remove('d-none');
+                    bellIcon.classList.add('bell-active');
+                } else {
+                    totalBadge.classList.add('d-none');
+                    bellIcon.classList.remove('bell-active');
+                }
+
+                // Update Badge pada Masing-Masing Kartu Modul
+                const bJurnal = document.getElementById('badgeCardJurnal');
+                const bAduan = document.getElementById('badgeCardAduan');
+                const bGaleri = document.getElementById('badgeCardGaleri');
+
+                if (c.jurnal > 0) { bJurnal.textContent = `${c.jurnal} Menunggu`; bJurnal.classList.remove('d-none'); } else { bJurnal.classList.add('d-none'); }
+                if (c.aduan > 0) { bAduan.textContent = `${c.aduan} Aktif`; bAduan.classList.remove('d-none'); } else { bAduan.classList.add('d-none'); }
+                if (c.galeri > 0) { bGaleri.textContent = `${c.galeri} Info`; bGaleri.classList.remove('d-none'); } else { bGaleri.classList.add('d-none'); }
+
+                // Render Daftar Item Notifikasi di Dropdown
+                if (items.length === 0) {
+                    container.innerHTML = `<div class="p-4 text-center text-muted small"><i class="fas fa-check-circle text-success fs-4 d-block mb-1"></i>Tidak ada antrean tindak lanjut baru.</div>`;
+                } else {
+                    container.innerHTML = '';
+                    items.forEach(it => {
+                        let aksiKlik = it.modul === 'JURNAL' ? `window.location.href='jurnal.html'` : `bukaPanel('${it.modul}')`;
+                        container.innerHTML += `
+                            <div class="notif-item d-flex align-items-start" onclick="${aksiKlik}">
+                                <div class="me-3 mt-1"><i class="fas ${it.icon} fs-5"></i></div>
+                                <div>
+                                    <div class="small fw-semibold text-dark">${it.teks}</div>
+                                    <small class="text-muted" style="font-size: 0.72rem;">${it.waktu}</small>
+                                </div>
+                            </div>
+                        `;
+                    });
+                }
+            }).catch(() => {});
+        }
 
         function bukaPanel(namaPanel) {
             document.getElementById('panelSarengseh').classList.add('d-none');
@@ -463,20 +566,27 @@
         }
 
         // =========================================================================
-        // 1. LOGIKA RUMAH SARENGSEH (CRUD PENGADUAN & TINDAK LANJUT)
+        // 2. LOGIKA RUMAH SARENGSEH (FILTER KELAS GURU & FITUR DELETE KEPSEK/ADMIN)
         // =========================================================================
         function muatDataAduan() {
             const tbody = document.getElementById('tbodyAduan');
             tbody.innerHTML = `<tr><td colspan="6" class="text-center py-4"><div class="spinner-border spinner-border-sm text-danger me-2"></div>Memuat data aduan...</td></tr>`;
 
             const kat = document.getElementById('filterKategoriAduan').value || 'SEMUA';
-            const roleParam = isSiswa ? 'SISWA' : 'STAF';
-            const url = `${API_URL}?action=baca_aduan&role=${roleParam}&id_relasi=${encodeURIComponent(user.id_relasi)}&kategori=${encodeURIComponent(kat)}&_t=${Date.now()}`;
+            const params = new URLSearchParams({
+                action: 'baca_aduan',
+                role: user.role,
+                id_relasi: user.id_relasi,
+                penugasan: penugasanUser,
+                kategori: kat
+            });
 
-            fetch(url).then(r => r.json()).then(res => {
+            fetch(`${API_URL}?${params.toString()}&_t=${Date.now()}`)
+            .then(r => r.json()).then(res => {
                 listAduanGlobal = res.data || [];
                 hitungStatistikAduan(listAduanGlobal);
                 renderTabelAduan(listAduanGlobal);
+                muatNotifikasi();
             }).catch(() => {
                 tbody.innerHTML = `<tr><td colspan="6" class="text-center text-danger py-4">Gagal memuat data pengaduan.</td></tr>`;
             });
@@ -494,7 +604,7 @@
             tbody.innerHTML = '';
 
             if (list.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="6" class="text-center py-4 text-muted">Belum ada laporan pengaduan pada kategori ini.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="6" class="text-center py-4 text-muted">Belum ada laporan pengaduan untuk ditampilkan.</td></tr>`;
                 return;
             }
 
@@ -514,14 +624,20 @@
                 }
 
                 let btnAksi = '';
+                // Tombol Edit untuk Siswa (saat Draf/Diajukan) atau Admin
                 if (isSiswa || isAdmin) {
                     if (item.status_aduan === 'Draf' || item.status_aduan === 'Diajukan') {
                         btnAksi += `<button class="btn btn-sm btn-outline-primary rounded-pill px-3 me-1 mb-1" onclick="bukaModalEditAduan(${idx})"><i class="fas fa-edit me-1"></i>Edit</button>`;
                     }
                 }
+                // Tombol Tanggapi / Intervensi untuk Guru, Kepsek, Admin
                 if (!isSiswa) {
                     let lblBtn = isKepsek ? 'Intervensi' : 'Tanggapi';
-                    btnAksi += `<button class="btn btn-sm btn-school rounded-pill px-3 mb-1" onclick="bukaModalTLAduan(${idx})"><i class="fas fa-reply me-1"></i>${lblBtn}</button>`;
+                    btnAksi += `<button class="btn btn-sm btn-school rounded-pill px-3 me-1 mb-1" onclick="bukaModalTLAduan(${idx})"><i class="fas fa-reply me-1"></i>${lblBtn}</button>`;
+                }
+                // Tombol Hapus (Delete) khusus Kepala Sekolah, Admin, atau Siswa saat masih Draf
+                if (isKepsek || isAdmin || (isSiswa && item.status_aduan === 'Draf')) {
+                    btnAksi += `<button class="btn btn-sm btn-outline-danger rounded-pill px-2 mb-1" onclick="hapusAduan('${item.id_aduan}')" title="Hapus Aduan"><i class="fas fa-trash"></i></button>`;
                 }
 
                 tbody.innerHTML += `
@@ -589,6 +705,16 @@
             });
         }
 
+        function hapusAduan(idAduan) {
+            if (!confirm("Apakah Anda yakin ingin menghapus laporan pengaduan ini secara permanen?")) return;
+            fetch(`${API_URL}?action=hapus_aduan&id_aduan=${encodeURIComponent(idAduan)}&_t=${Date.now()}`)
+            .then(r => r.json()).then(res => {
+                if (res.status === 'success') {
+                    muatDataAduan();
+                } else { alert(res.message); }
+            });
+        }
+
         function bukaModalTLAduan(idx) {
             const item = listAduanGlobal[idx];
             document.getElementById('tlIdAduan').value = item.id_aduan;
@@ -641,7 +767,7 @@
         }
 
         // =========================================================================
-        // 2. LOGIKA PANGGUNG SUKA KARYA (CMS GALERI GURU & APPROVAL KEPSEK)
+        // 3. LOGIKA PANGGUNG SUKA KARYA (CMS GALERI GURU & APPROVAL KEPSEK)
         // =========================================================================
         function toggleInputMediaGaleri() {
             const tipe = document.getElementById('glrTipeMedia').value;
@@ -667,6 +793,7 @@
             fetch(url).then(r => r.json()).then(res => {
                 listGaleriGlobal = res.data || [];
                 renderTabelGaleri(listGaleriGlobal);
+                muatNotifikasi();
             }).catch(() => {
                 tbody.innerHTML = `<tr><td colspan="6" class="text-center text-danger py-4">Gagal memuat daftar galeri.</td></tr>`;
             });
@@ -705,7 +832,8 @@
                         <td class="fw-semibold small">${item.tanggal_kegiatan}</td>
                         <td>
                             <div class="d-flex flex-wrap">${thumbsHtml}</div>
-                            <span class="badge bg-light text-dark border mt-1">${item.tipe_media} (${item.links.length} File)</span>
+                            <span class="badge bg-light text-dark border mt-1">${item.tipe_media} (${item.links.length})</span>
+                            <span class="badge bg-danger-subtle text-danger border border-danger-subtle mt-1 ms-1"><i class="fas fa-heart me-1"></i>${item.likes || 0}</span>
                         </td>
                         <td>
                             <div class="fw-bold text-primary-school">${item.judul_kegiatan}</div>
@@ -811,17 +939,20 @@
                     inner += `<div class="carousel-item ${i===0?'active':''}"><img src="${url}" class="d-block w-100" style="max-height: 380px; object-fit: cover;"></div>`;
                 });
                 mediaBox.innerHTML = `
-                    <div id="carouselValGaleri" class="carousel slide" data-bs-ride="carousel">
+                    <div id="carouselValGaleri" class="carousel slide" data-bs-ride="carousel" data-bs-interval="3000">
                         <div class="carousel-inner">${inner}</div>
                         <button class="carousel-control-prev" type="button" data-bs-target="#carouselValGaleri" data-bs-slide="prev"><span class="carousel-control-prev-icon"></span></button>
                         <button class="carousel-control-next" type="button" data-bs-target="#carouselValGaleri" data-bs-slide="next"><span class="carousel-control-next-icon"></span></button>
                     </div>
                 `;
+                setTimeout(() => {
+                    const elCar = document.getElementById('carouselValGaleri');
+                    if (elCar) new bootstrap.Carousel(elCar, { interval: 3000, ride: 'carousel' });
+                }, 150);
             } else if (item.links.length === 1) {
                 mediaBox.innerHTML = `<img src="${item.links[0]}" class="img-fluid w-100" style="max-height: 380px; object-fit: contain;">`;
             }
 
-            // Tampilkan tombol Approve hanya untuk Kepala Sekolah dan Admin
             document.getElementById('boxInputApprovalKepsek').classList.toggle('d-none', !(isKepsek || isAdmin));
             modalValGaleri.show();
         }
@@ -857,6 +988,9 @@
             localStorage.removeItem('userSession');
             window.location.href = 'login.html';
         }
+
+        // Jalankan pengecekan notifikasi saat halaman dibuka
+        muatNotifikasi();
     </script>
 </body>
 </html>
