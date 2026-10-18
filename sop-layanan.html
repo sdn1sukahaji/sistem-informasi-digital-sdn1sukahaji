@@ -1,1 +1,764 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pedoman & SOP Layanan Aduan (Rumah Sarengseh) | SDN 1 Sukahaji</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .hero-sop {
+            background: linear-gradient(135deg, #0f4c81 0%, #072540 100%);
+            color: white;
+            padding: 85px 0 45px 0;
+            margin-top: 56px;
+        }
+        .sop-nav .nav-link {
+            color: #0f4c81;
+            font-weight: 600;
+            border-radius: 12px;
+            padding: 12px 18px;
+            border: 1px solid #dee2e6;
+            background: #fff;
+            transition: all 0.25s ease;
+            font-size: 0.9rem;
+        }
+        .sop-nav .nav-link:hover {
+            background: #f0f7ff;
+            border-color: #0f4c81;
+        }
+        .sop-nav .nav-link.active {
+            background: #0f4c81;
+            color: #fff;
+            border-color: #0f4c81;
+            box-shadow: 0 5px 15px rgba(15, 76, 129, 0.25);
+        }
 
+        /* Infografis Alur Digital Rumah Sarengseh */
+        .step-flow-card {
+            border-radius: 14px;
+            border: 1px solid #e9ecef;
+            background: #fff;
+            padding: 18px 15px;
+            height: 100%;
+            position: relative;
+            transition: transform 0.2s;
+        }
+        .step-flow-card:hover { transform: translateY(-4px); box-shadow: 0 8px 20px rgba(0,0,0,0.06); }
+        .step-num-circle {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1rem;
+            margin-bottom: 12px;
+        }
+
+        /* Gaya Dokumen SOP Resmi (Standar Akreditasi & Cetak A4) */
+        .sop-paper {
+            background: #fff;
+            border-radius: 16px;
+            padding: 35px 40px;
+            box-shadow: 0 8px 28px rgba(0,0,0,0.07);
+            color: #000;
+        }
+        .sop-header-box {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+            font-size: 9.5pt;
+        }
+        .sop-header-box td {
+            border: 1px solid #000 !important;
+            padding: 5px 10px;
+            vertical-align: middle;
+        }
+        .sop-title-banner {
+            background-color: #e9ecef;
+            border: 1px solid #000;
+            text-align: center;
+            padding: 10px 15px;
+            margin-bottom: 20px;
+            font-weight: bold;
+            text-transform: uppercase;
+            font-size: 11pt;
+            -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
+        }
+        .sop-section-title {
+            font-weight: bold;
+            font-size: 10.5pt;
+            text-transform: uppercase;
+            margin-top: 18px;
+            margin-bottom: 8px;
+            color: #0f4c81;
+            border-bottom: 2px solid #0f4c81;
+            padding-bottom: 3px;
+        }
+        .table-sop {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 9.5pt;
+            margin-top: 8px;
+            margin-bottom: 15px;
+        }
+        .table-sop th, .table-sop td {
+            border: 1px solid #000 !important;
+            padding: 7px 9px;
+            vertical-align: top;
+            color: #000;
+        }
+        .table-sop thead th {
+            background-color: #0f4c81 !important;
+            color: #fff !important;
+            text-align: center;
+            vertical-align: middle;
+            -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
+        }
+        .ttd-sop-box {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 25px;
+            page-break-inside: avoid;
+            font-size: 10.5pt;
+        }
+
+        @media print {
+            @page { size: A4 portrait; margin: 12mm 14mm; }
+            body { background: #fff !important; }
+            .no-print, nav, .hero-sop, #sopNavWrapper { display: none !important; }
+            .container { max-width: 100% !important; width: 100% !important; margin: 0 !important; padding: 0 !important; }
+            .sop-paper { box-shadow: none !important; padding: 0 !important; border-radius: 0 !important; }
+            .tab-pane { display: none !important; }
+            .tab-pane.active { display: block !important; opacity: 1 !important; }
+            .table-sop tr { page-break-inside: avoid; }
+        }
+    </style>
+</head>
+<body class="bg-light">
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-white py-3 shadow-sm fixed-top no-print">
+        <div class="container">
+            <a class="navbar-brand fw-bold text-primary-school" href="index.html">
+                <i class="fas fa-graduation-cap me-2"></i>SDN 1 Sukahaji
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto align-items-center">
+                    <li class="nav-item"><a class="nav-link" href="index.html">Beranda</a></li>
+                    <li class="nav-item"><a class="nav-link" href="layanan.html">Pusat Layanan Publik</a></li>
+                    <li class="nav-item"><a class="nav-link active fw-bold text-primary-school" href="sop-layanan.html">Pedoman & SOP Layanan</a></li>
+                    <li class="nav-item ms-lg-3 mt-2 mt-lg-0">
+                        <a href="login.html" id="btnNavPortal" class="btn btn-school px-4 rounded-pill">
+                            <i class="fas fa-sign-in-alt me-1"></i> Login Portal
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Header -->
+    <section class="hero-sop text-center no-print">
+        <div class="container">
+            <span class="badge bg-warning text-dark px-3 py-2 rounded-pill mb-3 fw-bold">
+                <i class="fas fa-file-shield me-1"></i> Dokumen Mutu & Regulasi Satuan Pendidikan
+            </span>
+            <h1 class="fw-bold display-6 mb-2">Standar Operasional Prosedur (SOP)</h1>
+            <h5 class="text-warning fw-semibold mb-3">Layanan Pengaduan Terpadu "Rumah Sarengseh", TPPK, P3K/Sarpras, & SPAB</h5>
+            <p class="small text-white-50 mx-auto mb-4" style="max-width: 740px;">
+                Pedoman resmi tata laksana pelaporan digital, perlindungan siswa, keselamatan sarana prasarana, serta kesiapsiagaan darurat di SD Negeri 1 Sukahaji.
+            </p>
+            <div class="d-flex flex-wrap justify-content-center gap-2">
+                <a href="layanan.html" class="btn btn-outline-light btn-sm rounded-pill px-4 py-2">
+                    <i class="fas fa-arrow-left me-1"></i> Kembali ke Pusat Layanan
+                </a>
+                <button onclick="window.print()" class="btn btn-success btn-sm rounded-pill px-4 py-2 fw-bold shadow-sm">
+                    <i class="fas fa-print me-1"></i> Cetak Dokumen SOP Aktif (PDF)
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <div class="container my-4 pb-5">
+
+        <!-- Navigasi Pilihan 4 Dokumen SOP -->
+        <div class="mb-4 no-print" id="sopNavWrapper">
+            <div class="card border-0 shadow-sm rounded-4 p-3 bg-white">
+                <div class="small fw-bold text-muted mb-2"><i class="fas fa-folder-open me-1 text-primary-school"></i> Pilih Dokumen Standar Operasional Prosedur (SOP):</div>
+                <ul class="nav sop-nav gap-2" id="sopTabs" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#sop-10" type="button" role="tab">
+                            <i class="fas fa-laptop-medical text-danger me-1"></i> 1. SOP-10: Sistem Pengaduan Digital (Rumah Sarengseh)
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" data-bs-toggle="tab" data-bs-target="#sop-07" type="button" role="tab">
+                            <i class="fas fa-hand-holding-heart text-warning me-1"></i> 2. SOP-07: Pencegahan & Penanganan Kekerasan (TPPK)
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" data-bs-toggle="tab" data-bs-target="#sop-08" type="button" role="tab">
+                            <i class="fas fa-kit-medical text-success me-1"></i> 3. SOP-08: Keselamatan Sarpras, P3K, & UKS
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" data-bs-toggle="tab" data-bs-target="#sop-09" type="button" role="tab">
+                            <i class="fas fa-person-running text-info me-1"></i> 4. SOP-09: Tanggap Darurat Bencana (SPAB)
+                        </button>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Isi Tab Dokumen SOP -->
+        <div class="tab-content">
+
+            <!-- =================================================================== -->
+            <!-- TAB 1: SOP-10 SISTEM PENGADUAN DIGITAL "RUMAH SARENGSEH" (BARU)     -->
+            <!-- =================================================================== -->
+            <div class="tab-pane fade show active" id="sop-10" role="tabpanel">
+                
+                <!-- Visualisasi Infografis 5 Langkah Sistem Digital (Hanya Tampil di Web) -->
+                <div class="card border-0 shadow-sm rounded-4 p-4 bg-white mb-4 no-print">
+                    <div class="d-flex justify-content-between align-items-center flex-wrap mb-3">
+                        <div>
+                            <span class="badge bg-danger-subtle text-danger fw-bold mb-1">Arsitektur Alur Sistem</span>
+                            <h5 class="fw-bold text-primary-school mb-0">5 Tahapan Alur Pengaduan Digital "Rumah Sarengseh"</h5>
+                        </div>
+                        <a href="login.html" id="btnSopBuatAduan" class="btn btn-danger btn-sm rounded-pill px-4 fw-bold">
+                            <i class="fas fa-paper-plane me-1"></i> Masuk & Buat Pengaduan
+                        </a>
+                    </div>
+                    <div class="row g-3">
+                        <div class="col-md-4 col-lg">
+                            <div class="step-flow-card border-top border-secondary border-4">
+                                <div class="step-num-circle bg-secondary text-white">1</div>
+                                <h6 class="fw-bold mb-1">Login & Pilih Kategori</h6>
+                                <p class="small text-muted mb-0">Siswa/Orang Tua masuk ke portal, memilih 1 dari 4 kategori layanan, dan dapat menyimpan sebagai <strong>Draf</strong> terlebih dahulu.</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4 col-lg">
+                            <div class="step-flow-card border-top border-warning border-4">
+                                <div class="step-num-circle bg-warning text-dark">2</div>
+                                <h6 class="fw-bold mb-1">Ajukan & Isolasi Kelas</h6>
+                                <p class="small text-muted mb-0">Saat dikirim (<strong>Diajukan</strong>), sistem otomatis mengunci privasi laporan hanya ke <strong>Wali Kelas siswa bersangkutan</strong> & Kepala Sekolah.</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4 col-lg">
+                            <div class="step-flow-card border-top border-info border-4">
+                                <div class="step-num-circle bg-info text-white">3</div>
+                                <h6 class="fw-bold mb-1">Respon & RTL Guru</h6>
+                                <p class="small text-muted mb-0">Wali Kelas menerima notifikasi, melakukan verifikasi awal, dan mengisi <strong>Tanggapan & Rencana Tindak Lanjut (RTL)</strong>.</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-lg">
+                            <div class="step-flow-card border-top border-danger border-4">
+                                <div class="step-num-circle bg-danger text-white">4</div>
+                                <h6 class="fw-bold mb-1">Intervensi Kepsek & Tim</h6>
+                                <p class="small text-muted mb-0">Kepala Sekolah memantau seluruh kelas dan berwenang memberi <strong>Intervensi Kebijakan</strong> bersama Tim TPPK / Sarpras.</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-lg">
+                            <div class="step-flow-card border-top border-success border-4">
+                                <div class="step-num-circle bg-success text-white">5</div>
+                                <h6 class="fw-bold mb-1">Resolusi & Tuntas</h6>
+                                <p class="small text-muted mb-0">Setelah penanganan/perbaikan selesai, status diubah menjadi <strong>Selesai</strong>. Pelapor menerima riwayat penyelesaian secara utuh.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Lembar Dokumen Resmi SOP-10 -->
+                <div class="sop-paper">
+                    <table class="sop-header-box">
+                        <tr>
+                            <td rowspan="5" class="text-center" style="width: 38%;">
+                                <div class="fw-bold">PEMERINTAH KABUPATEN CIAMIS</div>
+                                <div class="fw-bold">DINAS PENDIDIKAN</div>
+                                <div class="fw-bold fs-6">SD NEGERI 1 SUKAHAJI</div>
+                                <div class="small">Jln. Cihaurbeuti No. 86 Desa Sukahaji, Kec. Cihaurbeuti, Kab. Ciamis 46262</div>
+                                <div class="small fw-semibold">NPSN: 20212211</div>
+                            </td>
+                            <td style="width: 22%;"><strong>Nomor SOP</strong></td>
+                            <td style="width: 40%;">: 000.8.3.3/SOP-10/SD.23/Korwil.05/2026</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Tanggal Pembuatan</strong></td>
+                            <td>: 15 Juli 2026</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Tanggal Revisi</strong></td>
+                            <td>: 18 Oktober 2026 (Integrasi Portal SIMS Rumah Sarengseh)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Tanggal Efektif</strong></td>
+                            <td>: 18 Oktober 2026</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Disahkan Oleh</strong></td>
+                            <td>: Kepala SD Negeri 1 Sukahaji<br>&nbsp; <strong>Iis Gustini Ratna Nengsih, S.Pd.SD.</strong> (NIP. 197108172014082002)</td>
+                        </tr>
+                    </table>
+
+                    <div class="sop-title-banner">
+                        STANDAR OPERASIONAL PROSEDUR (SOP)<br>
+                        PENYELENGGARAAN LAYANAN PENGADUAN DAN ASPIRASI DIGITAL TERPADU "RUMAH SARENGSEH"<br>
+                        (SALURAN ASPIRASI, RESPON, DAN PERLINDUNGAN SISWA)
+                    </div>
+
+                    <div class="sop-section-title">1. TUJUAN PROSEDUR</div>
+                    <p class="small mb-2" style="text-align: justify;">
+                        Standar Operasional Prosedur (SOP) ini disusun sebagai instrumen pelengkap dan pengintegrasi digital bagi <strong>SOP-07 (TPPK)</strong>, <strong>SOP-08 (Keselamatan Sarpras & P3K/UKS)</strong>, dan <strong>SOP-09 (SPAB)</strong> di SD Negeri 1 Sukahaji guna:
+                    </p>
+                    <ol class="small mb-3">
+                        <li>Menyediakan mekanisme pelaporan daring (<em>online ticketing system</em>) yang mudah diakses, aman, dan menjamin kerahasiaan identitas pelapor melalui pembatasan hak akses berbasis peran (<em>Role-Based Access Control</em>).</li>
+                        <li>Memastikan setiap pengaduan peserta didik atau orang tua pada 4 (empat) dimensi layanan terdistribusi secara presisi kepada Wali Kelas rombel terkait, Tim TPPK/Sarpras, dan Kepala Sekolah.</li>
+                        <li>Memberikan kepastian pelacakan status penanganan (<em>progress tracking</em>) secara transparan dari tahap pengajuan hingga penyelesaian tuntas.</li>
+                    </ol>
+
+                    <div class="sop-section-title">2. RUANG LINGKUP & INTEGRASI EMPAT KATEGORI LAYANAN</div>
+                    <table class="table-sop">
+                        <thead>
+                            <tr>
+                                <th style="width: 40px;">No</th>
+                                <th style="width: 24%;">Kategori Layanan di Sistem</th>
+                                <th>Cakupan Pelaporan</th>
+                                <th style="width: 28%;">Rujukan SOP & Penanggung Jawab Teknis</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="text-center">1</td>
+                                <td class="fw-bold">Layanan Pengaduan TPPK (Anti-Perundungan & Kekerasan)</td>
+                                <td>Indikasi perundungan (<em>bullying</em>), kekerasan fisik/psikis, pemalakan, intoleransi, atau perundungan siber.</td>
+                                <td>Merujuk <strong>SOP-07 TPPK</strong>.<br>PIC: Wali Kelas & Tim TPPK (Ketua: Ibu Nurjanah, S.Pd.I.)</td>
+                            </tr>
+                            <tr>
+                                <td class="text-center">2</td>
+                                <td class="fw-bold">Layanan Konseling, BK, & Dukungan Emosional Siswa</td>
+                                <td>Kesulitan adaptasi belajar, kecemasan, penurunan motivasi, atau perselisihan/konflik sebaya yang memerlukan mediasi restoratif.</td>
+                                <td>Merujuk <strong>SOP-07 (Mediasi & Konseling)</strong>.<br>PIC: Wali Kelas Kelas I–VI & Bidang Mediasi (Bpk. Anditiar Rusmana, S.Pd.)</td>
+                            </tr>
+                            <tr>
+                                <td class="text-center">3</td>
+                                <td class="fw-bold">Kotak Saran & Aspirasi Visi-Misi / Program Sekolah</td>
+                                <td>Masukan konstruktif, gagasan inovasi pembelajaran, evaluasi layanan sekolah, dan kemitraan orang tua.</td>
+                                <td>Merujuk <strong>Standar Pengelolaan (Permendikbudristek No. 47/2023)</strong>.<br>PIC: Kepala Sekolah & Komite Sekolah</td>
+                            </tr>
+                            <tr>
+                                <td class="text-center">4</td>
+                                <td class="fw-bold">Laporan Sarana, Prasarana, & Keselamatan Sekolah</td>
+                                <td>Kerusakan fasilitas ruang kelas, instalasi listrik rawan, drainase, ketersediaan P3K, atau titik bahaya lingkungan.</td>
+                                <td>Merujuk <strong>SOP-08 & SOP-09</strong>.<br>PIC: Wali Kelas, Tim Sarpras & Penjaga Sekolah (Bpk. Ana Sudiana)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="sop-section-title">3. PROSEDUR OPERASIONAL ALUR SISTEM PENGADUAN DIGITAL "RUMAH SARENGSEH"</div>
+                    <table class="table-sop">
+                        <thead>
+                            <tr>
+                                <th style="width: 38px;">No</th>
+                                <th style="width: 34%;">Tahapan Kegiatan / Alur Sistem</th>
+                                <th style="width: 20%;">Pelaksana / Otoritas Sistem</th>
+                                <th style="width: 20%;">Mutu Baku (Kelengkapan & Waktu)</th>
+                                <th style="width: 22%;">Output / Status pada Sistem</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="text-center">1</td>
+                                <td>
+                                    <strong>Penyusunan & Pengajuan Laporan Digital</strong><br>
+                                    Siswa atau Orang Tua/Wali login ke Portal SDN 1 Sukahaji, membuka modul <em>Rumah Sarengseh</em>, memilih kategori layanan, dan menuliskan deskripsi kronologi/aspirasi. Pelapor dapat menekan <strong>Simpan Draf</strong> (jika masih ingin dilengkapi) atau <strong>Ajukan Aduan</strong>.
+                                </td>
+                                <td>Peserta Didik / Orang Tua Wali</td>
+                                <td>• Akun Login Siswa/Ortu<br>• Formulir Digital Rumah Sarengseh<br>• Waktu: Setiap saat (24 Jam)</td>
+                                <td>• ID Tiket Otomatis (<code>ADU-YYYYMMDD-...</code>)<br>• Status: <strong>Draf</strong> atau <strong>Diajukan</strong></td>
+                            </tr>
+                            <tr>
+                                <td class="text-center">2</td>
+                                <td>
+                                    <strong>Distribusi Terisolasi & Notifikasi Otomatis</strong><br>
+                                    Sistem secara otomatis menyaring laporan berdasarkan kelas siswa pelapor (laporan siswa Kelas I hanya tampil di ruang kerja Guru Kelas I, dst.) serta meneruskannya ke ruang kerja Kepala Sekolah, dilengkapi peringatan pada Lonceng Notifikasi.
+                                </td>
+                                <td>Sistem Otomatis (RBAC Engine)</td>
+                                <td>• Basis Data <code>Aduan_Sarengseh</code><br>• Waktu: Real-time (Detik laporan dikirim)</td>
+                                <td>• Notifikasi Lonceng Aktif pada Dashboard Wali Kelas & Kepala Sekolah</td>
+                            </tr>
+                            <tr>
+                                <td class="text-center">3</td>
+                                <td>
+                                    <strong>Verifikasi Awal, Tanggapan, & Rencana Tindak Lanjut (RTL) Guru</strong><br>
+                                    Wali Kelas memeriksa laporan yang masuk, melakukan langkah penanganan awal sesuai jenis layanan (konseling/mediasi/koordinasi TPPK atau cek fisik sarpras), lalu menuliskan <strong>Tanggapan & RTL Guru</strong> di sistem.
+                                </td>
+                                <td>Guru Kelas / Wali Kelas (Kelas I s.d. VI)</td>
+                                <td>• Modul Tindak Lanjut Dashboard<br>• Waktu: Maksimal 1 x 24 jam sejak diajukan</td>
+                                <td>• Rekam Tanggapan & RTL Guru<br>• Status berubah menjadi: <strong>Ditanggapi Guru</strong></td>
+                            </tr>
+                            <tr>
+                                <td class="text-center">4</td>
+                                <td>
+                                    <strong>Supervisi & Intervensi Eksekutif Kepala Sekolah</strong><br>
+                                    Kepala Sekolah memantau seluruh laporan lintas kelas. Untuk kasus krusial (dugaan perundungan/TPPK, kerusakan sarpras berat, atau kebijakan sekolah), Kepala Sekolah memberikan <strong>Arahan Intervensi</strong> langsung pada tiket aduan dan menginstruksikan Tim TPPK/Sarpras sesuai SOP-07/SOP-08.
+                                </td>
+                                <td>Kepala Sekolah & Tim TPPK / Tim Sarpras</td>
+                                <td>• Panel Intervensi Kepala Sekolah<br>• Waktu: Maksimal 2 x 24 jam</td>
+                                <td>• Rekam Intervensi Kepala Sekolah<br>• Status: <strong>Intervensi Kepsek</strong></td>
+                            </tr>
+                            <tr>
+                                <td class="text-center">5</td>
+                                <td>
+                                    <strong>Penyelesaian Kasus, Pemulihan, & Penutupan Tiket</strong><br>
+                                    Setelah tindak lanjut nyata (pemulihan korban/mediasi restitusi/perbaikan sarpras/tindak lanjut aspirasi) tuntas dilaksanakan, Wali Kelas atau Kepala Sekolah mengubah status aduan menjadi <strong>Selesai</strong>. Pelapor dapat membaca seluruh riwayat tanggapan di akunnya.
+                                </td>
+                                <td>Kepala Sekolah & Wali Kelas</td>
+                                <td>• Dokumentasi Penanganan<br>• Waktu: Maksimal 3 hari kerja hingga tuntas</td>
+                                <td>• Status Final: <strong>Selesai</strong><br>• Agregasi Statistik Layanan Terbarui</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="sop-section-title">4. JAMINAN KERAHASIAAN DATA & PERLINDUNGAN PELAPOR</div>
+                    <ul class="small mb-3">
+                        <li><strong>Isolasi Data Antar-Rombel:</strong> Isi pengaduan dan identitas siswa pelapor dikunci secara sistemik; siswa lain maupun guru kelas dari rombongan belajar berbeda tidak dapat mengakses isi laporan tersebut.</li>
+                        <li><strong>Konsumsi Publik Terbatas pada Statistik Agregat:</strong> Halaman publik hanya menampilkan pengenalan layanan dan rekapitulasi tingkat keterlaksanaan layanan, tanpa pernah menampilkan nama pelapor maupun rincian kronologi kasus.</li>
+                    </ul>
+
+                    <div class="ttd-sop-box">
+                        <div class="text-center" style="width: 280px;">
+                            <div>Ditetapkan di : Cihaurbeuti, Ciamis</div>
+                            <div>Pada Tanggal : 18 Oktober 2026</div>
+                            <div class="fw-bold mt-1">Kepala SD Negeri 1 Sukahaji,</div>
+                            <div style="height: 60px;"></div>
+                            <div class="fw-bold text-decoration-underline">IIS GUSTINI RATNA NENGSIH, S.Pd.SD.</div>
+                            <div>NIP. 19710817 201408 2 002</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- =================================================================== -->
+            <!-- TAB 2: SOP-07 PENCEGAHAN & PENANGANAN KEKERASAN (TPPK)              -->
+            <!-- =================================================================== -->
+            <div class="tab-pane fade" id="sop-07" role="tabpanel">
+                <div class="sop-paper">
+                    <table class="sop-header-box">
+                        <tr>
+                            <td rowspan="5" class="text-center" style="width: 38%;">
+                                <div class="fw-bold">PEMERINTAH KABUPATEN CIAMIS</div>
+                                <div class="fw-bold">DINAS PENDIDIKAN</div>
+                                <div class="fw-bold fs-6">SD NEGERI 1 SUKAHAJI</div>
+                                <div class="small">Jln. Cihaurbeuti No. 86 Desa Sukahaji, Kec. Cihaurbeuti, Kab. Ciamis 46262</div>
+                                <div class="small fw-semibold">NPSN: 20212211</div>
+                            </td>
+                            <td style="width: 22%;"><strong>Nomor SOP</strong></td>
+                            <td style="width: 40%;">: 000.8.3.3/SOP-07/SD.23/Korwil.05/2026</td>
+                        </tr>
+                        <tr><td><strong>Tanggal Pembuatan</strong></td><td>: 15 Juli 2024 (Berlaku Sejak T.A. 2024/2025)</td></tr>
+                        <tr><td><strong>Tanggal Revisi Terakhir</strong></td><td>: 15 Juli 2026 (Penyelarasan Permendikbudristek No. 46 Tahun 2023)</td></tr>
+                        <tr><td><strong>Tanggal Efektif</strong></td><td>: 15 Juli 2026</td></tr>
+                        <tr><td><strong>Disahkan Oleh</strong></td><td>: Kepala SD Negeri 1 Sukahaji — <strong>Iis Gustini Ratna Nengsih, S.Pd.SD.</strong></td></tr>
+                    </table>
+
+                    <div class="sop-title-banner">
+                        STANDAR OPERASIONAL PROSEDUR (SOP)<br>
+                        PENCEGAHAN DAN PENANGANAN PERUNDUNGAN (BULLYING), HUKUMAN FISIK, DAN KEKERASAN<br>
+                        OLEH TIM PENCEGAHAN DAN PENANGANAN KEKERASAN (TPPK)
+                    </div>
+
+                    <div class="sop-section-title">1. TUJUAN & DEFINISI OPERASIONAL</div>
+                    <ul class="small mb-3">
+                        <li><strong>Resolusi Konflik:</strong> Perselisihan antara dua pihak dengan kekuatan relatif seimbang yang diselesaikan melalui dialog, musyawarah, atau mediasi konstruktif.</li>
+                        <li><strong>Perundungan (Bullying):</strong> Perilaku agresif yang dilakukan secara sengaja, berulang-ulang, dan melibatkan ketidakseimbangan kekuasaan (fisik, psikologis, atau sosial) terhadap korban.</li>
+                        <li><strong>Kekerasan Fisik & Psikis/Seksual:</strong> Segala bentuk tindakan melukai fisik, ancaman, intimidasi, pelecehan, atau hukuman fisik yang merendahkan martabat manusia.</li>
+                    </ul>
+
+                    <div class="sop-section-title">2. PROSEDUR OPERASIONAL PENANGANAN KEKERASAN (TPPK)</div>
+                    <table class="table-sop">
+                        <thead>
+                            <tr>
+                                <th style="width: 38px;">No</th>
+                                <th>Tahapan Kegiatan / Alur Penanganan</th>
+                                <th style="width: 20%;">Pelaksana / PIC</th>
+                                <th style="width: 20%;">Mutu Baku (Kelengkapan & Waktu)</th>
+                                <th style="width: 22%;">Output / Bukti Fisik</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="text-center">1</td>
+                                <td><strong>Pembentukan TPPK & Sosialisasi Pencegahan Berkala:</strong> Penetapan SK Tim TPPK, sosialisasi tata tertib ramah anak, SOP penanganan, pemasangan Kotak Pengaduan & kanal digital Rumah Sarengseh, serta poster Stop Bullying di 5 area sekolah.</td>
+                                <td>Kepala Sekolah, Tim TPPK (Ketua: Ibu Nurjanah, S.Pd.I.), & Komite</td>
+                                <td>• SK TPPK & Poster<br>• Waktu: Awal Tahun Ajaran & Rutin</td>
+                                <td>• SK Tim TPPK & SOP<br>• Dokumen Sosialisasi Siswa & Orang Tua</td>
+                            </tr>
+                            <tr>
+                                <td class="text-center">2</td>
+                                <td><strong>Penerimaan Laporan / Pengaduan Kasus (Aman & Rahasia):</strong> Korban, saksi, atau orang tua menyampaikan laporan secara lisan/tertulis melalui Wali Kelas, Kotak Pengaduan, atau <strong>Portal Rumah Sarengseh</strong>. Identitas pelapor dijamin kerahasiaannya.</td>
+                                <td>Tim TPPK & Guru Penerima Laporan</td>
+                                <td>• Buku Catatan / Tiket Digital Rumah Sarengseh<br>• Waktu: Segera (Maks. 1 x 24 jam)</td>
+                                <td>• Catatan Layanan Pengaduan & Investigasi TPPK</td>
+                            </tr>
+                            <tr>
+                                <td class="text-center">3</td>
+                                <td><strong>Verifikasi, Investigasi, & Perlindungan Korban:</strong> Tim TPPK melakukan verifikasi objektif (membedakan konflik biasa atau perundungan), memberikan perlindungan dan pendampingan psikologis darurat bagi korban.</td>
+                                <td>Tim TPPK & Wali Kelas</td>
+                                <td>• Instrumen Investigasi TPPK<br>• Waktu: Maks. 2 x 24 jam</td>
+                                <td>• Berita Acara Investigasi & Dukungan Psikologis Korban</td>
+                            </tr>
+                            <tr>
+                                <td class="text-center">4</td>
+                                <td><strong>Sidang Pleno TPPK & Pengambilan Keputusan:</strong> Merumuskan rekomendasi penanganan (mediasi resolusi konflik damai atau pembinaan restitusi bagi pelaku) bersama orang tua/pihak terkait.</td>
+                                <td>Tim TPPK & Kepala Sekolah</td>
+                                <td>• Berita Acara Rapat Pleno<br>• Waktu: Maks. 3 hari kerja</td>
+                                <td>• Rekomendasi Tertulis & Berita Acara Kesepakatan Mediasi</td>
+                            </tr>
+                            <tr>
+                                <td class="text-center">5</td>
+                                <td><strong>Pelaksanaan Tindak Lanjut, Pemulihan (Recovery), & Pelaporan:</strong> Pembinaan reflektif/segitiga restitusi, konseling pemulihan korban, dan pelaporan berkala.</td>
+                                <td>Kepala Sekolah, Tim TPPK, & Wali Kelas</td>
+                                <td>• Jurnal Konseling / Mediasi<br>• Waktu: Berkelanjutan</td>
+                                <td>• Jurnal Pembinaan Siswa & Status "Selesai" di Sistem</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="sop-section-title">3. SUSUNAN KEANGGOTAAN TIM TPPK SDN 1 SUKAHAJI (T.A. 2026/2027)</div>
+                    <table class="table-sop">
+                        <thead>
+                            <tr>
+                                <th style="width: 40px;">No</th>
+                                <th>Nama Lengkap & NIP</th>
+                                <th>Unsur Perwakilan</th>
+                                <th>Jabatan & Peran Utama dalam TPPK</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td class="text-center">1</td><td class="fw-bold">Nurjanah, S.Pd.I.<br><small>NIP. 198312252023212016</small></td><td>Perwakilan Pendidik / Guru</td><td><strong>Ketua TPPK:</strong> Mengkoordinasikan penerimaan laporan, memimpin investigasi awal, dan pelaporan penanganan kasus.</td></tr>
+                            <tr><td class="text-center">2</td><td class="fw-bold">Meilan Monika, S.Pd.<br><small>NIP. 199605272025212138</small></td><td>Perwakilan Pendidik / Guru</td><td><strong>Sekretaris / Bidang Pencegahan:</strong> Menyiapkan instrumen sosialisasi, materi anti-perundungan, dan dokumentasi administrasi TPPK.</td></tr>
+                            <tr><td class="text-center">3</td><td class="fw-bold">Endin Sahrudin, S.Pd.</td><td>Perwakilan Komite Sekolah / Orang Tua</td><td><strong>Anggota Bidang Humas & Orang Tua:</strong> Menghubungkan komunikasi antara sekolah dengan orang tua/wali serta mengawasi iklim keamanan sekolah.</td></tr>
+                            <tr><td class="text-center">4</td><td class="fw-bold">Anditiar Rusmana, S.Pd.<br><small>NIP. 198805312022211004</small></td><td>Perwakilan Pendidik / Guru</td><td><strong>Anggota Bidang Penanganan & Mediasi:</strong> Mendampingi korban, melakukan mediasi pendekatan restoratif/restitusi bagi pelaku, serta koordinasi keamanan.</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- =================================================================== -->
+            <!-- TAB 3: SOP-08 KESELAMATAN SARPRAS, P3K, & LAYANAN UKS               -->
+            <!-- =================================================================== -->
+            <div class="tab-pane fade" id="sop-08" role="tabpanel">
+                <div class="sop-paper">
+                    <table class="sop-header-box">
+                        <tr>
+                            <td rowspan="5" class="text-center" style="width: 38%;">
+                                <div class="fw-bold">PEMERINTAH KABUPATEN CIAMIS</div>
+                                <div class="fw-bold">DINAS PENDIDIKAN</div>
+                                <div class="fw-bold fs-6">SD NEGERI 1 SUKAHAJI</div>
+                                <div class="small">Jln. Cihaurbeuti No. 86 Desa Sukahaji, Kec. Cihaurbeuti, Kab. Ciamis 46262</div>
+                                <div class="small fw-semibold">NPSN: 20212211</div>
+                            </td>
+                            <td style="width: 22%;"><strong>Nomor SOP</strong></td>
+                            <td style="width: 40%;">: 000.8.3.3/SOP-08/SD.23/Korwil.05/2026</td>
+                        </tr>
+                        <tr><td><strong>Tanggal Pembuatan</strong></td><td>: 15 Juli 2024 (Berlaku Sejak T.A. 2024/2025)</td></tr>
+                        <tr><td><strong>Tanggal Revisi Terakhir</strong></td><td>: 15 Juli 2026 (Penyelarasan Standar Sarpras & P3K 2026)</td></tr>
+                        <tr><td><strong>Tanggal Efektif</strong></td><td>: 15 Juli 2026</td></tr>
+                        <tr><td><strong>Disahkan Oleh</strong></td><td>: Kepala SD Negeri 1 Sukahaji — <strong>Iis Gustini Ratna Nengsih, S.Pd.SD.</strong></td></tr>
+                    </table>
+
+                    <div class="sop-title-banner">
+                        STANDAR OPERASIONAL PROSEDUR (SOP)<br>
+                        PEMERIKSAAN KESELAMATAN BANGUNAN/SARPRAS, PELAKSANAAN PERTOLONGAN PERTAMA<br>
+                        PADA KECELAKAAN (P3K), DAN PENGELOLAAN LAYANAN UKS
+                    </div>
+
+                    <div class="sop-section-title">1. STANDAR TEKNIS KESELAMATAN SARPRAS & KESIAPAN P3K</div>
+                    <ul class="small mb-3">
+                        <li><strong>Keselamatan Bangunan & Sarana:</strong> Pemeriksaan berkala 6 ruang kelas, perpustakaan, kantor, kantin, instalasi listrik, drainase/selokan, serta pagar pengaman sekolah.</li>
+                        <li><strong>Kesiapan Kotak P3K & UKS:</strong> Kotak P3K ditempatkan di Ruang UKS/Kantor Guru, <strong>tidak dikunci</strong> agar mudah diakses setiap saat, bebas obat kedaluwarsa, berisi kasa steril, perban, plester, povidone iodine, gunting, pinset, dan obat dasar/minyak kayu putih.</li>
+                        <li><strong>Kemitraan Rujukan Medis:</strong> Terintegrasi dengan layanan rujukan cepat ke <strong>UPTD Puskesmas Cihaurbeuti</strong>.</li>
+                    </ul>
+
+                    <div class="sop-section-title">2. PROSEDUR OPERASIONAL PEMERIKSAAN SARPRAS & PENANGANAN P3K</div>
+                    <table class="table-sop">
+                        <thead>
+                            <tr>
+                                <th style="width: 38px;">No</th>
+                                <th>Tahapan Kegiatan</th>
+                                <th style="width: 20%;">Pelaksana / PIC</th>
+                                <th style="width: 20%;">Mutu Baku (Kelengkapan & Waktu)</th>
+                                <th style="width: 22%;">Output / Bukti Fisik</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="text-center">1</td>
+                                <td><strong>Pemeriksaan Berkala & Tindak Lanjut Laporan Sarpras:</strong> Tim Sarpras bersama penjaga sekolah (Bpk. Ana Sudiana) melakukan pengecekan rutin mingguan/bulanan serta merespons laporan kerusakan yang masuk melalui <strong>Rumah Sarengseh</strong> terhadap atap, plafon, dinding, listrik, selokan, dan pagar.</td>
+                                <td>Tim Sarpras & Penjaga Sekolah (Bpk. Ana Sudiana)</td>
+                                <td>• Checklist Pemeriksaan & Tiket Laporan Sarpras<br>• Waktu: Rutin Mingguan/Bulanan & Segera saat ada laporan</td>
+                                <td>• Jurnal Pemeriksaan Keamanan Bangunan & Foto Perbaikan</td>
+                            </tr>
+                            <tr>
+                                <td class="text-center">2</td>
+                                <td><strong>Pemasangan Rambu Peringatan & Mitigasi Lingkungan:</strong> Pemasangan stiker peringatan pada stop kontak listrik/titik rawan serta memastikan fungsi pagar pembatas sekolah dari keramaian jalan raya.</td>
+                                <td>Tim Sarpras & Guru Piket</td>
+                                <td>• Stiker Peringatan / Rambu<br>• Waktu: Berkala Awal Semester</td>
+                                <td>• Dokumentasi Rambu Peringatan Keselamatan</td>
+                            </tr>
+                            <tr>
+                                <td class="text-center">3</td>
+                                <td><strong>Pengelolaan, Pengecekan, & Pengadaan Kotak P3K/UKS:</strong> Memeriksa kelengkapan isi Kotak P3K setiap bulan (tidak kedaluwarsa, tidak terkunci, mudah dijangkau).</td>
+                                <td>Petugas UKS & Tim UKS Sekolah</td>
+                                <td>• Daftar Inventaris Kotak P3K<br>• Waktu: Rutin Setiap Bulan</td>
+                                <td>• Ceklist Masa Kedaluwarsa Obat & Foto Kotak P3K</td>
+                            </tr>
+                            <tr>
+                                <td class="text-center">4</td>
+                                <td><strong>Pelaksanaan Pertolongan Pertama (P3K) pada Siswa Sakit/Cedera:</strong> Memberikan pertolongan pertama sesuai SOP dan mencatat dalam buku layanan UKS.</td>
+                                <td>Guru Piket & Petugas UKS</td>
+                                <td>• Kotak P3K & Buku Layanan UKS<br>• Waktu: Segera saat kejadian</td>
+                                <td>• Buku Catatan Layanan UKS & Penanganan P3K</td>
+                            </tr>
+                            <tr>
+                                <td class="text-center">5</td>
+                                <td><strong>Koordinasi Rujukan Medis Darurat:</strong> Menghubungi orang tua/wali murid serta berkoordinasi dengan UPTD Puskesmas Cihaurbeuti untuk proses rujukan cepat apabila diperlukan tindakan medis lanjutan.</td>
+                                <td>Kepala Sekolah, Petugas UKS, & Orang Tua</td>
+                                <td>• Kontak Darurat Puskesmas / Orang Tua<br>• Waktu: Segera (Darurat)</td>
+                                <td>• Catatan Rujukan Medis & MoU Puskesmas Cihaurbeuti</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- =================================================================== -->
+            <!-- TAB 4: SOP-09 SIMULASI & EVAKUASI TANGGAP DARURAT BENCANA (SPAB)    -->
+            <!-- =================================================================== -->
+            <div class="tab-pane fade" id="sop-09" role="tabpanel">
+                <div class="sop-paper">
+                    <table class="sop-header-box">
+                        <tr>
+                            <td rowspan="5" class="text-center" style="width: 38%;">
+                                <div class="fw-bold">PEMERINTAH KABUPATEN CIAMIS</div>
+                                <div class="fw-bold">DINAS PENDIDIKAN</div>
+                                <div class="fw-bold fs-6">SD NEGERI 1 SUKAHAJI</div>
+                                <div class="small">Jln. Cihaurbeuti No. 86 Desa Sukahaji, Kec. Cihaurbeuti, Kab. Ciamis 46262</div>
+                                <div class="small fw-semibold">NPSN: 20212211</div>
+                            </td>
+                            <td style="width: 22%;"><strong>Nomor SOP</strong></td>
+                            <td style="width: 40%;">: 000.8.3.3/SOP-09/SD.23/Korwil.05/2026</td>
+                        </tr>
+                        <tr><td><strong>Tanggal Pembuatan</strong></td><td>: 15 Juli 2024 (Berlaku Sejak T.A. 2024/2025)</td></tr>
+                        <tr><td><strong>Tanggal Revisi Terakhir</strong></td><td>: 15 Juli 2026 (Penyelarasan Program SPAB & Permendikbud No. 33/2019)</td></tr>
+                        <tr><td><strong>Tanggal Efektif</strong></td><td>: 15 Juli 2026</td></tr>
+                        <tr><td><strong>Disahkan Oleh</strong></td><td>: Kepala SD Negeri 1 Sukahaji — <strong>Iis Gustini Ratna Nengsih, S.Pd.SD.</strong></td></tr>
+                    </table>
+
+                    <div class="sop-title-banner">
+                        STANDAR OPERASIONAL PROSEDUR (SOP)<br>
+                        SIMULASI DAN EVAKUASI TANGGAP DARURAT BENCANA DALAM RANGKA<br>
+                        PROGRAM SATUAN PENDIDIKAN AMAN BENCANA (SPAB)
+                    </div>
+
+                    <div class="sop-section-title">1. KETENTUAN TEKNIS EVAKUASI DARURAT</div>
+                    <ul class="small mb-3">
+                        <li><strong>Sistem Peringatan Dini:</strong> Bunyi bel sekolah panjang beruntun atau sirine khusus yang menandakan seluruh warga sekolah wajib segera melakukan evakuasi.</li>
+                        <li><strong>Jalur Evakuasi & Titik Kumpul Utama:</strong> Setiap ruang kelas (Kelas I–VI), ruang guru, dan perpustakaan dilengkapi denah jalur evakuasi bertanda panah hijau menuju halaman tengah sekolah sebagai <strong>Titik Kumpul Utama</strong>.</li>
+                        <li><strong>Panduan Tamu/Pengunjung:</strong> Setiap tamu wajib melapor ke piket/kantor dan mengikuti arahan jalur evakuasi terdekat saat terdengar tanda darurat.</li>
+                    </ul>
+
+                    <div class="sop-section-title">2. PROSEDUR OPERASIONAL SIMULASI & EVAKUASI BENCANA</div>
+                    <table class="table-sop">
+                        <thead>
+                            <tr>
+                                <th style="width: 38px;">No</th>
+                                <th>Tahapan Kegiatan / Alur Evakuasi Bencana</th>
+                                <th style="width: 20%;">Pelaksana / PIC</th>
+                                <th style="width: 20%;">Mutu Baku (Kelengkapan & Waktu)</th>
+                                <th style="width: 22%;">Output / Bukti Fisik</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="text-center">1</td>
+                                <td><strong>Pembentukan Tim Siaga Bencana (SPAB) & Pemasangan Rambu:</strong> Menetapkan SK Tim SPAB, memasang rambu jalur evakuasi, denah kelas, dan rambu Titik Kumpul.</td>
+                                <td>Kepala Sekolah, Tim SPAB, & Penjaga Sekolah</td>
+                                <td>• SK Tim SPAB & Denah Jalur Evakuasi<br>• Waktu: Awal Tahun Ajaran</td>
+                                <td>• SK Tim SPAB & Peta Jalur Evakuasi Terpasang</td>
+                            </tr>
+                            <tr>
+                                <td class="text-center">2</td>
+                                <td><strong>Pemberian Tanda Peringatan Bahaya (Alarm/Bel Darurat):</strong> Membunyikan alarm/bel darurat panjang secara beruntun saat terjadi gempa atau tanda ancaman bencana.</td>
+                                <td>Guru Piket / Petugas Siaga</td>
+                                <td>• Bel Darurat / Sirine<br>• Waktu: Segera saat darurat</td>
+                                <td>• Catatan Log Kejadian Sistem Peringatan Dini</td>
+                            </tr>
+                            <tr>
+                                <td class="text-center">3</td>
+                                <td><strong>Perlindungan Diri Sesaat (Drop, Cover, and Hold On):</strong> Melindungi kepala dengan tas/buku, berlindung di bawah meja belajar, menjauhi kaca jendela/lemari tinggi hingga guncangan mereda.</td>
+                                <td>Seluruh Guru & Murid (98 Siswa)</td>
+                                <td>• Waktu: 10–30 detik (saat guncangan)</td>
+                                <td>• Praktik Tanggap Darurat Langsung</td>
+                            </tr>
+                            <tr>
+                                <td class="text-center">4</td>
+                                <td><strong>Evakuasi Terarah Menuju Titik Kumpul (Termasuk Panduan Tamu):</strong> Berjalan cepat dan tertib (tidak berlari/mendorong) mengikuti jalur evakuasi hijau menuju Titik Kumpul halaman sekolah.</td>
+                                <td>Tim SPAB, Guru Kelas, & Petugas Piket</td>
+                                <td>• Jalur Evakuasi Hijau<br>• Waktu: Maksimal 2–3 menit</td>
+                                <td>• Dokumentasi Rute Evakuasi & Panduan Tamu</td>
+                            </tr>
+                            <tr>
+                                <td class="text-center">5</td>
+                                <td><strong>Pengecekan Kehadiran (Absen) & Penanganan Darurat Lanjutan:</strong> Wali kelas mengabsen jumlah siswa di Titik Kumpul dan melaporkannya kepada Ketua Tim SPAB/Kepala Sekolah.</td>
+                                <td>Wali Kelas I–VI & Kepala Sekolah</td>
+                                <td>• Buku Absensi Kelas<br>• Waktu: Segera di Titik Kumpul</td>
+                                <td>• Laporan Rekapitulasi Keselamatan Warga Sekolah</td>
+                            </tr>
+                            <tr>
+                                <td class="text-center">6</td>
+                                <td><strong>Pelaksanaan Simulasi Berkala & Reviu Prosedur (Minimal 1x Setahun):</strong> Melaksanakan simulasi evakuasi bersama Puskesmas/Pemdes/BPBD serta mereviu prosedur apabila ada perubahan tata letak bangunan.</td>
+                                <td>Kepala Sekolah, Tim SPAB, & Instansi Mitra</td>
+                                <td>• Jadwal Simulasi Tahunan<br>• Waktu: Minimal 1 kali per tahun ajaran</td>
+                                <td>• Berita Acara & Dokumentasi Simulasi Evakuasi (Rekor: 2 menit 15 detik)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Deteksi Sesi Login: Jika pengguna sudah login, arahkan tombol langsung ke Ruang Kerja (dashboard.html)
+        const activeSession = localStorage.getItem('userSession');
+        if (activeSession) {
+            try {
+                const u = JSON.parse(activeSession);
+                const namaSingkat = u.nama ? u.nama.split(' ')[0] : 'Akun';
+                const btnNav = document.getElementById('btnNavPortal');
+                const btnBuat = document.getElementById('btnSopBuatAduan');
+                if (btnNav) {
+                    btnNav.href = 'dashboard.html';
+                    btnNav.innerHTML = `<i class="fas fa-th-large me-1"></i> Ruang Kerja (${namaSingkat})`;
+                }
+                if (btnBuat) {
+                    btnBuat.href = 'dashboard.html';
+                    btnBuat.innerHTML = `<i class="fas fa-shield-heart me-1"></i> Buka Ruang Pengaduan Saya`;
+                }
+            } catch (e) {}
+        }
+    </script>
+</body>
+</html>
