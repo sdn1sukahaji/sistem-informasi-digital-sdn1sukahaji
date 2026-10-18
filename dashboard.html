@@ -3,25 +3,34 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard | SDN 1 Sukahaji</title>
-    <!-- Bootstrap 5 CSS -->
+    <title>Dashboard Ruang Kerja | SDN 1 Sukahaji</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Custom CSS -->
     <link rel="stylesheet" href="css/style.css">
+    <style>
+        .menu-card { cursor: pointer; transition: all 0.25s ease; border: 2px solid transparent; }
+        .menu-card:hover { transform: translateY(-5px); border-color: #0f4c81; }
+        .menu-card.active-panel { border-color: #0f4c81; background-color: #f0f7ff; }
+        .step-badge { font-size: 0.78rem; padding: 5px 12px; border-radius: 50px; font-weight: 600; }
+        .timeline-box { border-left: 3px solid #0f4c81; padding-left: 12px; margin-top: 8px; background: #f8f9fa; border-radius: 0 8px 8px 0; padding: 8px 12px; }
+        .timeline-kepsek { border-left-color: #dc3545; background: #fff5f5; }
+        .thumb-mini { width: 55px; height: 42px; object-fit: cover; border-radius: 6px; border: 1px solid #dee2e6; }
+    </style>
 </head>
 <body class="bg-light">
 
     <!-- Navbar Dashboard -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary-school shadow-sm sticky-top">
-        <div class="container-fluid px-4">
+        <div class="container-fluid px-3 px-md-4">
             <a class="navbar-brand fw-bold" href="dashboard.html">
                 <i class="fas fa-graduation-cap me-2 text-warning"></i>Portal SDN 1 Sukahaji
             </a>
             <div class="d-flex align-items-center text-white">
+                <a href="layanan.html" class="btn btn-warning btn-sm rounded-pill px-3 me-2 fw-semibold text-dark">
+                    <i class="fas fa-globe me-1"></i> Lihat Halaman Publik
+                </a>
                 <div class="text-end me-3 d-none d-md-block">
-                    <div class="fw-bold" id="userNameDisplay">Memuat...</div>
+                    <div class="fw-bold small" id="userNameDisplay">Memuat...</div>
                     <small class="text-warning" id="userRoleDisplay">Memuat...</small>
                 </div>
                 <button onclick="logout()" class="btn btn-outline-light btn-sm rounded-pill px-3">
@@ -31,75 +40,817 @@
         </div>
     </nav>
 
-    <div class="container mt-4">
-        <!-- Ucapan Selamat Datang -->
-        <div class="row mb-4">
-            <div class="col-12">
-                <div class="card card-soft border-0 bg-white p-4 rounded-4 shadow-sm">
-                    <h3 class="fw-bold text-primary-school">Selamat Datang, <span id="welcomeName"></span>!</h3>
-                    <p class="text-muted mb-0">Ini adalah ruang kerja digital Anda. Hak akses Anda saat ini adalah: <strong id="welcomeRole" class="text-warning"></strong>.</p>
+    <div class="container mt-4 mb-5">
+        <!-- Sambutan Pengguna -->
+        <div class="card card-soft border-0 bg-white p-4 rounded-4 shadow-sm mb-4">
+            <div class="d-flex flex-wrap justify-content-between align-items-center">
+                <div>
+                    <h4 class="fw-bold text-primary-school mb-1">Selamat Datang, <span id="welcomeName"></span>!</h4>
+                    <p class="text-muted small mb-0">Ruang Kerja Terpadu SDN 1 Sukahaji | Otoritas Akses: <strong id="welcomeRole" class="text-warning bg-dark px-2 py-1 rounded"></strong></p>
                 </div>
             </div>
         </div>
 
-        <!-- Menu Berdasarkan Otoritas -->
-        <div class="row g-4" id="menuContainer">
-            
-            <!-- Menu 1: Jurnal 7KAIH -->
-            <div class="col-md-6 col-lg-4">
-                <div class="card card-soft h-100 border-0 p-4 text-center rounded-4 shadow-sm d-flex flex-column">
-                    <div class="display-4 text-warning mb-3"><i class="fas fa-book-open"></i></div>
+        <!-- Kartu Navigasi Modul Utama -->
+        <div class="row g-3 mb-4">
+            <!-- Modul 1: Jurnal 7KAIH -->
+            <div class="col-md-4">
+                <div class="card card-soft menu-card h-100 border-0 p-4 text-center rounded-4 shadow-sm d-flex flex-column" onclick="window.location.href='jurnal.html'">
+                    <div class="fs-1 text-warning mb-2"><i class="fas fa-book-open"></i></div>
                     <h5 class="fw-bold text-primary-school">Jurnal 7KAIH</h5>
-                    <p class="text-muted small">Kelola, isi, validasi, dan cetak laporan Jurnal 7 Kebiasaan Anak Indonesia Hebat.</p>
-                    <a href="jurnal.html" class="btn btn-school w-100 mt-auto">Buka Jurnal</a>
+                    <p class="text-muted small mb-3">Isi kalender harian, validasi kelas, dan cetak rekapitulasi laporan 7KAIH.</p>
+                    <span class="btn btn-school btn-sm w-100 mt-auto rounded-pill">Buka Modul Jurnal <i class="fas fa-arrow-right ms-1"></i></span>
                 </div>
             </div>
 
-            <!-- Menu 2: Kelola Pengguna (Hanya Admin) -->
-            <div class="col-md-6 col-lg-4 d-none" id="menuAdminUsers">
-                <div class="card card-soft h-100 border-0 p-4 text-center rounded-4 shadow-sm d-flex flex-column">
-                    <div class="display-4 text-danger mb-3"><i class="fas fa-users-cog"></i></div>
-                    <h5 class="fw-bold text-primary-school">Kelola Pengguna</h5>
-                    <p class="text-muted small">Otoritas Admin: Atur data Guru, Siswa, dan Hak Akses Sistem.</p>
-                    <a href="pengguna.html" class="btn btn-outline-danger w-100 mt-auto">Kelola Data</a>
+            <!-- Modul 2: Rumah Sarengseh (Semua Role) -->
+            <div class="col-md-4">
+                <div class="card card-soft menu-card h-100 border-0 p-4 text-center rounded-4 shadow-sm d-flex flex-column" id="cardMenuSarengseh" onclick="bukaPanel('SARENGSEH')">
+                    <div class="fs-1 text-danger mb-2"><i class="fas fa-shield-heart"></i></div>
+                    <h5 class="fw-bold text-primary-school">Rumah Sarengseh</h5>
+                    <p class="text-muted small mb-3">Layanan Pengaduan TPPK, Konseling BK, Kotak Aspirasi, & Keselamatan Sarpras.</p>
+                    <button class="btn btn-outline-danger btn-sm w-100 mt-auto rounded-pill fw-semibold">Kelola Pengaduan</button>
                 </div>
             </div>
 
-            <!-- Menu 3: Laporan Eksekutif (Hanya Kepsek & Admin) -->
-            <div class="col-md-6 col-lg-4 d-none" id="menuKepsekReport">
-                <div class="card card-soft h-100 border-0 p-4 text-center rounded-4 shadow-sm d-flex flex-column">
-                    <div class="display-4 text-success mb-3"><i class="fas fa-chart-pie"></i></div>
-                    <h5 class="fw-bold text-primary-school">Laporan Eksekutif</h5>
-                    <p class="text-muted small">Pantau grafik visualisasi perkembangan karakter siswa sekolah.</p>
-                    <a href="laporan.html" class="btn btn-outline-success w-100 mt-auto">Lihat Laporan</a>
+            <!-- Modul 3: Panggung Suka Karya (Khusus Guru, Kepsek, Admin) -->
+            <div class="col-md-4 d-none" id="colMenuGaleri">
+                <div class="card card-soft menu-card h-100 border-0 p-4 text-center rounded-4 shadow-sm d-flex flex-column" id="cardMenuGaleri" onclick="bukaPanel('GALERI')">
+                    <div class="fs-1 text-success mb-2"><i class="fas fa-photo-video"></i></div>
+                    <h5 class="fw-bold text-primary-school">Panggung Suka Karya</h5>
+                    <p class="text-muted small mb-3">Input dokumentasi kegiatan (Slide 4 Foto / Video) & Persetujuan Publikasi.</p>
+                    <button class="btn btn-outline-success btn-sm w-100 mt-auto rounded-pill fw-semibold">Kelola Galeri Karya</button>
                 </div>
             </div>
+        </div>
 
+        <!-- =============================================================== -->
+        <!-- PANEL KERJA 1: RUMAH SARENGSEH (PENGADUAN & TINDAK LANJUT)      -->
+        <!-- =============================================================== -->
+        <div id="panelSarengseh" class="d-none">
+            <div class="card border-0 shadow-sm rounded-4 p-4 bg-white">
+                <div class="d-flex flex-wrap justify-content-between align-items-center border-bottom pb-3 mb-4">
+                    <div>
+                        <span class="badge bg-danger-subtle text-danger mb-1">Aman, Nyaman, Silih Asih</span>
+                        <h4 class="fw-bold text-primary-school mb-0"><i class="fas fa-shield-heart text-danger me-2"></i>Ruang Kerja Rumah Sarengseh</h4>
+                    </div>
+                    <div class="d-flex gap-2 mt-2 mt-md-0">
+                        <button class="btn btn-danger btn-sm rounded-pill px-3 fw-semibold" id="btnTambahAduan" onclick="bukaModalFormAduan()">
+                            <i class="fas fa-plus me-1"></i> Buat Laporan / Aduan Baru
+                        </button>
+                        <button class="btn btn-outline-secondary btn-sm rounded-pill px-3" onclick="muatDataAduan()">
+                            <i class="fas fa-sync-alt me-1"></i> Muat Ulang
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Statistik Singkat Aduan -->
+                <div class="row g-3 mb-4">
+                    <div class="col-6 col-md-3">
+                        <div class="p-3 bg-light rounded-3 border-start border-primary border-4">
+                            <small class="text-muted fw-semibold">Total Laporan</small>
+                            <h4 class="fw-bold mb-0 text-primary-school" id="statAduTotal">0</h4>
+                        </div>
+                    </div>
+                    <div class="col-6 col-md-3">
+                        <div class="p-3 bg-light rounded-3 border-start border-warning border-4">
+                            <small class="text-muted fw-semibold">Diajukan (Baru)</small>
+                            <h4 class="fw-bold mb-0 text-warning" id="statAduBaru">0</h4>
+                        </div>
+                    </div>
+                    <div class="col-6 col-md-3">
+                        <div class="p-3 bg-light rounded-3 border-start border-info border-4">
+                            <small class="text-muted fw-semibold">Dalam Tindak Lanjut</small>
+                            <h4 class="fw-bold mb-0 text-info" id="statAduProses">0</h4>
+                        </div>
+                    </div>
+                    <div class="col-6 col-md-3">
+                        <div class="p-3 bg-light rounded-3 border-start border-success border-4">
+                            <small class="text-muted fw-semibold">Selesai Tuntas</small>
+                            <h4 class="fw-bold mb-0 text-success" id="statAduSelesai">0</h4>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Filter Kategori -->
+                <div class="row g-2 mb-3">
+                    <div class="col-md-4">
+                        <select id="filterKategoriAduan" class="form-select form-select-sm" onchange="muatDataAduan()">
+                            <option value="SEMUA">Semua Kategori Layanan (4 Layanan)</option>
+                            <option value="TPPK (Anti-Perundungan & Kekerasan)">1. Layanan Pengaduan TPPK</option>
+                            <option value="Konseling, BK & Dukungan Emosional">2. Layanan Konseling, BK & Emosional</option>
+                            <option value="Kotak Saran & Aspirasi Sekolah">3. Kotak Saran & Aspirasi Sekolah</option>
+                            <option value="Laporan Sarana, Prasarana & Keselamatan">4. Laporan Sarpras & Keselamatan</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Tabel Daftar Aduan & Progres -->
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle">
+                        <thead class="table-light">
+                            <tr>
+                                <th style="width: 115px;">Waktu</th>
+                                <th style="width: 160px;">Pelapor</th>
+                                <th style="width: 190px;">Kategori Layanan</th>
+                                <th>Deskripsi & Riwayat Tindak Lanjut</th>
+                                <th class="text-center" style="width: 130px;">Progres Status</th>
+                                <th class="text-end" style="width: 140px;">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tbodyAduan">
+                            <tr><td colspan="6" class="text-center py-4 text-muted">Memuat data pengaduan...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- =============================================================== -->
+        <!-- PANEL KERJA 2: PANGGUNG SUKA KARYA (CMS GALERI & APPROVAL)      -->
+        <!-- =============================================================== -->
+        <div id="panelGaleri" class="d-none">
+            <div class="card border-0 shadow-sm rounded-4 p-4 bg-white">
+                <div class="d-flex flex-wrap justify-content-between align-items-center border-bottom pb-3 mb-4">
+                    <div>
+                        <span class="badge bg-success-subtle text-success mb-1">Unjuk Kreasi & Nalar Kritis</span>
+                        <h4 class="fw-bold text-primary-school mb-0"><i class="fas fa-photo-video text-success me-2"></i>Manajemen Galeri Panggung Suka Karya</h4>
+                        <p class="text-muted small mb-0" id="subJudulGaleri">Input dokumentasi kegiatan (4 Link Foto Google Drive / Link Video) dan kelola persetujuan tayang.</p>
+                    </div>
+                    <div class="d-flex gap-2 mt-2 mt-md-0">
+                        <button class="btn btn-success btn-sm rounded-pill px-3 fw-semibold" id="btnTambahGaleri" onclick="bukaModalFormGaleri()">
+                            <i class="fas fa-plus me-1"></i> Input Dokumentasi Baru
+                        </button>
+                        <button class="btn btn-outline-secondary btn-sm rounded-pill px-3" onclick="muatDataGaleri()">
+                            <i class="fas fa-sync-alt me-1"></i> Muat Ulang
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Tabel Daftar Konten Galeri -->
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle">
+                        <thead class="table-light">
+                            <tr>
+                                <th style="width: 105px;">Tgl Kegiatan</th>
+                                <th style="width: 220px;">Media (Pratinjau)</th>
+                                <th>Judul & Deskripsi Kegiatan</th>
+                                <th style="width: 150px;">Penulis (Guru)</th>
+                                <th class="text-center" style="width: 130px;">Status Publikasi</th>
+                                <th class="text-end" style="width: 170px;">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tbodyGaleri">
+                            <tr><td colspan="6" class="text-center py-4 text-muted">Memuat daftar galeri...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- =============================================================== -->
+    <!-- MODAL 1: FORM INPUT / EDIT ADUAN (SISWA / ORTU / ADMIN)         -->
+    <!-- =============================================================== -->
+    <div class="modal fade" id="modalFormAduan" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-0 rounded-4 shadow-lg">
+                <div class="modal-header bg-danger text-white border-0">
+                    <h5 class="modal-title fw-bold"><i class="fas fa-comment-medical me-2"></i>Formulir Rumah Sarengseh</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body p-4">
+                    <input type="hidden" id="aduIdEdit">
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold small">Pilih Kategori Layanan <span class="text-danger">*</span></label>
+                        <select id="aduKategori" class="form-select">
+                            <option value="TPPK (Anti-Perundungan & Kekerasan)">1. Layanan Pengaduan TPPK (Anti-Perundungan & Kekerasan)</option>
+                            <option value="Konseling, BK & Dukungan Emosional">2. Layanan Konseling, BK & Dukungan Emosional Siswa</option>
+                            <option value="Kotak Saran & Aspirasi Sekolah">3. Kotak Saran & Aspirasi Visi-Misi/Program Sekolah</option>
+                            <option value="Laporan Sarana, Prasarana & Keselamatan">4. Laporan Sarana, Prasarana & Keselamatan Sekolah</option>
+                        </select>
+                    </div>
+                    <div class="mb-2">
+                        <label class="form-label fw-semibold small">Ceritakan Kronologi / Saran / Laporan Anda <span class="text-danger">*</span></label>
+                        <textarea id="aduDeskripsi" class="form-control" rows="5" placeholder="Tuliskan secara jelas kejadian, lokasi, waktu, atau aspirasi yang ingin disampaikan..."></textarea>
+                    </div>
+                    <small class="text-muted fst-italic"><i class="fas fa-lock me-1"></i> Identitas dan isi laporan Anda bersifat rahasia dan hanya dapat dilihat oleh pihak berwenang sekolah.</small>
+                </div>
+                <div class="modal-footer border-0 bg-light">
+                    <button type="button" class="btn btn-outline-secondary rounded-pill px-3" data-bs-dismiss="modal">Batal</button>
+                    <button type="button" class="btn btn-warning text-dark rounded-pill px-4 fw-semibold" id="btnAduDraft" onclick="simpanAduan('Draf')">
+                        <i class="fas fa-save me-1"></i> Simpan Draf
+                    </button>
+                    <button type="button" class="btn btn-danger rounded-pill px-4 fw-semibold" id="btnAduKirim" onclick="simpanAduan('Diajukan')">
+                        <i class="fas fa-paper-plane me-1"></i> Ajukan Aduan
+                    </button>
+                </div>
+            </div>
         </div>
     </div>
 
+    <!-- =============================================================== -->
+    <!-- MODAL 2: FORM TANGGAPAN GURU & INTERVENSI KEPSEK                -->
+    <!-- =============================================================== -->
+    <div class="modal fade" id="modalTindakLanjutAduan" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content border-0 rounded-4 shadow-lg">
+                <div class="modal-header bg-primary-school text-white border-0">
+                    <h5 class="modal-title fw-bold"><i class="fas fa-tasks me-2 text-warning"></i>Tindak Lanjut & Intervensi Pengaduan</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body p-4">
+                    <input type="hidden" id="tlIdAduan">
+                    <div class="p-3 bg-light rounded-3 mb-3 border">
+                        <div class="d-flex justify-content-between mb-1">
+                            <strong class="text-primary-school" id="tlInfoPelapor">Nama Pelapor</strong>
+                            <span class="badge bg-danger" id="tlKategori">Kategori</span>
+                        </div>
+                        <p class="mb-0 small text-dark" id="tlDeskripsi" style="white-space: pre-wrap;"></p>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-bold small text-primary-school" id="tlLabelInput">Tanggapan & Rencana Tindak Lanjut</label>
+                        <textarea id="tlPesanInput" class="form-control" rows="4" placeholder="Tuliskan tanggapan, langkah penanganan, atau arahan intervensi..."></textarea>
+                    </div>
+
+                    <div class="mb-2">
+                        <label class="form-label fw-bold small">Perbarui Status Progres Aduan</label>
+                        <select id="tlStatusBaru" class="form-select">
+                            <option value="Ditanggapi Guru">Ditanggapi Guru (Dalam Proses Penanganan)</option>
+                            <option value="Intervensi Kepsek">Intervensi Kepala Sekolah (Penanganan Khusus)</option>
+                            <option value="Selesai">Selesai (Masalah Telah Dituntaskan)</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer border-0 bg-light">
+                    <button type="button" class="btn btn-outline-secondary rounded-pill px-4" data-bs-dismiss="modal">Tutup</button>
+                    <button type="button" class="btn btn-school rounded-pill px-4 fw-semibold" id="btnSimpanTL" onclick="simpanTindakLanjutAduan()">
+                        <i class="fas fa-check-circle me-1"></i> Simpan Tindak Lanjut
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- =============================================================== -->
+    <!-- MODAL 3: FORM INPUT / EDIT GALERI (GURU & ADMIN)                -->
+    <!-- =============================================================== -->
+    <div class="modal fade" id="modalFormGaleri" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content border-0 rounded-4 shadow-lg">
+                <div class="modal-header bg-success text-white border-0">
+                    <h5 class="modal-title fw-bold"><i class="fas fa-camera-retro me-2"></i>Input Konten Panggung Suka Karya</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body p-4">
+                    <input type="hidden" id="glrIdEdit">
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-4">
+                            <label class="form-label fw-semibold small">Tanggal Kegiatan <span class="text-danger">*</span></label>
+                            <input type="date" id="glrTanggal" class="form-control">
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label fw-semibold small">Jenis Media Konten <span class="text-danger">*</span></label>
+                            <select id="glrTipeMedia" class="form-select" onchange="toggleInputMediaGaleri()">
+                                <option value="Foto">Album Foto (Slide Otomatis 4 Foto)</option>
+                                <option value="Video">Video Dokumentasi (1 Link Video)</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label fw-semibold small">Judul Kegiatan <span class="text-danger">*</span></label>
+                            <input type="text" id="glrJudul" class="form-control" placeholder="Contoh: Praktik Sains Kelas 4">
+                        </div>
+                    </div>
+
+                    <!-- Input Link Google Drive -->
+                    <div class="p-3 bg-light rounded-3 border mb-3">
+                        <div class="small fw-bold text-primary-school mb-2">
+                            <i class="fas fa-link me-1"></i> Tautan (Link) Media Google Drive
+                            <span class="fw-normal text-muted d-block">Pastikan akses file di Google Drive sudah diatur ke <strong>"Siapa saja yang memiliki link" (Anyone with the link)</strong>.</span>
+                        </div>
+                        <div class="row g-2">
+                            <div class="col-md-6">
+                                <label class="form-label small mb-1" id="lblLink1">Link Foto 1 (Sampul Utama) <span class="text-danger">*</span></label>
+                                <input type="url" id="glrLink1" class="form-control form-control-sm" placeholder="https://drive.google.com/file/d/.../view">
+                            </div>
+                            <div class="col-md-6" id="wrapLink2">
+                                <label class="form-label small mb-1">Link Foto 2 (Slide ke-2)</label>
+                                <input type="url" id="glrLink2" class="form-control form-control-sm" placeholder="https://drive.google.com/file/d/.../view">
+                            </div>
+                            <div class="col-md-6" id="wrapLink3">
+                                <label class="form-label small mb-1">Link Foto 3 (Slide ke-3)</label>
+                                <input type="url" id="glrLink3" class="form-control form-control-sm" placeholder="https://drive.google.com/file/d/.../view">
+                            </div>
+                            <div class="col-md-6" id="wrapLink4">
+                                <label class="form-label small mb-1">Link Foto 4 (Slide ke-4)</label>
+                                <input type="url" id="glrLink4" class="form-control form-control-sm" placeholder="https://drive.google.com/file/d/.../view">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-2">
+                        <label class="form-label fw-semibold small">Deskripsi / Narasi Kegiatan <span class="text-danger">*</span></label>
+                        <textarea id="glrDeskripsi" class="form-control" rows="4" placeholder="Tuliskan deskripsi kegiatan pembelajaran atau karya siswa secara inspiratif..."></textarea>
+                    </div>
+                    <small class="text-danger fst-italic"><i class="fas fa-info-circle me-1"></i> Catatan: Setiap konten yang baru dikirim atau diedit akan memerlukan persetujuan (Approve) Kepala Sekolah sebelum tampil di halaman publik.</small>
+                </div>
+                <div class="modal-footer border-0 bg-light">
+                    <button type="button" class="btn btn-outline-secondary rounded-pill px-3" data-bs-dismiss="modal">Batal</button>
+                    <button type="button" class="btn btn-warning text-dark rounded-pill px-4 fw-semibold" id="btnGlrDraft" onclick="simpanGaleri('Draf')">
+                        <i class="fas fa-save me-1"></i> Simpan Draf
+                    </button>
+                    <button type="button" class="btn btn-success rounded-pill px-4 fw-semibold" id="btnGlrKirim" onclick="simpanGaleri('Menunggu')">
+                        <i class="fas fa-paper-plane me-1"></i> Kirim untuk Disetujui
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- =============================================================== -->
+    <!-- MODAL 4: PRATINJAU & APPROVAL GALERI (KEPSEK & ADMIN)           -->
+    <!-- =============================================================== -->
+    <div class="modal fade" id="modalValidasiGaleri" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content border-0 rounded-4 shadow-lg overflow-hidden">
+                <div class="modal-header bg-primary-school text-white border-0">
+                    <h5 class="modal-title fw-bold" id="valGlrJudul">Pratinjau Konten Galeri</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body p-0">
+                    <div id="valGlrMediaBox" class="bg-dark text-center"></div>
+                    <div class="p-4">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <span class="badge bg-info text-dark" id="valGlrInfo">Tanggal & Guru</span>
+                            <span class="badge bg-secondary" id="valGlrStatus">Status</span>
+                        </div>
+                        <p class="small text-dark mb-3" id="valGlrDeskripsi" style="white-space: pre-wrap; text-align: justify;"></p>
+
+                        <div id="boxInputApprovalKepsek" class="border-top pt-3 d-none">
+                            <input type="hidden" id="valGlrId">
+                            <label class="form-label fw-bold small text-primary-school">Catatan Kepala Sekolah (Opsional / Alasan Revisi)</label>
+                            <textarea id="valGlrCatatan" class="form-control form-control-sm mb-3" rows="2" placeholder="Berikan apresiasi atau catatan perbaikan kepada guru..."></textarea>
+                            <div class="d-flex justify-content-end gap-2">
+                                <button class="btn btn-outline-warning text-dark btn-sm rounded-pill px-3 fw-semibold" onclick="eksekusiApprovalGaleri('Revisi')">
+                                    <i class="fas fa-undo me-1"></i> Minta Revisi
+                                </button>
+                                <button class="btn btn-success btn-sm rounded-pill px-4 fw-bold" id="btnApproveGaleri" onclick="eksekusiApprovalGaleri('Disetujui')">
+                                    <i class="fas fa-check-double me-1"></i> Setujui & Terbitkan ke Publik
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
+        const API_URL = 'https://script.google.com/macros/s/AKfycbyfseRl94qmA0TaX1ODw3sr8Car6i0uf-3WEBKcJ8cDILdi459vW0CCqo28L3iGgHhVww/exec';
+
         const sessionData = localStorage.getItem('userSession');
-        
-        if (!sessionData) {
-            window.location.href = 'login.html';
-        } else {
-            const user = JSON.parse(sessionData);
-            const labelRole = user.penugasan ? `${user.role} (${user.penugasan})` : user.role;
+        if (!sessionData) window.location.href = 'login.html';
+        const user = JSON.parse(sessionData || '{}');
 
-            document.getElementById('userNameDisplay').textContent = user.nama;
-            document.getElementById('userRoleDisplay').textContent = labelRole;
-            document.getElementById('welcomeName').textContent = user.nama;
-            document.getElementById('welcomeRole').textContent = labelRole;
+        const roleUpper = String(user.role || '').toUpperCase().trim();
+        const isSiswa = (roleUpper === 'SISWA' || roleUpper === 'ORTU');
+        const isKepsek = (roleUpper.includes('KEPSEK') || roleUpper.includes('KEPALA SEKOLAH'));
+        const isAdmin = (roleUpper === 'ADMIN');
+        const isGuru = (!isSiswa && !isKepsek && !isAdmin);
 
-            const role = String(user.role).toUpperCase();
+        const labelRole = user.penugasan ? `${user.role} (${user.penugasan})` : user.role;
+        document.getElementById('userNameDisplay').textContent = user.nama;
+        document.getElementById('userRoleDisplay').textContent = labelRole;
+        document.getElementById('welcomeName').textContent = user.nama;
+        document.getElementById('welcomeRole').textContent = labelRole;
 
-            if (role === 'ADMIN') {
-                document.getElementById('menuAdminUsers').classList.remove('d-none');
-                document.getElementById('menuKepsekReport').classList.remove('d-none');
-            } else if (role.includes('KEPSEK') || role.includes('KEPALA SEKOLAH')) {
-                document.getElementById('menuKepsekReport').classList.remove('d-none');
+        // Tampilkan kartu Panggung Suka Karya untuk Guru, Kepsek, dan Admin
+        if (!isSiswa) {
+            document.getElementById('colMenuGaleri').classList.remove('d-none');
+        }
+
+        // Jika Guru atau Kepsek, sembunyikan tombol "Buat Aduan Siswa" (kecuali Admin & Siswa)
+        if (isGuru || isKepsek) {
+            document.getElementById('btnTambahAduan').classList.add('d-none');
+        }
+
+        let listAduanGlobal = [];
+        let listGaleriGlobal = [];
+
+        const modalFormAduan = new bootstrap.Modal(document.getElementById('modalFormAduan'));
+        const modalTLAduan = new bootstrap.Modal(document.getElementById('modalTindakLanjutAduan'));
+        const modalFormGaleri = new bootstrap.Modal(document.getElementById('modalFormGaleri'));
+        const modalValGaleri = new bootstrap.Modal(document.getElementById('modalValidasiGaleri'));
+
+        function bukaPanel(namaPanel) {
+            document.getElementById('panelSarengseh').classList.add('d-none');
+            document.getElementById('panelGaleri').classList.add('d-none');
+            document.getElementById('cardMenuSarengseh').classList.remove('active-panel');
+            document.getElementById('cardMenuGaleri').classList.remove('active-panel');
+
+            if (namaPanel === 'SARENGSEH') {
+                document.getElementById('panelSarengseh').classList.remove('d-none');
+                document.getElementById('cardMenuSarengseh').classList.add('active-panel');
+                muatDataAduan();
+            } else if (namaPanel === 'GALERI') {
+                document.getElementById('panelGaleri').classList.remove('d-none');
+                document.getElementById('cardMenuGaleri').classList.add('active-panel');
+                muatDataGaleri();
             }
+        }
+
+        // =========================================================================
+        // 1. LOGIKA RUMAH SARENGSEH (CRUD PENGADUAN & TINDAK LANJUT)
+        // =========================================================================
+        function muatDataAduan() {
+            const tbody = document.getElementById('tbodyAduan');
+            tbody.innerHTML = `<tr><td colspan="6" class="text-center py-4"><div class="spinner-border spinner-border-sm text-danger me-2"></div>Memuat data aduan...</td></tr>`;
+
+            const kat = document.getElementById('filterKategoriAduan').value || 'SEMUA';
+            const roleParam = isSiswa ? 'SISWA' : 'STAF';
+            const url = `${API_URL}?action=baca_aduan&role=${roleParam}&id_relasi=${encodeURIComponent(user.id_relasi)}&kategori=${encodeURIComponent(kat)}&_t=${Date.now()}`;
+
+            fetch(url).then(r => r.json()).then(res => {
+                listAduanGlobal = res.data || [];
+                hitungStatistikAduan(listAduanGlobal);
+                renderTabelAduan(listAduanGlobal);
+            }).catch(() => {
+                tbody.innerHTML = `<tr><td colspan="6" class="text-center text-danger py-4">Gagal memuat data pengaduan.</td></tr>`;
+            });
+        }
+
+        function hitungStatistikAduan(list) {
+            document.getElementById('statAduTotal').textContent = list.length;
+            document.getElementById('statAduBaru').textContent = list.filter(x => x.status_aduan === 'Diajukan').length;
+            document.getElementById('statAduProses').textContent = list.filter(x => x.status_aduan === 'Ditanggapi Guru' || x.status_aduan === 'Intervensi Kepsek').length;
+            document.getElementById('statAduSelesai').textContent = list.filter(x => x.status_aduan === 'Selesai').length;
+        }
+
+        function renderTabelAduan(list) {
+            const tbody = document.getElementById('tbodyAduan');
+            tbody.innerHTML = '';
+
+            if (list.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="6" class="text-center py-4 text-muted">Belum ada laporan pengaduan pada kategori ini.</td></tr>`;
+                return;
+            }
+
+            list.forEach((item, idx) => {
+                let badgeColor = 'bg-secondary';
+                if (item.status_aduan === 'Diajukan') badgeColor = 'bg-warning text-dark';
+                if (item.status_aduan === 'Ditanggapi Guru') badgeColor = 'bg-info text-dark';
+                if (item.status_aduan === 'Intervensi Kepsek') badgeColor = 'bg-danger';
+                if (item.status_aduan === 'Selesai') badgeColor = 'bg-success';
+
+                let htmlTanggapan = '';
+                if (item.tanggapan_guru) {
+                    htmlTanggapan += `<div class="timeline-box small mt-2"><strong><i class="fas fa-chalkboard-teacher me-1 text-primary"></i>Tanggapan & RTL Guru (${item.nama_guru || 'Guru'}):</strong><br>${item.tanggapan_guru}</div>`;
+                }
+                if (item.intervensi_kepsek) {
+                    htmlTanggapan += `<div class="timeline-box timeline-kepsek small mt-2"><strong><i class="fas fa-user-tie me-1 text-danger"></i>Intervensi Kepala Sekolah:</strong><br>${item.intervensi_kepsek}</div>`;
+                }
+
+                let btnAksi = '';
+                if (isSiswa || isAdmin) {
+                    if (item.status_aduan === 'Draf' || item.status_aduan === 'Diajukan') {
+                        btnAksi += `<button class="btn btn-sm btn-outline-primary rounded-pill px-3 me-1 mb-1" onclick="bukaModalEditAduan(${idx})"><i class="fas fa-edit me-1"></i>Edit</button>`;
+                    }
+                }
+                if (!isSiswa) {
+                    let lblBtn = isKepsek ? 'Intervensi' : 'Tanggapi';
+                    btnAksi += `<button class="btn btn-sm btn-school rounded-pill px-3 mb-1" onclick="bukaModalTLAduan(${idx})"><i class="fas fa-reply me-1"></i>${lblBtn}</button>`;
+                }
+
+                tbody.innerHTML += `
+                    <tr>
+                        <td class="small text-muted">${item.waktu_submit}</td>
+                        <td>
+                            <div class="fw-bold text-primary-school">${item.nama_siswa}</div>
+                            <span class="badge bg-light text-dark border">${item.kelas}</span>
+                        </td>
+                        <td><span class="badge bg-danger-subtle text-danger border border-danger-subtle text-wrap text-start">${item.kategori_layanan}</span></td>
+                        <td>
+                            <div class="fw-normal text-dark" style="white-space: pre-wrap;">${item.deskripsi_laporan}</div>
+                            ${htmlTanggapan}
+                        </td>
+                        <td class="text-center"><span class="badge ${badgeColor} step-badge">${item.status_aduan}</span></td>
+                        <td class="text-end">${btnAksi || '<span class="text-muted small">Terkunci</span>'}</td>
+                    </tr>
+                `;
+            });
+        }
+
+        function bukaModalFormAduan() {
+            document.getElementById('aduIdEdit').value = '';
+            document.getElementById('aduDeskripsi').value = '';
+            modalFormAduan.show();
+        }
+
+        function bukaModalEditAduan(idx) {
+            const item = listAduanGlobal[idx];
+            document.getElementById('aduIdEdit').value = item.id_aduan;
+            document.getElementById('aduKategori').value = item.kategori_layanan;
+            document.getElementById('aduDeskripsi').value = item.deskripsi_laporan;
+            modalFormAduan.show();
+        }
+
+        function simpanAduan(statusTarget) {
+            const idEdit = document.getElementById('aduIdEdit').value;
+            const kat = document.getElementById('aduKategori').value;
+            const desk = document.getElementById('aduDeskripsi').value.trim();
+
+            if (!desk) { alert("Mohon tuliskan rincian laporan atau aspirasi Anda terlebih dahulu!"); return; }
+
+            const btn = document.getElementById('btnAduKirim');
+            const origText = btn.innerHTML;
+            btn.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Menyimpan...';
+            btn.disabled = true;
+
+            const params = new URLSearchParams({
+                action: 'simpan_aduan',
+                id_aduan: idEdit,
+                nisn: user.id_relasi,
+                kategori_layanan: kat,
+                deskripsi_laporan: desk,
+                status_aduan: statusTarget
+            });
+
+            fetch(`${API_URL}?${params.toString()}&_t=${Date.now()}`)
+            .then(r => r.json()).then(res => {
+                btn.innerHTML = origText;
+                btn.disabled = false;
+                if (res.status === 'success') {
+                    modalFormAduan.hide();
+                    muatDataAduan();
+                } else { alert(res.message); }
+            });
+        }
+
+        function bukaModalTLAduan(idx) {
+            const item = listAduanGlobal[idx];
+            document.getElementById('tlIdAduan').value = item.id_aduan;
+            document.getElementById('tlInfoPelapor').textContent = `${item.nama_siswa} (${item.kelas})`;
+            document.getElementById('tlKategori').textContent = item.kategori_layanan;
+            document.getElementById('tlDeskripsi').textContent = item.deskripsi_laporan;
+
+            if (isKepsek) {
+                document.getElementById('tlLabelInput').textContent = 'Arahan Intervensi & Rencana Tindak Lanjut Kepala Sekolah';
+                document.getElementById('tlPesanInput').value = item.intervensi_kepsek || '';
+                document.getElementById('tlStatusBaru').value = 'Intervensi Kepsek';
+            } else {
+                document.getElementById('tlLabelInput').textContent = 'Tanggapan & Rencana Tindak Lanjut Guru';
+                document.getElementById('tlPesanInput').value = item.tanggapan_guru || '';
+                document.getElementById('tlStatusBaru').value = item.status_aduan === 'Selesai' ? 'Selesai' : 'Ditanggapi Guru';
+            }
+            modalTLAduan.show();
+        }
+
+        function simpanTindakLanjutAduan() {
+            const idAdu = document.getElementById('tlIdAduan').value;
+            const pesan = document.getElementById('tlPesanInput').value.trim();
+            const statBaru = document.getElementById('tlStatusBaru').value;
+
+            if (!pesan) { alert("Mohon isi tanggapan atau rencana tindak lanjut!"); return; }
+
+            const btn = document.getElementById('btnSimpanTL');
+            const orig = btn.innerHTML;
+            btn.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Menyimpan...';
+            btn.disabled = true;
+
+            const params = new URLSearchParams({
+                action: 'tindak_lanjut_aduan',
+                id_aduan: idAdu,
+                role: isKepsek ? 'KEPSEK' : 'GURU',
+                nip: user.id_relasi,
+                pesan_tindak_lanjut: pesan,
+                ubah_status: statBaru
+            });
+
+            fetch(`${API_URL}?${params.toString()}&_t=${Date.now()}`)
+            .then(r => r.json()).then(res => {
+                btn.innerHTML = orig;
+                btn.disabled = false;
+                if (res.status === 'success') {
+                    modalTLAduan.hide();
+                    muatDataAduan();
+                } else { alert(res.message); }
+            });
+        }
+
+        // =========================================================================
+        // 2. LOGIKA PANGGUNG SUKA KARYA (CMS GALERI GURU & APPROVAL KEPSEK)
+        // =========================================================================
+        function toggleInputMediaGaleri() {
+            const tipe = document.getElementById('glrTipeMedia').value;
+            const isVideo = (tipe === 'Video');
+            document.getElementById('lblLink1').innerHTML = isVideo ? 'Link Video Google Drive <span class="text-danger">*</span>' : 'Link Foto 1 (Sampul Utama) <span class="text-danger">*</span>';
+            document.getElementById('wrapLink2').classList.toggle('d-none', isVideo);
+            document.getElementById('wrapLink3').classList.toggle('d-none', isVideo);
+            document.getElementById('wrapLink4').classList.toggle('d-none', isVideo);
+            if (isVideo) {
+                document.getElementById('glrLink2').value = '';
+                document.getElementById('glrLink3').value = '';
+                document.getElementById('glrLink4').value = '';
+            }
+        }
+
+        function muatDataGaleri() {
+            const tbody = document.getElementById('tbodyGaleri');
+            tbody.innerHTML = `<tr><td colspan="6" class="text-center py-4"><div class="spinner-border spinner-border-sm text-success me-2"></div>Memuat daftar galeri...</td></tr>`;
+
+            const modeParam = (isKepsek || isAdmin) ? 'ADMIN' : 'GURU';
+            const url = `${API_URL}?action=baca_galeri&mode=${modeParam}&nip=${encodeURIComponent(user.id_relasi)}&_t=${Date.now()}`;
+
+            fetch(url).then(r => r.json()).then(res => {
+                listGaleriGlobal = res.data || [];
+                renderTabelGaleri(listGaleriGlobal);
+            }).catch(() => {
+                tbody.innerHTML = `<tr><td colspan="6" class="text-center text-danger py-4">Gagal memuat daftar galeri.</td></tr>`;
+            });
+        }
+
+        function renderTabelGaleri(list) {
+            const tbody = document.getElementById('tbodyGaleri');
+            tbody.innerHTML = '';
+
+            if (list.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="6" class="text-center py-4 text-muted">Belum ada konten dokumentasi kegiatan yang diinput.</td></tr>`;
+                return;
+            }
+
+            list.forEach((item, idx) => {
+                let badge = 'bg-secondary';
+                if (item.status_publikasi === 'Menunggu') badge = 'bg-warning text-dark';
+                if (item.status_publikasi === 'Disetujui') badge = 'bg-success';
+                if (item.status_publikasi === 'Revisi') badge = 'bg-danger';
+
+                let thumbsHtml = '';
+                item.links.forEach(l => {
+                    thumbsHtml += `<img src="${l}" class="thumb-mini me-1 mb-1" alt="Media">`;
+                });
+
+                let catatanHtml = item.catatan_approver ? `<div class="small text-danger fst-italic mt-1"><i class="fas fa-comment-dots me-1"></i>Catatan Kepsek: "${item.catatan_approver}"</div>` : '';
+
+                let btnAksi = `<button class="btn btn-sm btn-outline-primary rounded-pill px-3 me-1 mb-1" onclick="bukaModalPratinjauGaleri(${idx})"><i class="fas fa-eye me-1"></i>${(isKepsek || isAdmin) ? 'Periksa & Approve' : 'Pratinjau'}</button>`;
+                
+                if (isGuru || isAdmin) {
+                    btnAksi += `<button class="btn btn-sm btn-outline-success rounded-pill px-3 mb-1" onclick="bukaModalEditGaleri(${idx})"><i class="fas fa-edit me-1"></i>Edit</button>`;
+                }
+
+                tbody.innerHTML += `
+                    <tr>
+                        <td class="fw-semibold small">${item.tanggal_kegiatan}</td>
+                        <td>
+                            <div class="d-flex flex-wrap">${thumbsHtml}</div>
+                            <span class="badge bg-light text-dark border mt-1">${item.tipe_media} (${item.links.length} File)</span>
+                        </td>
+                        <td>
+                            <div class="fw-bold text-primary-school">${item.judul_kegiatan}</div>
+                            <div class="small text-muted">${item.deskripsi_kegiatan.substring(0, 95)}${item.deskripsi_kegiatan.length > 95 ? '...' : ''}</div>
+                            ${catatanHtml}
+                        </td>
+                        <td class="small fw-semibold">${item.nama_pembuat}</td>
+                        <td class="text-center"><span class="badge ${badge} step-badge">${item.status_publikasi}</span></td>
+                        <td class="text-end">${btnAksi}</td>
+                    </tr>
+                `;
+            });
+        }
+
+        function bukaModalFormGaleri() {
+            document.getElementById('glrIdEdit').value = '';
+            document.getElementById('glrTanggal').value = new Date().toISOString().split('T')[0];
+            document.getElementById('glrTipeMedia').value = 'Foto';
+            document.getElementById('glrJudul').value = '';
+            document.getElementById('glrLink1').value = '';
+            document.getElementById('glrLink2').value = '';
+            document.getElementById('glrLink3').value = '';
+            document.getElementById('glrLink4').value = '';
+            document.getElementById('glrDeskripsi').value = '';
+            toggleInputMediaGaleri();
+            modalFormGaleri.show();
+        }
+
+        function bukaModalEditGaleri(idx) {
+            const item = listGaleriGlobal[idx];
+            document.getElementById('glrIdEdit').value = item.id_galeri;
+            document.getElementById('glrTanggal').value = item.tanggal_kegiatan;
+            document.getElementById('glrTipeMedia').value = item.tipe_media || 'Foto';
+            document.getElementById('glrJudul').value = item.judul_kegiatan;
+            document.getElementById('glrLink1').value = item.links[0] || '';
+            document.getElementById('glrLink2').value = item.links[1] || '';
+            document.getElementById('glrLink3').value = item.links[2] || '';
+            document.getElementById('glrLink4').value = item.links[3] || '';
+            document.getElementById('glrDeskripsi').value = item.deskripsi_kegiatan;
+            toggleInputMediaGaleri();
+            modalFormGaleri.show();
+        }
+
+        function simpanGaleri(statusTarget) {
+            const idEdit = document.getElementById('glrIdEdit').value;
+            const tgl = document.getElementById('glrTanggal').value;
+            const tipe = document.getElementById('glrTipeMedia').value;
+            const judul = document.getElementById('glrJudul').value.trim();
+            const l1 = document.getElementById('glrLink1').value.trim();
+            const l2 = document.getElementById('glrLink2').value.trim();
+            const l3 = document.getElementById('glrLink3').value.trim();
+            const l4 = document.getElementById('glrLink4').value.trim();
+            const desk = document.getElementById('glrDeskripsi').value.trim();
+
+            if (!tgl || !judul || !l1 || !desk) {
+                alert("Mohon lengkapi Tanggal, Judul, minimal Link Media 1, dan Deskripsi Kegiatan!");
+                return;
+            }
+
+            const btn = document.getElementById('btnGlrKirim');
+            const orig = btn.innerHTML;
+            btn.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Menyimpan...';
+            btn.disabled = true;
+
+            const params = new URLSearchParams({
+                action: 'simpan_galeri',
+                id_galeri: idEdit,
+                nip_pembuat: user.id_relasi,
+                tanggal_kegiatan: tgl,
+                judul_kegiatan: judul,
+                deskripsi_kegiatan: desk,
+                tipe_media: tipe,
+                link_1: l1, link_2: l2, link_3: l3, link_4: l4,
+                status_publikasi: statusTarget
+            });
+
+            fetch(`${API_URL}?${params.toString()}&_t=${Date.now()}`)
+            .then(r => r.json()).then(res => {
+                btn.innerHTML = orig;
+                btn.disabled = false;
+                if (res.status === 'success') {
+                    modalFormGaleri.hide();
+                    muatDataGaleri();
+                } else { alert(res.message); }
+            });
+        }
+
+        function bukaModalPratinjauGaleri(idx) {
+            const item = listGaleriGlobal[idx];
+            document.getElementById('valGlrId').value = item.id_galeri;
+            document.getElementById('valGlrJudul').textContent = item.judul_kegiatan;
+            document.getElementById('valGlrInfo').textContent = `${item.tanggal_kegiatan} | Oleh: ${item.nama_pembuat}`;
+            document.getElementById('valGlrStatus').textContent = `Status: ${item.status_publikasi}`;
+            document.getElementById('valGlrDeskripsi').textContent = item.deskripsi_kegiatan;
+            document.getElementById('valGlrCatatan').value = item.catatan_approver || '';
+
+            const mediaBox = document.getElementById('valGlrMediaBox');
+            mediaBox.innerHTML = '';
+
+            if (item.links.length > 1) {
+                let inner = '';
+                item.links.forEach((url, i) => {
+                    inner += `<div class="carousel-item ${i===0?'active':''}"><img src="${url}" class="d-block w-100" style="max-height: 380px; object-fit: cover;"></div>`;
+                });
+                mediaBox.innerHTML = `
+                    <div id="carouselValGaleri" class="carousel slide" data-bs-ride="carousel">
+                        <div class="carousel-inner">${inner}</div>
+                        <button class="carousel-control-prev" type="button" data-bs-target="#carouselValGaleri" data-bs-slide="prev"><span class="carousel-control-prev-icon"></span></button>
+                        <button class="carousel-control-next" type="button" data-bs-target="#carouselValGaleri" data-bs-slide="next"><span class="carousel-control-next-icon"></span></button>
+                    </div>
+                `;
+            } else if (item.links.length === 1) {
+                mediaBox.innerHTML = `<img src="${item.links[0]}" class="img-fluid w-100" style="max-height: 380px; object-fit: contain;">`;
+            }
+
+            // Tampilkan tombol Approve hanya untuk Kepala Sekolah dan Admin
+            document.getElementById('boxInputApprovalKepsek').classList.toggle('d-none', !(isKepsek || isAdmin));
+            modalValGaleri.show();
+        }
+
+        function eksekusiApprovalGaleri(statusBaru) {
+            const idGlr = document.getElementById('valGlrId').value;
+            const cat = document.getElementById('valGlrCatatan').value.trim();
+            const btn = document.getElementById('btnApproveGaleri');
+            const orig = btn.innerHTML;
+            btn.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Memproses...';
+            btn.disabled = true;
+
+            const params = new URLSearchParams({
+                action: 'validasi_galeri',
+                id_galeri: idGlr,
+                status_publikasi: statusBaru,
+                nip_approver: user.id_relasi,
+                catatan_approver: cat
+            });
+
+            fetch(`${API_URL}?${params.toString()}&_t=${Date.now()}`)
+            .then(r => r.json()).then(res => {
+                btn.innerHTML = orig;
+                btn.disabled = false;
+                if (res.status === 'success') {
+                    modalValGaleri.hide();
+                    muatDataGaleri();
+                } else { alert(res.message); }
+            });
         }
 
         function logout() {
@@ -107,6 +858,5 @@
             window.location.href = 'login.html';
         }
     </script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
