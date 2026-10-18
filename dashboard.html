@@ -16,7 +16,6 @@
         .timeline-kepsek { border-left-color: #dc3545; background: #fff5f5; }
         .thumb-mini { width: 52px; height: 40px; object-fit: cover; border-radius: 6px; border: 1px solid #dee2e6; }
         
-        /* Gaya Lonceng & Dropdown Notifikasi */
         .notif-dropdown-menu { width: 340px; max-height: 400px; overflow-y: auto; border-radius: 14px; }
         .notif-item { border-bottom: 1px solid #f1f1f1; padding: 10px 14px; cursor: pointer; transition: background 0.2s; white-space: normal; }
         .notif-item:hover { background-color: #f0f7ff; }
@@ -40,9 +39,9 @@
                 <i class="fas fa-graduation-cap me-2 text-warning"></i>Portal SDN 1 Sukahaji
             </a>
             <div class="d-flex align-items-center text-white">
-                <!-- Tombol Halaman Publik -->
+                <!-- Tombol Langsung ke Halaman Layanan Publik -->
                 <a href="layanan.html" class="btn btn-warning btn-sm rounded-pill px-3 me-2 fw-semibold text-dark">
-                    <i class="fas fa-globe me-1"></i> <span class="d-none d-sm-inline">Halaman Publik</span>
+                    <i class="fas fa-globe me-1"></i> <span class="d-none d-sm-inline">Pusat Layanan Publik</span>
                 </a>
 
                 <!-- Dropdown Lonceng Notifikasi Terpadu -->
@@ -81,8 +80,9 @@
                     <h4 class="fw-bold text-primary-school mb-1">Selamat Datang, <span id="welcomeName"></span>!</h4>
                     <p class="text-muted small mb-0">Ruang Kerja Terpadu SDN 1 Sukahaji | Otoritas Akses: <strong id="welcomeRole" class="text-warning bg-dark px-2 py-1 rounded"></strong></p>
                 </div>
-                <div class="mt-2 mt-md-0">
-                    <a href="index.html" class="btn btn-outline-primary btn-sm rounded-pill px-3"><i class="fas fa-home me-1"></i> Ke Beranda Utama</a>
+                <div class="mt-2 mt-md-0 d-flex gap-2">
+                    <a href="index.html" class="btn btn-outline-primary btn-sm rounded-pill px-3"><i class="fas fa-home me-1"></i> Beranda Web</a>
+                    <a href="layanan.html" class="btn btn-primary btn-sm rounded-pill px-3"><i class="fas fa-globe me-1"></i> Lihat Galeri & Layanan Publik</a>
                 </div>
             </div>
         </div>
@@ -213,7 +213,7 @@
             <div class="card border-0 shadow-sm rounded-4 p-4 bg-white">
                 <div class="d-flex flex-wrap justify-content-between align-items-center border-bottom pb-3 mb-4">
                     <div>
-                        <span class="badge bg-success-subtle text-success mb-1">Unjuk Kreasi & Nalar Kritis</span>
+                        <span class="badge bg-success-subtle text-success mb-1" id="badgeScopeGaleri">Unjuk Kreasi & Nalar Kritis</span>
                         <h4 class="fw-bold text-primary-school mb-0"><i class="fas fa-photo-video text-success me-2"></i>Manajemen Galeri Panggung Suka Karya</h4>
                         <p class="text-muted small mb-0" id="subJudulGaleri">Input dokumentasi kegiatan (4 Link Foto Google Drive / Link Video) dan kelola persetujuan tayang.</p>
                     </div>
@@ -237,7 +237,7 @@
                                 <th>Judul & Deskripsi Kegiatan</th>
                                 <th style="width: 150px;">Penulis (Guru)</th>
                                 <th class="text-center" style="width: 130px;">Status Publikasi</th>
-                                <th class="text-end" style="width: 170px;">Aksi</th>
+                                <th class="text-end" style="width: 185px;">Aksi</th>
                             </tr>
                         </thead>
                         <tbody id="tbodyGaleri">
@@ -457,6 +457,9 @@
 
         const roleUpper = String(user.role || '').toUpperCase().trim();
         const penugasanUser = String(user.penugasan || '').trim();
+        const myNip = String(user.id_relasi || '').replace(/^'/, '').trim();
+        const myName = String(user.nama || '').trim();
+
         const isSiswa = (roleUpper === 'SISWA' || roleUpper === 'ORTU');
         const isKepsek = (roleUpper.includes('KEPSEK') || roleUpper.includes('KEPALA SEKOLAH'));
         const isAdmin = (roleUpper === 'ADMIN');
@@ -468,14 +471,14 @@
         document.getElementById('welcomeName').textContent = user.nama;
         document.getElementById('welcomeRole').textContent = labelRole;
 
-        // Tampilkan kartu Panggung Suka Karya untuk Guru, Kepsek, dan Admin
         if (!isSiswa) {
             document.getElementById('colMenuGaleri').classList.remove('d-none');
         }
 
-        // Sesuaikan keterangan cakupan aduan untuk Guru Kelas
         if (isGuru) {
             document.getElementById('btnTambahAduan').classList.add('d-none');
+            document.getElementById('badgeScopeGaleri').textContent = `Daftar Karya Saya (${myName})`;
+            document.getElementById('subJudulGaleri').textContent = `Menampilkan khusus dokumentasi kegiatan yang Anda buat.`;
             if (/^kelas\s*[1-6]/i.test(penugasanUser)) {
                 document.getElementById('badgeScopeAduan').textContent = `Khusus Siswa ${penugasanUser}`;
                 document.getElementById('subJudulAduan').textContent = `Menampilkan laporan pengaduan khusus dari siswa ${penugasanUser}.`;
@@ -483,6 +486,9 @@
         } else if (isKepsek) {
             document.getElementById('btnTambahAduan').classList.add('d-none');
             document.getElementById('badgeScopeAduan').textContent = `Seluruh Kelas (Kelas 1 - 6)`;
+            document.getElementById('badgeScopeGaleri').textContent = `Meja Persetujuan Kepala Sekolah (Semua Guru)`;
+        } else if (isAdmin) {
+            document.getElementById('badgeScopeGaleri').textContent = `Manajemen Seluruh Konten (Admin)`;
         }
 
         let listAduanGlobal = [];
@@ -499,14 +505,13 @@
         function muatNotifikasi(event) {
             if (event) event.stopPropagation();
             const container = document.getElementById('notifListContainer');
-            const url = `${API_URL}?action=cek_notifikasi&role=${encodeURIComponent(user.role)}&id_relasi=${encodeURIComponent(user.id_relasi)}&penugasan=${encodeURIComponent(penugasanUser)}&_t=${Date.now()}`;
+            const url = `${API_URL}?action=cek_notifikasi&role=${encodeURIComponent(user.role)}&id_relasi=${encodeURIComponent(myNip)}&penugasan=${encodeURIComponent(penugasanUser)}&_t=${Date.now()}`;
 
             fetch(url).then(r => r.json()).then(res => {
                 if (res.status !== 'success') return;
                 const c = res.counts || { jurnal: 0, aduan: 0, galeri: 0, total: 0 };
                 const items = res.items || [];
 
-                // Update Lonceng Utama
                 const totalBadge = document.getElementById('notifTotalBadge');
                 const bellIcon = document.getElementById('bellIcon');
                 if (c.total > 0) {
@@ -518,7 +523,6 @@
                     bellIcon.classList.remove('bell-active');
                 }
 
-                // Update Badge pada Masing-Masing Kartu Modul
                 const bJurnal = document.getElementById('badgeCardJurnal');
                 const bAduan = document.getElementById('badgeCardAduan');
                 const bGaleri = document.getElementById('badgeCardGaleri');
@@ -527,7 +531,6 @@
                 if (c.aduan > 0) { bAduan.textContent = `${c.aduan} Aktif`; bAduan.classList.remove('d-none'); } else { bAduan.classList.add('d-none'); }
                 if (c.galeri > 0) { bGaleri.textContent = `${c.galeri} Info`; bGaleri.classList.remove('d-none'); } else { bGaleri.classList.add('d-none'); }
 
-                // Render Daftar Item Notifikasi di Dropdown
                 if (items.length === 0) {
                     container.innerHTML = `<div class="p-4 text-center text-muted small"><i class="fas fa-check-circle text-success fs-4 d-block mb-1"></i>Tidak ada antrean tindak lanjut baru.</div>`;
                 } else {
@@ -576,7 +579,7 @@
             const params = new URLSearchParams({
                 action: 'baca_aduan',
                 role: user.role,
-                id_relasi: user.id_relasi,
+                id_relasi: myNip,
                 penugasan: penugasanUser,
                 kategori: kat
             });
@@ -624,18 +627,15 @@
                 }
 
                 let btnAksi = '';
-                // Tombol Edit untuk Siswa (saat Draf/Diajukan) atau Admin
                 if (isSiswa || isAdmin) {
                     if (item.status_aduan === 'Draf' || item.status_aduan === 'Diajukan') {
                         btnAksi += `<button class="btn btn-sm btn-outline-primary rounded-pill px-3 me-1 mb-1" onclick="bukaModalEditAduan(${idx})"><i class="fas fa-edit me-1"></i>Edit</button>`;
                     }
                 }
-                // Tombol Tanggapi / Intervensi untuk Guru, Kepsek, Admin
                 if (!isSiswa) {
                     let lblBtn = isKepsek ? 'Intervensi' : 'Tanggapi';
                     btnAksi += `<button class="btn btn-sm btn-school rounded-pill px-3 me-1 mb-1" onclick="bukaModalTLAduan(${idx})"><i class="fas fa-reply me-1"></i>${lblBtn}</button>`;
                 }
-                // Tombol Hapus (Delete) khusus Kepala Sekolah, Admin, atau Siswa saat masih Draf
                 if (isKepsek || isAdmin || (isSiswa && item.status_aduan === 'Draf')) {
                     btnAksi += `<button class="btn btn-sm btn-outline-danger rounded-pill px-2 mb-1" onclick="hapusAduan('${item.id_aduan}')" title="Hapus Aduan"><i class="fas fa-trash"></i></button>`;
                 }
@@ -688,7 +688,7 @@
             const params = new URLSearchParams({
                 action: 'simpan_aduan',
                 id_aduan: idEdit,
-                nisn: user.id_relasi,
+                nisn: myNip,
                 kategori_layanan: kat,
                 deskripsi_laporan: desk,
                 status_aduan: statusTarget
@@ -750,7 +750,7 @@
                 action: 'tindak_lanjut_aduan',
                 id_aduan: idAdu,
                 role: isKepsek ? 'KEPSEK' : 'GURU',
-                nip: user.id_relasi,
+                nip: myNip,
                 pesan_tindak_lanjut: pesan,
                 ubah_status: statBaru
             });
@@ -767,7 +767,7 @@
         }
 
         // =========================================================================
-        // 3. LOGIKA PANGGUNG SUKA KARYA (CMS GALERI GURU & APPROVAL KEPSEK)
+        // 3. LOGIKA PANGGUNG SUKA KARYA (ISOLASI KETAT PER PEMBUAT, KEPSEK & ADMIN)
         // =========================================================================
         function toggleInputMediaGaleri() {
             const tipe = document.getElementById('glrTipeMedia').value;
@@ -787,11 +787,31 @@
             const tbody = document.getElementById('tbodyGaleri');
             tbody.innerHTML = `<tr><td colspan="6" class="text-center py-4"><div class="spinner-border spinner-border-sm text-success me-2"></div>Memuat daftar galeri...</td></tr>`;
 
-            const modeParam = (isKepsek || isAdmin) ? 'ADMIN' : 'GURU';
-            const url = `${API_URL}?action=baca_galeri&mode=${modeParam}&nip=${encodeURIComponent(user.id_relasi)}&_t=${Date.now()}`;
+            // Tentukan mode: KEPSEK, ADMIN, atau GURU
+            let modeParam = 'GURU';
+            if (isAdmin) modeParam = 'ADMIN';
+            else if (isKepsek) modeParam = 'KEPSEK';
 
-            fetch(url).then(r => r.json()).then(res => {
-                listGaleriGlobal = res.data || [];
+            const params = new URLSearchParams({
+                action: 'baca_galeri',
+                mode: modeParam,
+                nip: myNip,
+                nama: myName
+            });
+
+            fetch(`${API_URL}?${params.toString()}&_t=${Date.now()}`)
+            .then(r => r.json()).then(res => {
+                let rawList = res.data || [];
+                // Pengaman ganda (Double-Lock) di sisi Frontend:
+                // Jika user adalah Guru, pastikan hanya menampilkan karya yang nip_pembuat == myNip
+                if (isGuru) {
+                    rawList = rawList.filter(item => {
+                        let nipItem = String(item.nip_pembuat || '').replace(/^'/, '').trim();
+                        if (myNip !== '') return nipItem === myNip;
+                        return String(item.nama_pembuat || '').toLowerCase() === myName.toLowerCase();
+                    });
+                }
+                listGaleriGlobal = rawList;
                 renderTabelGaleri(listGaleriGlobal);
                 muatNotifikasi();
             }).catch(() => {
@@ -804,7 +824,7 @@
             tbody.innerHTML = '';
 
             if (list.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="6" class="text-center py-4 text-muted">Belum ada konten dokumentasi kegiatan yang diinput.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="6" class="text-center py-4 text-muted">Belum ada konten dokumentasi kegiatan yang Anda buat.</td></tr>`;
                 return;
             }
 
@@ -821,10 +841,14 @@
 
                 let catatanHtml = item.catatan_approver ? `<div class="small text-danger fst-italic mt-1"><i class="fas fa-comment-dots me-1"></i>Catatan Kepsek: "${item.catatan_approver}"</div>` : '';
 
-                let btnAksi = `<button class="btn btn-sm btn-outline-primary rounded-pill px-3 me-1 mb-1" onclick="bukaModalPratinjauGaleri(${idx})"><i class="fas fa-eye me-1"></i>${(isKepsek || isAdmin) ? 'Periksa & Approve' : 'Pratinjau'}</button>`;
+                let btnAksi = `<button class="btn btn-sm btn-outline-primary rounded-pill px-3 me-1 mb-1" onclick="bukaModalPratinjauGaleri(${idx})"><i class="fas fa-eye me-1"></i>${(isKepsek || isAdmin) ? 'Approve' : 'Lihat'}</button>`;
                 
-                if (isGuru || isAdmin) {
-                    btnAksi += `<button class="btn btn-sm btn-outline-success rounded-pill px-3 mb-1" onclick="bukaModalEditGaleri(${idx})"><i class="fas fa-edit me-1"></i>Edit</button>`;
+                let isOwner = (String(item.nip_pembuat || '').replace(/^'/, '').trim() === myNip);
+                if (isOwner || isAdmin) {
+                    btnAksi += `<button class="btn btn-sm btn-outline-success rounded-pill px-3 me-1 mb-1" onclick="bukaModalEditGaleri(${idx})"><i class="fas fa-edit me-1"></i>Edit</button>`;
+                }
+                if (isOwner || isKepsek || isAdmin) {
+                    btnAksi += `<button class="btn btn-sm btn-outline-danger rounded-pill px-2 mb-1" onclick="hapusGaleri('${item.id_galeri}')" title="Hapus Karya"><i class="fas fa-trash"></i></button>`;
                 }
 
                 tbody.innerHTML += `
@@ -901,7 +925,7 @@
             const params = new URLSearchParams({
                 action: 'simpan_galeri',
                 id_galeri: idEdit,
-                nip_pembuat: user.id_relasi,
+                nip_pembuat: myNip || myName,
                 tanggal_kegiatan: tgl,
                 judul_kegiatan: judul,
                 deskripsi_kegiatan: desk,
@@ -916,6 +940,16 @@
                 btn.disabled = false;
                 if (res.status === 'success') {
                     modalFormGaleri.hide();
+                    muatDataGaleri();
+                } else { alert(res.message); }
+            });
+        }
+
+        function hapusGaleri(idGaleri) {
+            if (!confirm("Apakah Anda yakin ingin menghapus konten galeri ini secara permanen?")) return;
+            fetch(`${API_URL}?action=hapus_galeri&id_galeri=${encodeURIComponent(idGaleri)}&_t=${Date.now()}`)
+            .then(r => r.json()).then(res => {
+                if (res.status === 'success') {
                     muatDataGaleri();
                 } else { alert(res.message); }
             });
@@ -969,7 +1003,7 @@
                 action: 'validasi_galeri',
                 id_galeri: idGlr,
                 status_publikasi: statusBaru,
-                nip_approver: user.id_relasi,
+                nip_approver: myNip,
                 catatan_approver: cat
             });
 
@@ -989,7 +1023,6 @@
             window.location.href = 'login.html';
         }
 
-        // Jalankan pengecekan notifikasi saat halaman dibuka
         muatNotifikasi();
     </script>
 </body>
