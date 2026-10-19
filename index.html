@@ -247,8 +247,7 @@
         let mapMarkers = [];
 
         function initMap() {
-            // Koordinat Fokus: Area Cihaurbeuti (SDN 1 Sukahaji)
-            // Angka 14 adalah tingkat zoom, ubah ke 15 atau 16 jika ingin lebih dekat
+            // Koordinat Fokus Sementara (Akan ditimpa oleh Auto-Zoom 3 Desa)
             map = L.map('mapContainer').setView([-7.2660, 108.2010], 14);
             
             // Tampilan Peta Elegan: CartoDB Positron (Bersih & Profesional)
@@ -274,6 +273,8 @@
                 loader.classList.add('d-none');
                 if(res.status === 'success' && res.data.length > 0) {
                     
+                    let localLatLngs = []; // Array khusus untuk auto-zoom 3 desa utama
+
                     // Loop data hasil agregasi dari Backend
                     res.data.forEach(item => {
                         // Menentukan radius lingkaran berdasarkan jumlah siswa (minimal 10, maksimal 45)
@@ -324,7 +325,21 @@
                         });
 
                         mapMarkers.push(circle);
+
+                        // --- LOGIKA CERDAS: AUTO-ZOOM HANYA KE 3 DESA TARGET ---
+                        let namaDesa = String(item.desa).toLowerCase();
+                        if (namaDesa.includes('sukahaji') || namaDesa.includes('cijulang') || namaDesa.includes('sukamulya')) {
+                            localLatLngs.push([item.lat, item.lng]);
+                        }
                     });
+
+                    // Perintahkan peta untuk Auto-Zoom KHUSUS ke kumpulan koordinat 3 desa tersebut
+                    if (localLatLngs.length > 0) {
+                        const bounds = L.latLngBounds(localLatLngs);
+                        // maxZoom 15 dipasang agar jika jarak antar desa terlalu dekat, peta tidak terlalu menukik ke bawah
+                        map.fitBounds(bounds, { padding: [50, 50], maxZoom: 15 });
+                    }
+
                 } else {
                     loader.innerHTML = '<div class="text-danger fw-bold"><i class="fas fa-exclamation-triangle me-1"></i> Koordinat belum tersedia di Database</div>';
                 }
@@ -334,7 +349,7 @@
             });
         }
 
-        // Inisialisasi Peta saat halaman selesai dimuat (TIDAK DIHAPUS)
+        // Inisialisasi Peta saat halaman selesai dimuat (TIDAK BOLEH DIHAPUS)
         document.addEventListener("DOMContentLoaded", function() {
             initMap();
         });
