@@ -49,25 +49,21 @@
             box-shadow: 0 12px 24px rgba(15, 76, 129, 0.1);
         }
         .avatar-circle {
-            width: 78px;
-            height: 78px;
+            width: 96px;
+            height: 96px;
             border-radius: 50%;
             background: linear-gradient(135deg, #0f4c81, #1e6bb8);
             color: #fff;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 28px;
+            font-size: 32px;
             font-weight: bold;
-            margin: 0 auto 12px auto;
+            margin: 0 auto 14px auto;
             border: 3px solid #ffc107;
             object-fit: cover;
-        }
-        .stat-box {
-            border-radius: 16px;
-            padding: 20px;
-            background: #f8faff;
-            border-left: 5px solid #0f4c81;
+            object-position: top center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.08);
         }
         .footer-pro { background-color: #0a3356; color: rgba(255,255,255,0.8); padding: 60px 0 30px 0; }
         .footer-pro h5 { color: #fff; font-weight: bold; margin-bottom: 20px; }
@@ -237,7 +233,7 @@
                                         <tr><th class="bg-light">Jenjang / Status</th><td>Sekolah Dasar (SD) / Negeri</td></tr>
                                         <tr><th class="bg-light">Alamat Lengkap</th><td>Jln. Cihaurbeuti No. 86 Desa Sukahaji</td></tr>
                                         <tr><th class="bg-light">Kecamatan / Kabupaten</th><td>Kec. Cihaurbeuti, Kab. Ciamis, Jawa Barat 46262</td></tr>
-                                        <tr><th class="bg-light">Karakteristik Wilayah</th><td>Perdesaan ($\pm$ 450 mdpl, jarak $\pm$ 4 km dari pusat kecamatan)</td></tr>
+                                        <tr><th class="bg-light">Karakteristik Wilayah</th><td>Perdesaan (&plusmn; 450 mdpl, jarak &plusmn; 4 km dari pusat kecamatan)</td></tr>
                                         <tr><th class="bg-light">Kepala Sekolah</th><td><strong>Iis Gustini Ratna Nengsih, S.Pd.SD.</strong><br><small class="text-muted">NIP. 19710817 201408 2 002</small></td></tr>
                                         <tr><th class="bg-light">Ketua Komite Sekolah</th><td><strong>Endin Sahrudin, S.Pd.</strong></td></tr>
                                         <tr><th class="bg-light">Pengawas Bina</th><td><strong>H. Yuyu Rustandi, S.Pd., M.Pd.</strong><br><small class="text-muted">NIP. 19670206 198803 1003</small></td></tr>
@@ -294,7 +290,7 @@
                 <!-- Karakteristik Sosial Budaya & SWOT -->
                 <div class="card border-0 shadow-sm rounded-4 p-4 bg-white">
                     <h5 class="fw-bold text-primary-school mb-3"><i class="fas fa-compass text-warning me-2"></i>Karakteristik Wilayah, Budaya Sunda & Prioritas Pengembangan</h5>
-                    <p class="small text-secondary" style="text-align: justify;">
+                    <p class="small text-secondary mb-0" style="text-align: justify;">
                         Berada di kawasan perdesaan Kecamatan Cihaurbeuti dengan ketinggian sekitar 450 mdpl, SDN 1 Sukahaji memanfaatkan lingkungan alam, pertanian, dan kearifan lokal masyarakat Sunda (<em>silih asih, silih asah, silih asuh</em>, tata krama, dan gotong royong) sebagai laboratorium pembelajaran kontekstual. Berdasarkan Analisis SWOT Rapor Pendidikan 2026, prioritas pengembangan sekolah difokuskan pada 6 pilar utama: (1) Penguatan literasi tingkat lanjut & penalaran numerasi, (2) Penguatan kreativitas dan nalar kritis melalui PjBL, (3) Peningkatan kompetensi inovasi mengajar PTK melalui Komunitas Belajar, (4) Peningkatan partisipasi aktif orang tua, (5) Optimalisasi anggaran BOSP berbasis data, serta (6) Penguatan budaya Sekolah Aman dan Ramah Anak.
                     </p>
                 </div>
@@ -331,7 +327,6 @@
             <!-- ========================================================================= -->
             <div class="tab-pane fade" id="pane-sarpras" role="tabpanel">
                 
-                <!-- Sarana Prasarana & Teknologi Pembelajaran -->
                 <div class="card border-0 shadow-sm rounded-4 p-4 p-md-5 bg-white mb-4">
                     <span class="badge bg-info-subtle text-info px-3 py-2 rounded-pill fw-bold mb-2" style="width: fit-content;">Daya Dukung Pembelajaran</span>
                     <h3 class="fw-bold text-primary-school mb-2">Fasilitas, Sarana Prasarana & Ekosistem Digital</h3>
@@ -376,7 +371,6 @@
                         </div>
                     </div>
 
-                    <!-- Tabel 10 Kemitraan Strategis Sekolah -->
                     <h5 class="fw-bold text-primary-school mt-3 mb-3"><i class="fas fa-handshake text-primary me-2"></i>Jejaring Kemitraan Satuan Pendidikan</h5>
                     <div class="table-responsive">
                         <table class="table table-bordered table-hover small align-middle mb-0">
@@ -455,31 +449,55 @@
             } catch (e) {}
         }
 
-        // Fungsi Cerdas: Mengubah Link Google Drive / Path GitHub menjadi Gambar
-        function prosesUrlFotoGuru(rawFoto, nip) {
+        // Menyusun daftar kandidat URL foto berdasarkan kolom Foto, NIP (.png/.jpg), dan NUPTK (.png/.jpg)
+        function daftarKandidatFoto(rawFoto, nip, nuptk) {
+            let kandidat = [];
             let f = (rawFoto || '').trim();
-            
-            // 1. Jika kolom Foto di Master_Guru diisi Link Google Drive
-            if (f.includes('drive.google.com')) {
-                let match = f.match(/\/d\/([a-zA-Z0-9_-]+)/) || f.match(/id=([a-zA-Z0-9_-]+)/);
-                if (match && match[1]) {
-                    return `https://drive.google.com/thumbnail?id=${match[1]}&sz=w400`;
+
+            if (f && f !== '-') {
+                if (f.includes('drive.google.com')) {
+                    let match = f.match(/\/d\/([a-zA-Z0-9_-]+)/) || f.match(/id=([a-zA-Z0-9_-]+)/);
+                    if (match && match[1]) {
+                        kandidat.push(`https://drive.google.com/thumbnail?id=${match[1]}&sz=w400`);
+                    }
+                } else if (f.startsWith('http') || f.startsWith('assets/')) {
+                    kandidat.push(f);
+                } else {
+                    kandidat.push(`assets/${f}`);
                 }
             }
-            
-            // 2. Jika kolom Foto diisi URL langsung atau path folder assets
-            if (f !== '' && f !== '-') {
-                if (f.startsWith('http') || f.startsWith('assets/')) return f;
-                return `assets/${f}`;
-            }
 
-            // 3. Jika kolom Foto kosong, coba cari otomatis berdasarkan NIP di folder assets/
             let cleanNip = (nip || '').replace(/[^0-9]/g, '');
             if (cleanNip) {
-                return `assets/${cleanNip}.jpg`;
+                kandidat.push(`assets/${cleanNip}.png`);
+                kandidat.push(`assets/${cleanNip}.jpg`);
+                kandidat.push(`assets/${cleanNip}.jpeg`);
             }
 
-            return '';
+            let cleanNuptk = (nuptk || '').replace(/[^0-9]/g, '');
+            if (cleanNuptk) {
+                kandidat.push(`assets/${cleanNuptk}.png`);
+                kandidat.push(`assets/${cleanNuptk}.jpg`);
+                kandidat.push(`assets/${cleanNuptk}.jpeg`);
+            }
+
+            return kandidat;
+        }
+
+        // Fungsi Fallback Berantai: Jika .png tidak ada, coba .jpg, lalu coba NUPTK, lalu lingkaran inisial
+        function cobaFotoBerikutnya(imgEl) {
+            let list = JSON.parse(imgEl.getAttribute('data-kandidat') || '[]');
+            let idx = parseInt(imgEl.getAttribute('data-idx') || '0', 10) + 1;
+            if (idx < list.length) {
+                imgEl.setAttribute('data-idx', idx);
+                imgEl.src = list[idx];
+            } else {
+                let inisial = imgEl.getAttribute('data-inisial') || 'G';
+                let div = document.createElement('div');
+                div.className = 'avatar-circle';
+                div.textContent = inisial;
+                imgEl.replaceWith(div);
+            }
         }
 
         function muatDataGuru() {
@@ -493,12 +511,15 @@
                     let html = '';
                     res.data.forEach(g => {
                         let inisial = g.nama ? g.nama.trim().charAt(0).toUpperCase() : 'G';
-                        let urlFoto = prosesUrlFotoGuru(g.foto, g.nip);
+                        let kandidat = daftarKandidatFoto(g.foto, g.nip, g.nuptk);
 
-                        // Jika foto ditemukan maka tampilkan foto; jika belum ada/gagal dimuat, otomatis kembali ke lingkaran inisial
-                        let avatarEl = urlFoto
-                            ? `<img src="${urlFoto}" alt="${g.nama}" class="avatar-circle" style="width:92px; height:92px;" onerror="this.outerHTML='<div class=\\'avatar-circle\\' style=\\'width:92px; height:92px;\\'>${inisial}</div>'">`
-                            : `<div class="avatar-circle" style="width:92px; height:92px;">${inisial}</div>`;
+                        let avatarEl = '';
+                        if (kandidat.length > 0) {
+                            let jsonKandidat = JSON.stringify(kandidat).replace(/'/g, "&#39;");
+                            avatarEl = `<img src="${kandidat[0]}" alt="${g.nama}" class="avatar-circle" data-kandidat='${jsonKandidat}' data-idx="0" data-inisial="${inisial}" onerror="cobaFotoBerikutnya(this)">`;
+                        } else {
+                            avatarEl = `<div class="avatar-circle">${inisial}</div>`;
+                        }
 
                         let badgeKelas = (g.kelas_ampu && g.kelas_ampu !== '-')
                             ? `<span class="badge bg-warning text-dark rounded-pill px-3 py-1 mb-2">${g.kelas_ampu}</span>`
