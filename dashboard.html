@@ -14,7 +14,7 @@
         .step-badge { font-size: 0.78rem; padding: 5px 12px; border-radius: 50px; font-weight: 600; }
         .timeline-box { border-left: 3px solid #0f4c81; padding-left: 12px; margin-top: 8px; background: #f8f9fa; border-radius: 0 8px 8px 0; padding: 8px 12px; }
         .timeline-kepsek { border-left-color: #dc3545; background: #fff5f5; }
-        .thumb-mini { width: 52px; height: 40px; object-fit: cover; border-radius: 6px; border: 1px solid #dee2e6; }
+        .thumb-mini { width: 56px; height: 42px; object-fit: cover; border-radius: 6px; border: 1px solid #dee2e6; background: #f8f9fa; }
         
         .notif-dropdown-menu { width: 340px; max-height: 400px; overflow-y: auto; border-radius: 14px; }
         .notif-item { border-bottom: 1px solid #f1f1f1; padding: 10px 14px; cursor: pointer; transition: background 0.2s; white-space: normal; }
@@ -39,7 +39,6 @@
                 <i class="fas fa-graduation-cap me-2 text-warning"></i>Portal SDN 1 Sukahaji
             </a>
             <div class="d-flex align-items-center text-white">
-                <!-- Tombol Langsung ke Halaman Layanan Publik -->
                 <a href="layanan.html" class="btn btn-warning btn-sm rounded-pill px-3 me-2 fw-semibold text-dark">
                     <i class="fas fa-globe me-1"></i> <span class="d-none d-sm-inline">Pusat Layanan Publik</span>
                 </a>
@@ -123,9 +122,7 @@
             </div>
         </div>
 
-        <!-- =============================================================== -->
-        <!-- PANEL KERJA 1: RUMAH SARENGSEH (PENGADUAN & TINDAK LANJUT)      -->
-        <!-- =============================================================== -->
+        <!-- PANEL KERJA 1: RUMAH SARENGSEH -->
         <div id="panelSarengseh" class="d-none">
             <div class="card border-0 shadow-sm rounded-4 p-4 bg-white">
                 <div class="d-flex flex-wrap justify-content-between align-items-center border-bottom pb-3 mb-4">
@@ -144,7 +141,6 @@
                     </div>
                 </div>
 
-                <!-- Statistik Singkat Aduan -->
                 <div class="row g-3 mb-4">
                     <div class="col-6 col-md-3">
                         <div class="p-3 bg-light rounded-3 border-start border-primary border-4">
@@ -172,7 +168,6 @@
                     </div>
                 </div>
 
-                <!-- Filter Kategori -->
                 <div class="row g-2 mb-3">
                     <div class="col-md-5">
                         <select id="filterKategoriAduan" class="form-select form-select-sm" onchange="muatDataAduan()">
@@ -185,7 +180,6 @@
                     </div>
                 </div>
 
-                <!-- Tabel Daftar Aduan & Progres -->
                 <div class="table-responsive">
                     <table class="table table-hover align-middle">
                         <thead class="table-light">
@@ -206,16 +200,14 @@
             </div>
         </div>
 
-        <!-- =============================================================== -->
-        <!-- PANEL KERJA 2: PANGGUNG SUKA KARYA (CMS GALERI & APPROVAL)      -->
-        <!-- =============================================================== -->
+        <!-- PANEL KERJA 2: PANGGUNG SUKA KARYA -->
         <div id="panelGaleri" class="d-none">
             <div class="card border-0 shadow-sm rounded-4 p-4 bg-white">
                 <div class="d-flex flex-wrap justify-content-between align-items-center border-bottom pb-3 mb-4">
                     <div>
                         <span class="badge bg-success-subtle text-success mb-1" id="badgeScopeGaleri">Unjuk Kreasi & Nalar Kritis</span>
                         <h4 class="fw-bold text-primary-school mb-0"><i class="fas fa-photo-video text-success me-2"></i>Manajemen Galeri Panggung Suka Karya</h4>
-                        <p class="text-muted small mb-0" id="subJudulGaleri">Input dokumentasi kegiatan (4 Link Foto Google Drive / Link Video) dan kelola persetujuan tayang.</p>
+                        <p class="text-muted small mb-0" id="subJudulGaleri">Input dokumentasi kegiatan (4 Link Foto Google Drive / Link Video YouTube atau Drive) dan kelola persetujuan tayang.</p>
                     </div>
                     <div class="d-flex gap-2 mt-2 mt-md-0">
                         <button class="btn btn-success btn-sm rounded-pill px-3 fw-semibold" id="btnTambahGaleri" onclick="bukaModalFormGaleri()">
@@ -227,7 +219,6 @@
                     </div>
                 </div>
 
-                <!-- Tabel Daftar Konten Galeri -->
                 <div class="table-responsive">
                     <table class="table table-hover align-middle">
                         <thead class="table-light">
@@ -250,9 +241,7 @@
 
     </div>
 
-    <!-- =============================================================== -->
-    <!-- MODAL 1: FORM INPUT / EDIT ADUAN (SISWA / ORTU / ADMIN)         -->
-    <!-- =============================================================== -->
+    <!-- MODAL 1: FORM INPUT / EDIT ADUAN -->
     <div class="modal fade" id="modalFormAduan" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content border-0 rounded-4 shadow-lg">
@@ -290,9 +279,7 @@
         </div>
     </div>
 
-    <!-- =============================================================== -->
-    <!-- MODAL 2: FORM TANGGAPAN GURU & INTERVENSI KEPSEK                -->
-    <!-- =============================================================== -->
+    <!-- MODAL 2: FORM TANGGAPAN GURU & INTERVENSI KEPSEK -->
     <div class="modal fade" id="modalTindakLanjutAduan" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
         <div class="modal-dialog modal-dialog-centered modal-lg">
             <div class="modal-content border-0 rounded-4 shadow-lg">
@@ -334,9 +321,7 @@
         </div>
     </div>
 
-    <!-- =============================================================== -->
-    <!-- MODAL 3: FORM INPUT / EDIT GALERI (GURU & ADMIN)                -->
-    <!-- =============================================================== -->
+    <!-- MODAL 3: FORM INPUT / EDIT GALERI -->
     <div class="modal fade" id="modalFormGaleri" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
         <div class="modal-dialog modal-dialog-centered modal-lg">
             <div class="modal-content border-0 rounded-4 shadow-lg">
@@ -355,7 +340,7 @@
                             <label class="form-label fw-semibold small">Jenis Media Konten <span class="text-danger">*</span></label>
                             <select id="glrTipeMedia" class="form-select" onchange="toggleInputMediaGaleri()">
                                 <option value="Foto">Album Foto (Slide Otomatis 4 Foto)</option>
-                                <option value="Video">Video Dokumentasi (1 Link Video)</option>
+                                <option value="Video">Video Dokumentasi (YouTube / Google Drive)</option>
                             </select>
                         </div>
                         <div class="col-md-4">
@@ -364,16 +349,15 @@
                         </div>
                     </div>
 
-                    <!-- Input Link Google Drive -->
                     <div class="p-3 bg-light rounded-3 border mb-3">
                         <div class="small fw-bold text-primary-school mb-2">
-                            <i class="fas fa-link me-1"></i> Tautan (Link) Media Google Drive
-                            <span class="fw-normal text-muted d-block">Pastikan akses file di Google Drive diatur ke <strong>"Siapa saja yang memiliki link" (Anyone with the link)</strong>.</span>
+                            <i class="fas fa-link me-1"></i> Tautan (Link) Media Google Drive / YouTube
+                            <span class="fw-normal text-muted d-block">Jika menggunakan Google Drive, pastikan akses file diatur ke <strong>"Siapa saja yang memiliki link" (Anyone with the link)</strong>.</span>
                         </div>
                         <div class="row g-2">
                             <div class="col-md-6">
                                 <label class="form-label small mb-1" id="lblLink1">Link Foto 1 (Sampul Utama) <span class="text-danger">*</span></label>
-                                <input type="url" id="glrLink1" class="form-control form-control-sm" placeholder="https://drive.google.com/file/d/.../view">
+                                <input type="url" id="glrLink1" class="form-control form-control-sm" placeholder="https://drive.google.com/... atau https://youtu.be/...">
                             </div>
                             <div class="col-md-6" id="wrapLink2">
                                 <label class="form-label small mb-1">Link Foto 2 (Slide ke-2)</label>
@@ -409,9 +393,7 @@
         </div>
     </div>
 
-    <!-- =============================================================== -->
-    <!-- MODAL 4: PRATINJAU & APPROVAL GALERI (KEPSEK & ADMIN)           -->
-    <!-- =============================================================== -->
+    <!-- MODAL 4: PRATINJAU & APPROVAL GALERI -->
     <div class="modal fade" id="modalValidasiGaleri" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-lg">
             <div class="modal-content border-0 rounded-4 shadow-lg overflow-hidden">
@@ -499,9 +481,32 @@
         const modalFormGaleri = new bootstrap.Modal(document.getElementById('modalFormGaleri'));
         const modalValGaleri = new bootstrap.Modal(document.getElementById('modalValidasiGaleri'));
 
-        // =========================================================================
+        // Helper Media: Ekstrak ID YouTube & Google Drive
+        function ekstrakIdYouTube(url) {
+            if (!url) return null;
+            let str = String(url).trim();
+            let regExp = /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?|shorts|live)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/i;
+            let match = str.match(regExp);
+            return (match && match[1]) ? match[1] : null;
+        }
+
+        function ekstrakIdDrive(url) {
+            if (!url) return null;
+            let f = String(url).trim();
+            if (!f.includes('drive.google.com')) return null;
+            let match = f.match(/\/d\/([a-zA-Z0-9_-]+)/) || f.match(/id=([a-zA-Z0-9_-]+)/);
+            return (match && match[1]) ? match[1] : null;
+        }
+
+        function buatUrlThumbnail(url) {
+            let ytId = ekstrakIdYouTube(url);
+            if (ytId) return `https://img.youtube.com/vi/${ytId}/hqdefault.jpg`;
+            let driveId = ekstrakIdDrive(url);
+            if (driveId) return `https://drive.google.com/thumbnail?id=${driveId}&sz=w400`;
+            return url;
+        }
+
         // 1. SISTEM NOTIFIKASI REAL-TIME
-        // =========================================================================
         function muatNotifikasi(event) {
             if (event) event.stopPropagation();
             const container = document.getElementById('notifListContainer');
@@ -568,9 +573,7 @@
             }
         }
 
-        // =========================================================================
-        // 2. LOGIKA RUMAH SARENGSEH (FILTER KELAS GURU & FITUR DELETE KEPSEK/ADMIN)
-        // =========================================================================
+        // 2. LOGIKA RUMAH SARENGSEH
         function muatDataAduan() {
             const tbody = document.getElementById('tbodyAduan');
             tbody.innerHTML = `<tr><td colspan="6" class="text-center py-4"><div class="spinner-border spinner-border-sm text-danger me-2"></div>Memuat data aduan...</td></tr>`;
@@ -766,13 +769,11 @@
             });
         }
 
-        // =========================================================================
-        // 3. LOGIKA PANGGUNG SUKA KARYA (ISOLASI KETAT PER PEMBUAT, KEPSEK & ADMIN)
-        // =========================================================================
+        // 3. LOGIKA PANGGUNG SUKA KARYA
         function toggleInputMediaGaleri() {
             const tipe = document.getElementById('glrTipeMedia').value;
             const isVideo = (tipe === 'Video');
-            document.getElementById('lblLink1').innerHTML = isVideo ? 'Link Video Google Drive <span class="text-danger">*</span>' : 'Link Foto 1 (Sampul Utama) <span class="text-danger">*</span>';
+            document.getElementById('lblLink1').innerHTML = isVideo ? 'Link Video (YouTube / Google Drive) <span class="text-danger">*</span>' : 'Link Foto 1 (Sampul Utama) <span class="text-danger">*</span>';
             document.getElementById('wrapLink2').classList.toggle('d-none', isVideo);
             document.getElementById('wrapLink3').classList.toggle('d-none', isVideo);
             document.getElementById('wrapLink4').classList.toggle('d-none', isVideo);
@@ -787,7 +788,6 @@
             const tbody = document.getElementById('tbodyGaleri');
             tbody.innerHTML = `<tr><td colspan="6" class="text-center py-4"><div class="spinner-border spinner-border-sm text-success me-2"></div>Memuat daftar galeri...</td></tr>`;
 
-            // Tentukan mode: KEPSEK, ADMIN, atau GURU
             let modeParam = 'GURU';
             if (isAdmin) modeParam = 'ADMIN';
             else if (isKepsek) modeParam = 'KEPSEK';
@@ -802,8 +802,6 @@
             fetch(`${API_URL}?${params.toString()}&_t=${Date.now()}`)
             .then(r => r.json()).then(res => {
                 let rawList = res.data || [];
-                // Pengaman ganda (Double-Lock) di sisi Frontend:
-                // Jika user adalah Guru, pastikan hanya menampilkan karya yang nip_pembuat == myNip
                 if (isGuru) {
                     rawList = rawList.filter(item => {
                         let nipItem = String(item.nip_pembuat || '').replace(/^'/, '').trim();
@@ -836,7 +834,8 @@
 
                 let thumbsHtml = '';
                 item.links.forEach(l => {
-                    thumbsHtml += `<img src="${l}" class="thumb-mini me-1 mb-1" alt="Media">`;
+                    let thumbSrc = buatUrlThumbnail(l);
+                    thumbsHtml += `<img src="${thumbSrc}" class="thumb-mini me-1 mb-1" alt="Media" onerror="this.src='https://img.freepik.com/free-vector/video-files-concept-illustration_114360-4758.jpg'">`;
                 });
 
                 let catatanHtml = item.catatan_approver ? `<div class="small text-danger fst-italic mt-1"><i class="fas fa-comment-dots me-1"></i>Catatan Kepsek: "${item.catatan_approver}"</div>` : '';
@@ -967,10 +966,20 @@
             const mediaBox = document.getElementById('valGlrMediaBox');
             mediaBox.innerHTML = '';
 
-            if (item.links.length > 1) {
+            let firstUrl = item.links[0] || '';
+            let ytId = ekstrakIdYouTube(firstUrl);
+            let driveId = ekstrakIdDrive(firstUrl);
+            let isVideo = String(item.tipe_media || '').toLowerCase() === 'video' || Boolean(ytId);
+
+            if (ytId) {
+                mediaBox.innerHTML = `<div class="ratio ratio-16x9"><iframe src="https://www.youtube.com/embed/${ytId}?rel=0" allowfullscreen></iframe></div>`;
+            } else if (isVideo && driveId) {
+                mediaBox.innerHTML = `<div class="ratio ratio-16x9"><iframe src="https://drive.google.com/file/d/${driveId}/preview" allow="autoplay; fullscreen" allowfullscreen></iframe></div>`;
+            } else if (item.links.length > 1) {
                 let inner = '';
                 item.links.forEach((url, i) => {
-                    inner += `<div class="carousel-item ${i===0?'active':''}"><img src="${url}" class="d-block w-100" style="max-height: 380px; object-fit: cover;"></div>`;
+                    let imgUrl = buatUrlThumbnail(url);
+                    inner += `<div class="carousel-item ${i===0?'active':''}"><img src="${imgUrl}" class="d-block w-100" style="max-height: 380px; object-fit: cover;"></div>`;
                 });
                 mediaBox.innerHTML = `
                     <div id="carouselValGaleri" class="carousel slide" data-bs-ride="carousel" data-bs-interval="3000">
@@ -979,12 +988,9 @@
                         <button class="carousel-control-next" type="button" data-bs-target="#carouselValGaleri" data-bs-slide="next"><span class="carousel-control-next-icon"></span></button>
                     </div>
                 `;
-                setTimeout(() => {
-                    const elCar = document.getElementById('carouselValGaleri');
-                    if (elCar) new bootstrap.Carousel(elCar, { interval: 3000, ride: 'carousel' });
-                }, 150);
             } else if (item.links.length === 1) {
-                mediaBox.innerHTML = `<img src="${item.links[0]}" class="img-fluid w-100" style="max-height: 380px; object-fit: contain;">`;
+                let singleUrl = buatUrlThumbnail(firstUrl);
+                mediaBox.innerHTML = `<img src="${singleUrl}" class="img-fluid w-100" style="max-height: 380px; object-fit: contain;">`;
             }
 
             document.getElementById('boxInputApprovalKepsek').classList.toggle('d-none', !(isKepsek || isAdmin));
