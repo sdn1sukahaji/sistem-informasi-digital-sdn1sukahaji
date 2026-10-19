@@ -247,12 +247,13 @@
         let mapMarkers = [];
 
         function initMap() {
-            // Koordinat Default (Area Cihaurbeuti Ciamis)
-            map = L.map('mapContainer').setView([-7.2660, 108.2010], 13);
+            // Koordinat Fokus: Area Cihaurbeuti (SDN 1 Sukahaji)
+            // Angka 14 adalah tingkat zoom, ubah ke 15 atau 16 jika ingin lebih dekat
+            map = L.map('mapContainer').setView([-7.2660, 108.2010], 14);
             
-            // Tambahkan Tile Layer (Peta Dasar dari OpenStreetMap)
-            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors | SDN 1 Sukahaji'
+            // Tampilan Peta Elegan: CartoDB Positron (Bersih & Profesional)
+            L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+                attribution: '&copy; <a href="https://carto.com/attributions">CARTO</a> | Data SDN 1 Sukahaji'
             }).addTo(map);
 
             // Langsung panggil data koordinat dari Backend
@@ -263,7 +264,7 @@
             const loader = document.getElementById('mapLoader');
             loader.classList.remove('d-none');
 
-            // Hapus marker lama jika ada (fitur penyegaran)
+            // Hapus marker lama jika ada (fitur penyegaran manual)
             mapMarkers.forEach(m => map.removeLayer(m));
             mapMarkers = [];
 
@@ -272,23 +273,25 @@
             .then(res => {
                 loader.classList.add('d-none');
                 if(res.status === 'success' && res.data.length > 0) {
-                    let latLngs = [];
-
-                    // Kustomisasi Ikon Peta Sekolah (Desain Sekolah)
-                    const schoolIcon = L.divIcon({
-                        className: 'custom-div-icon',
-                        html: "<div style='background-color:#0f4c81; width:34px; height:34px; border-radius:50%; display:flex; align-items:center; justify-content:center; color:white; border:3px solid white; box-shadow:0 3px 6px rgba(0,0,0,0.3);'><i class='fas fa-user-graduate'></i></div>",
-                        iconSize: [34, 34],
-                        iconAnchor: [17, 17]
-                    });
-
+                    
                     // Loop data hasil agregasi dari Backend
                     res.data.forEach(item => {
-                        let marker = L.marker([item.lat, item.lng], { icon: schoolIcon }).addTo(map);
+                        // Menentukan radius lingkaran berdasarkan jumlah siswa (minimal 10, maksimal 45)
+                        let radiusSize = Math.min(Math.max(item.jumlah * 2, 10), 45);
+
+                        // Membuat Bubble/Lingkaran Interaktif
+                        let circle = L.circleMarker([item.lat, item.lng], {
+                            radius: radiusSize,
+                            fillColor: "#0f4c81", // Warna biru ciri khas sekolah
+                            color: "#ffc107", // Garis tepi kuning
+                            weight: 2,
+                            opacity: 1,
+                            fillOpacity: 0.65
+                        }).addTo(map);
                         
                         // Buat Pop-Up Interaktif
                         let popUpHtml = `
-                            <div class="text-center p-1">
+                            <div class="text-center p-1" style="min-width: 140px;">
                                 <div class="map-popup-title"><i class="fas fa-map-marker-alt text-danger me-1"></i> ${item.dusun}</div>
                                 <div class="small text-muted mb-2">Desa ${item.desa}</div>
                                 <div class="badge bg-warning text-dark px-3 py-2 w-100 shadow-sm" style="font-size:14px;">
@@ -296,18 +299,33 @@
                                 </div>
                             </div>
                         `;
-                        marker.bindPopup(popUpHtml);
-                        mapMarkers.push(marker);
-                        latLngs.push([item.lat, item.lng]);
-                    });
+                        circle.bindPopup(popUpHtml);
 
-                    // Auto-Zoom & Auto-Center peta agar semua titik pas di layar
-                    if (latLngs.length > 0) {
-                        const bounds = L.latLngBounds(latLngs);
-                        map.fitBounds(bounds, { padding: [40, 40] });
-                    }
+                        // Efek Hover (Berubah Warna saat Mouse Diarahkan)
+                        circle.on('mouseover', function (e) {
+                            this.setStyle({
+                                fillColor: '#dc3545', // Berubah merah terang
+                                color: '#dc3545',
+                                weight: 3,
+                                fillOpacity: 0.9
+                            });
+                            this.openPopup(); // Munculkan pop-up otomatis
+                        });
+
+                        // Kembali ke warna asal saat mouse pergi
+                        circle.on('mouseout', function (e) {
+                            this.setStyle({
+                                fillColor: '#0f4c81',
+                                color: '#ffc107',
+                                weight: 2,
+                                fillOpacity: 0.65
+                            });
+                            this.closePopup();
+                        });
+
+                        mapMarkers.push(circle);
+                    });
                 } else {
-                    // Jika data koordinat kosong, beri tahu pengguna
                     loader.innerHTML = '<div class="text-danger fw-bold"><i class="fas fa-exclamation-triangle me-1"></i> Koordinat belum tersedia di Database</div>';
                 }
             })
@@ -316,7 +334,7 @@
             });
         }
 
-        // Inisialisasi Peta saat halaman selesai dimuat
+        // Inisialisasi Peta saat halaman selesai dimuat (TIDAK DIHAPUS)
         document.addEventListener("DOMContentLoaded", function() {
             initMap();
         });
