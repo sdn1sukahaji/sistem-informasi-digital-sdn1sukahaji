@@ -455,7 +455,32 @@
             } catch (e) {}
         }
 
-        let guruLoaded = false;
+        // Fungsi Cerdas: Mengubah Link Google Drive / Path GitHub menjadi Gambar
+        function prosesUrlFotoGuru(rawFoto, nip) {
+            let f = (rawFoto || '').trim();
+            
+            // 1. Jika kolom Foto di Master_Guru diisi Link Google Drive
+            if (f.includes('drive.google.com')) {
+                let match = f.match(/\/d\/([a-zA-Z0-9_-]+)/) || f.match(/id=([a-zA-Z0-9_-]+)/);
+                if (match && match[1]) {
+                    return `https://drive.google.com/thumbnail?id=${match[1]}&sz=w400`;
+                }
+            }
+            
+            // 2. Jika kolom Foto diisi URL langsung atau path folder assets
+            if (f !== '' && f !== '-') {
+                if (f.startsWith('http') || f.startsWith('assets/')) return f;
+                return `assets/${f}`;
+            }
+
+            // 3. Jika kolom Foto kosong, coba cari otomatis berdasarkan NIP di folder assets/
+            let cleanNip = (nip || '').replace(/[^0-9]/g, '');
+            if (cleanNip) {
+                return `assets/${cleanNip}.jpg`;
+            }
+
+            return '';
+        }
 
         function muatDataGuru() {
             const container = document.getElementById('guruContainer');
@@ -464,14 +489,16 @@
             fetch(`${API_URL}?action=baca_guru&_t=${Date.now()}`)
             .then(r => r.json())
             .then(res => {
-                guruLoaded = true;
                 if (res.status === 'success' && res.data && res.data.length > 0) {
                     let html = '';
                     res.data.forEach(g => {
                         let inisial = g.nama ? g.nama.trim().charAt(0).toUpperCase() : 'G';
-                        let avatarEl = g.foto && g.foto.startsWith('http')
-                            ? `<img src="${g.foto}" alt="${g.nama}" class="avatar-circle" onerror="this.outerHTML='<div class=\\'avatar-circle\\'>${inisial}</div>'">`
-                            : `<div class="avatar-circle">${inisial}</div>`;
+                        let urlFoto = prosesUrlFotoGuru(g.foto, g.nip);
+
+                        // Jika foto ditemukan maka tampilkan foto; jika belum ada/gagal dimuat, otomatis kembali ke lingkaran inisial
+                        let avatarEl = urlFoto
+                            ? `<img src="${urlFoto}" alt="${g.nama}" class="avatar-circle" style="width:92px; height:92px;" onerror="this.outerHTML='<div class=\\'avatar-circle\\' style=\\'width:92px; height:92px;\\'>${inisial}</div>'">`
+                            : `<div class="avatar-circle" style="width:92px; height:92px;">${inisial}</div>`;
 
                         let badgeKelas = (g.kelas_ampu && g.kelas_ampu !== '-')
                             ? `<span class="badge bg-warning text-dark rounded-pill px-3 py-1 mb-2">${g.kelas_ampu}</span>`
