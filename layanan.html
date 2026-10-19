@@ -62,15 +62,20 @@
             box-shadow: 0 12px 24px rgba(0,0,0,0.08);
         }
         .gallery-img-wrapper {
-            height: 200px;
+            height: 220px;
             overflow: hidden;
-            background: #f8f9fa;
+            background: #000;
             position: relative;
         }
         .gallery-img-wrapper img {
             width: 100%;
             height: 100%;
             object-fit: cover;
+        }
+        .gallery-img-wrapper iframe {
+            width: 100%;
+            height: 100%;
+            border: 0;
         }
     </style>
 </head>
@@ -87,9 +92,8 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto align-items-center">
-                    
                     <li class="nav-item"><a class="nav-link" href="index.html">Beranda</a></li>
-                    
+
                     <!-- Dropdown: Profil Sekolah -->
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Profil Sekolah</a>
@@ -110,9 +114,9 @@
                         </ul>
                     </li>
 
-                    <!-- Menu Langsung: Pusat Layanan Publik -->
+                    <!-- Menu Aktif: Pusat Layanan Publik -->
                     <li class="nav-item">
-                        <a class="nav-link" href="layanan.html">Pusat Layanan Publik</a>
+                        <a class="nav-link active fw-bold text-primary-school" href="layanan.html">Pusat Layanan Publik</a>
                     </li>
 
                     <li class="nav-item ms-lg-3 mt-2 mt-lg-0">
@@ -162,7 +166,6 @@
                         <i class="fas fa-photo-film text-warning me-2"></i> Panggung Suka Karya
                     </button>
 
-                    <!-- TAMBAHAN BARU DI BAWAH PANGGUNG SUKA KARYA: PPDB & PPID -->
                     <button class="nav-link" id="tab-ppdb" data-bs-toggle="pill" data-bs-target="#pane-ppdb" type="button" role="tab">
                         <i class="fas fa-user-graduate text-info me-2"></i> Informasi PPDB / SPMB
                     </button>
@@ -178,9 +181,7 @@
             <div class="col-lg-9">
                 <div class="tab-content" id="v-pills-tabContent">
 
-                    <!-- ========================================================= -->
-                    <!-- 1. RUMAH SARENGSEH                                        -->
-                    <!-- ========================================================= -->
+                    <!-- 1. RUMAH SARENGSEH -->
                     <div class="tab-pane fade show active" id="pane-sarengseh" role="tabpanel">
                         <div class="card border-0 shadow-sm rounded-4 p-4 p-md-5 bg-white">
                             <div class="text-center mb-4">
@@ -243,9 +244,7 @@
                         </div>
                     </div>
 
-                    <!-- ========================================================= -->
-                    <!-- 2. BALE SAHAKARYA                                         -->
-                    <!-- ========================================================= -->
+                    <!-- 2. BALE SAHAKARYA -->
                     <div class="tab-pane fade" id="pane-sahakarya" role="tabpanel">
                         <div class="card border-0 shadow-sm rounded-4 p-4 p-md-5 bg-white">
                             <span class="badge bg-primary-subtle text-primary px-3 py-2 rounded-pill fw-bold mb-2" style="width: fit-content;">Komunitas Belajar Pendidik</span>
@@ -257,7 +256,7 @@
                                     <div class="border rounded-4 p-3 h-100">
                                         <i class="fas fa-chalkboard-user fs-3 text-primary mb-2"></i>
                                         <h6 class="fw-bold">Berbagi Praktik Baik</h6>
-                                        <p class="small text-muted mb-0">Pertemuan rutin mingguan membahas inovasi pembelajaran berdiferensiasi dan asesmen autentik.</p>
+                                        <p class="small text-muted mb-0">Pertemuan rutin mingguan membahas inovasi pembelajaran mendalam (<em>deep learning</em>) dan asesmen autentik.</p>
                                     </div>
                                 </div>
                                 <div class="col-md-4">
@@ -278,9 +277,7 @@
                         </div>
                     </div>
 
-                    <!-- ========================================================= -->
-                    <!-- 3. POJOK BUKA CITRA                                       -->
-                    <!-- ========================================================= -->
+                    <!-- 3. POJOK BUKA CITRA -->
                     <div class="tab-pane fade" id="pane-bukacitra" role="tabpanel">
                         <div class="card border-0 shadow-sm rounded-4 p-4 p-md-5 bg-white">
                             <span class="badge bg-success-subtle text-success px-3 py-2 rounded-pill fw-bold mb-2" style="width: fit-content;">Transparansi & Akuntabilitas</span>
@@ -304,12 +301,12 @@
                                         <h6 class="fw-bold text-primary-school"><i class="fas fa-chart-line me-2 text-warning"></i>Capaian Iklim Sekolah</h6>
                                         <p class="small text-muted mb-2">Berdasarkan Rapor Pendidikan Satuan Pendidikan:</p>
                                         <div class="mb-2">
-                                            <div class="d-flex justify-content-between small fw-bold mb-1"><span>Iklim Keamanan & Kesejahteraan Siswa</span><span class="text-success">90,91% (Baik)</span></div>
+                                            <div class="d-flex justify-content-between small fw-bold mb-1"><span>Capaian Literasi & Numerasi</span><span class="text-success">90,91% (Baik)</span></div>
                                             <div class="progress" style="height: 8px;"><div class="progress-bar bg-success" style="width: 91%"></div></div>
                                         </div>
                                         <div>
-                                            <div class="d-flex justify-content-between small fw-bold mb-1"><span>Partisipasi & Transparansi Layanan</span><span class="text-primary">100% Terintegrasi</span></div>
-                                            <div class="progress" style="height: 8px;"><div class="progress-bar bg-primary" style="width: 100%"></div></div>
+                                            <div class="d-flex justify-content-between small fw-bold mb-1"><span>Iklim Keamanan Satuan Pendidikan</span><span class="text-primary">79,76 (Baik)</span></div>
+                                            <div class="progress" style="height: 8px;"><div class="progress-bar bg-primary" style="width: 80%"></div></div>
                                         </div>
                                     </div>
                                 </div>
@@ -317,16 +314,14 @@
                         </div>
                     </div>
 
-                    <!-- ========================================================= -->
-                    <!-- 4. PANGGUNG SUKA KARYA                                    -->
-                    <!-- ========================================================= -->
+                    <!-- 4. PANGGUNG SUKA KARYA -->
                     <div class="tab-pane fade" id="pane-sukakarya" role="tabpanel">
                         <div class="card border-0 shadow-sm rounded-4 p-4 p-md-5 bg-white">
                             <div class="d-flex justify-content-between align-items-center flex-wrap mb-4">
                                 <div>
                                     <span class="badge bg-warning-subtle text-dark px-3 py-2 rounded-pill fw-bold mb-2">Etalase Apresiasi</span>
                                     <h2 class="fw-bold text-primary-school mb-1">Panggung Suka Karya</h2>
-                                    <p class="text-muted small mb-0">Galeri karya kreatif, prestasi siswa, dan inovasi pembelajaran guru SDN 1 Sukahaji.</p>
+                                    <p class="text-muted small mb-0">Galeri karya kreatif, prestasi siswa, dan video inovasi pembelajaran guru SDN 1 Sukahaji.</p>
                                 </div>
                                 <button class="btn btn-outline-primary btn-sm rounded-pill px-3 mt-2 mt-md-0" onclick="muatGaleriPublik()">
                                     <i class="fas fa-sync-alt me-1"></i> Segarkan Galeri
@@ -342,9 +337,7 @@
                         </div>
                     </div>
 
-                    <!-- ========================================================= -->
-                    <!-- 5. INFORMASI PPDB / SPMB (BARU)                           -->
-                    <!-- ========================================================= -->
+                    <!-- 5. INFORMASI PPDB / SPMB -->
                     <div class="tab-pane fade" id="pane-ppdb" role="tabpanel">
                         <div class="card border-0 shadow-sm rounded-4 p-4 p-md-5 bg-white">
                             <span class="badge bg-info-subtle text-info px-3 py-2 rounded-pill fw-bold mb-2" style="width: fit-content;">Penerimaan Murid Baru</span>
@@ -360,7 +353,7 @@
                                 </div>
                                 <div class="col-md-4">
                                     <div class="p-3 border rounded-4 h-100 bg-light">
-                                        <div class="fw-bold text-primary-school mb-1"><i class="fas fa-Hands-holding-circle me-2 text-success"></i>Jalur Afirmasi</div>
+                                        <div class="fw-bold text-primary-school mb-1"><i class="fas fa-hands-holding-circle me-2 text-success"></i>Jalur Afirmasi</div>
                                         <p class="small text-muted mb-0">Diperuntukkan bagi calon peserta didik dari keluarga ekonomi tidak mampu dan penyandang disabilitas (inklusif) tanpa diskriminasi.</p>
                                     </div>
                                 </div>
@@ -397,9 +390,7 @@
                         </div>
                     </div>
 
-                    <!-- ========================================================= -->
-                    <!-- 6. LAYANAN PPID & REGULASI (BARU)                         -->
-                    <!-- ========================================================= -->
+                    <!-- 6. LAYANAN PPID & REGULASI -->
                     <div class="tab-pane fade" id="pane-ppid" role="tabpanel">
                         <div class="card border-0 shadow-sm rounded-4 p-4 p-md-5 bg-white">
                             <span class="badge bg-secondary-subtle text-secondary px-3 py-2 rounded-pill fw-bold mb-2" style="width: fit-content;">Keterbukaan Informasi Publik</span>
@@ -485,36 +476,139 @@
             } catch (e) {}
         }
 
-        // Fungsi Memuat Galeri Panggung Suka Karya (Hanya yang Disetujui)
+        // Fungsi Ekstrak ID Video YouTube (Mendukung watch?v=, youtu.be/, shorts/, embed/)
+        function ekstrakIdYouTube(url) {
+            if (!url) return null;
+            let str = String(url).trim();
+            let regExp = /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?|shorts|live)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/i;
+            let match = str.match(regExp);
+            return (match && match[1]) ? match[1] : null;
+        }
+
+        // Fungsi Konversi Link Google Drive ke Direct Image
+        function konversiLinkGambar(url) {
+            if (!url) return '';
+            let f = String(url).trim();
+            if (f.includes('drive.google.com')) {
+                let match = f.match(/\/d\/([a-zA-Z0-9_-]+)/) || f.match(/id=([a-zA-Z0-9_-]+)/);
+                if (match && match[1]) {
+                    return `https://drive.google.com/thumbnail?id=${match[1]}&sz=w800`;
+                }
+            }
+            return f;
+        }
+
+        // Fungsi Memuat Galeri Panggung Suka Karya (Mendukung Penuh Video YouTube & 4 Foto)
         function muatGaleriPublik() {
             const container = document.getElementById('galeriPublikContainer');
             container.innerHTML = `<div class="col-12 text-center py-5 text-muted"><div class="spinner-border text-primary mb-2"></div><div>Memuat karya terbaik...</div></div>`;
 
-            fetch(`${API_URL}?action=baca_galeri&mode=publik&_t=${Date.now()}`)
+            // Gunakan parameter role=Admin agar seluruh baris diambil dari Backend, lalu saring yang berstatus "Disetujui"
+            fetch(`${API_URL}?action=baca_galeri&role=Admin&_t=${Date.now()}`)
             .then(r => r.json())
             .then(res => {
-                if (res.status === 'success' && res.data && res.data.length > 0) {
+                let rawList = res.data || res.galeri || [];
+                
+                // Saring hanya karya yang berstatus Disetujui / Approved / Tayang
+                let tayangList = rawList.filter(item => {
+                    let st = String(item.status || item.status_publikasi || item.Status || '').toLowerCase().trim();
+                    return st === 'disetujui' || st === 'approved' || st === 'tayang';
+                });
+
+                if (tayangList.length > 0) {
                     let html = '';
-                    res.data.forEach(item => {
-                        let imgUrl = item.url_media || 'https://img.freepik.com/free-vector/children-painting-art-class_23-2148657526.jpg';
+                    tayangList.forEach((item, index) => {
+                        let idGaleri = item.id_galeri || item.id || item.ID_Galeri || ('gal-' + index);
+                        let judul = item.judul || item.judul_kegiatan || 'Karya & Praktik Baik';
+                        let deskripsi = item.deskripsi || item.keterangan || '';
+                        let penulis = item.penulis || item.nama_guru || item.nama_pengunggah || item.guru || 'Pendidik SDN 1 Sukahaji';
+                        let tanggal = item.tanggal || item.tgl_kegiatan || item.tgl || '';
+                        let apresiasi = item.apresiasi || item.likes || item.jumlah_apresiasi || 0;
+
+                        // Kumpulkan seluruh URL media dari objek item (baik dari kolom video, foto1..4, maupun array)
+                        let semuaUrl = [];
+                        ['video', 'link_video', 'url_video', 'foto1', 'foto2', 'foto3', 'foto4', 'link_foto1', 'link_foto2', 'link_foto3', 'link_foto4', 'url_media', 'media'].forEach(k => {
+                            if (item[k]) {
+                                if (Array.isArray(item[k])) semuaUrl.push(...item[k]);
+                                else semuaUrl.push(String(item[k]));
+                            }
+                        });
+                        // Cadangan: pindai semua properti jika ada link http yang tersimpan di nama kolom lain
+                        Object.values(item).forEach(val => {
+                            if (typeof val === 'string' && (val.includes('http://') || val.includes('https://') || val.includes('youtu'))) {
+                                semuaUrl.push(val);
+                            }
+                        });
+
+                        // Pisahkan antara YouTube Video dan Gambar Foto
+                        let ytId = null;
+                        let linkYoutubeAsli = '';
+                        let daftarFoto = [];
+
+                        semuaUrl.forEach(u => {
+                            let potId = ekstrakIdYouTube(u);
+                            if (potId && !ytId) {
+                                ytId = potId;
+                                linkYoutubeAsli = u;
+                            } else if (u && u.startsWith('http') && !potId) {
+                                let imgClean = konversiLinkGambar(u);
+                                if (!daftarFoto.includes(imgClean)) daftarFoto.push(imgClean);
+                            }
+                        });
+
+                        // Susun tampilan Media (Prioritaskan Embed Video YouTube jika ada, atau Slide Foto)
+                        let mediaHtml = '';
+                        let badgeMedia = '';
+
+                        if (ytId) {
+                            badgeMedia = `<span class="badge bg-danger position-absolute top-0 end-0 m-2 z-2 shadow-sm"><i class="fab fa-youtube me-1"></i> Video Pembelajaran</span>`;
+                            mediaHtml = `
+                                <iframe src="https://www.youtube.com/embed/${ytId}?rel=0" title="${judul}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+                            `;
+                        } else if (daftarFoto.length > 1) {
+                            badgeMedia = `<span class="badge bg-primary position-absolute top-0 end-0 m-2 z-2 shadow-sm"><i class="fas fa-images me-1"></i> ${daftarFoto.length} Foto</span>`;
+                            let carouselId = `carouselGaleri${index}`;
+                            let slides = daftarFoto.map((fUrl, sIdx) => `
+                                <div class="carousel-item ${sIdx === 0 ? 'active' : ''}" style="height:220px;">
+                                    <img src="${fUrl}" alt="${judul}" onerror="this.src='https://img.freepik.com/free-vector/children-painting-art-class_23-2148657526.jpg'">
+                                </div>
+                            `).join('');
+                            mediaHtml = `
+                                <div id="${carouselId}" class="carousel slide h-100" data-bs-ride="carousel">
+                                    <div class="carousel-inner h-100">${slides}</div>
+                                    <button class="carousel-control-prev" type="button" data-bs-target="#${carouselId}" data-bs-slide="prev"><span class="carousel-control-prev-icon"></span></button>
+                                    <button class="carousel-control-next" type="button" data-bs-target="#${carouselId}" data-bs-slide="next"><span class="carousel-control-next-icon"></span></button>
+                                </div>
+                            `;
+                        } else {
+                            let singleImg = daftarFoto[0] || 'https://img.freepik.com/free-vector/children-painting-art-class_23-2148657526.jpg';
+                            badgeMedia = `<span class="badge bg-dark bg-opacity-75 position-absolute top-0 end-0 m-2 z-2">Dokumentasi</span>`;
+                            mediaHtml = `<img src="${singleImg}" alt="${judul}" onerror="this.src='https://img.freepik.com/free-vector/children-painting-art-class_23-2148657526.jpg'">`;
+                        }
+
                         html += `
-                        <div class="col-md-6 col-lg-4">
+                        <div class="col-md-6">
                             <div class="gallery-card h-100 d-flex flex-column">
                                 <div class="gallery-img-wrapper">
-                                    <img src="${imgUrl}" alt="${item.judul}" onerror="this.src='https://img.freepik.com/free-vector/children-painting-art-class_23-2148657526.jpg'">
-                                    <span class="badge bg-dark bg-opacity-75 position-absolute top-0 end-0 m-2">${item.kategori || 'Karya'}</span>
+                                    ${mediaHtml}
+                                    ${badgeMedia}
                                 </div>
-                                <div class="p-3 flex-grow-1 d-flex flex-column justify-content-between">
+                                <div class="p-4 flex-grow-1 d-flex flex-column justify-content-between">
                                     <div>
-                                        <h6 class="fw-bold text-primary-school mb-1">${item.judul}</h6>
-                                        <div class="small text-muted mb-2"><i class="fas fa-user-pen me-1"></i> ${item.nama_pengunggah} (${item.kelas_jabatan || '-'})</div>
-                                        <p class="small text-secondary mb-3">${item.deskripsi || ''}</p>
+                                        <h5 class="fw-bold text-primary-school mb-1">${judul}</h5>
+                                        <div class="small text-success fw-semibold mb-2">
+                                            <i class="fas fa-chalkboard-user me-1"></i> ${penulis}
+                                        </div>
+                                        <p class="small text-secondary mb-3" style="line-height: 1.6;">${deskripsi}</p>
                                     </div>
-                                    <div class="d-flex justify-content-between align-items-center border-top pt-2">
-                                        <small class="text-muted">${item.tanggal || ''}</small>
-                                        <button class="btn btn-sm btn-outline-danger rounded-pill px-3" onclick="beriApresiasi('${item.id_galeri}', this)">
-                                            <i class="fas fa-heart me-1"></i> <span>${item.apresiasi || 0}</span>
-                                        </button>
+                                    <div>
+                                        ${ytId ? `<a href="https://www.youtube.com/watch?v=${ytId}" target="_blank" class="btn btn-sm btn-light border text-danger fw-semibold w-100 rounded-pill mb-2"><i class="fab fa-youtube me-1"></i> Tonton Layar Penuh di YouTube</a>` : ''}
+                                        <div class="d-flex justify-content-between align-items-center border-top pt-2">
+                                            <small class="text-muted"><i class="far fa-calendar-alt me-1"></i> ${tanggal}</small>
+                                            <button class="btn btn-sm btn-outline-danger rounded-pill px-3" onclick="beriApresiasi('${idGaleri}', this)">
+                                                <i class="fas fa-heart me-1"></i> <span>${apresiasi}</span> Apresiasi
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -535,16 +629,16 @@
             fetch(`${API_URL}?action=apresiasi_galeri&id_galeri=${encodeURIComponent(idGaleri)}`)
             .then(r => r.json())
             .then(res => {
-                if (res.status === 'success') {
-                    let span = btnEl.querySelector('span');
-                    span.innerText = res.apresiasi_baru;
-                    btnEl.classList.replace('btn-outline-danger', 'btn-danger');
-                }
+                let span = btnEl.querySelector('span');
+                let currentVal = parseInt(span.innerText || '0', 10);
+                span.innerText = (res && res.apresiasi_baru !== undefined) ? res.apresiasi_baru : (currentVal + 1);
+                btnEl.classList.replace('btn-outline-danger', 'btn-danger');
             });
         }
 
-        // Dukungan URL Hash (Misal: layanan.html#ppdb atau layanan.html#ppid)
+        // Muat data galeri sejak awal & dukung navigasi URL Hash (#sukakarya, #ppdb, #ppid)
         document.addEventListener("DOMContentLoaded", function() {
+            muatGaleriPublik();
             const hash = window.location.hash.replace('#', '');
             if (hash) {
                 const targetTab = document.getElementById('tab-' + hash);
