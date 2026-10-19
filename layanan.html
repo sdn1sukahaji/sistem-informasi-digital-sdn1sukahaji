@@ -62,7 +62,7 @@
             box-shadow: 0 12px 24px rgba(0,0,0,0.08);
         }
         .gallery-img-wrapper {
-            height: 220px;
+            height: 230px;
             overflow: hidden;
             background: #000;
             position: relative;
@@ -504,98 +504,65 @@
             return String(url).trim();
         }
 
-        // Fungsi Memuat Galeri Panggung Suka Karya
+        // Fungsi Memuat Galeri Panggung Suka Karya (Sesuai Struktur prosesBacaGaleri.js)
         function muatGaleriPublik() {
             const container = document.getElementById('galeriPublikContainer');
             container.innerHTML = `<div class="col-12 text-center py-5 text-muted"><div class="spinner-border text-primary mb-2"></div><div>Memuat karya terbaik...</div></div>`;
 
-            // PERBAIKAN: Menggunakan mode=publik agar tidak diblokir oleh backend
-            fetch(`${API_URL}?action=baca_galeri&mode=publik&_t=${Date.now()}`)
+            // WAJIB mode=PUBLIC (dengan huruf C sesuai prosesBacaGaleri.js)
+            fetch(`${API_URL}?action=baca_galeri&mode=PUBLIC&_t=${Date.now()}`)
             .then(r => r.json())
             .then(res => {
-                let rawList = res.data || res.galeri || [];
-                
-                // Gunakan filter sangat longgar atau gunakan semua data publik
-                let tayangList = rawList.filter(item => {
-                    let gabunganTeks = Object.values(item).join(' ').toLowerCase();
-                    return gabunganTeks.includes('setuju') || gabunganTeks.includes('tayang') || gabunganTeks.includes('approved') || gabunganTeks.includes('publik');
-                });
-                
-                // Fallback: Jika filter gagal (karena backend mungkin tidak mengirim kolom status di mode publik), tampilkan semua
-                if (tayangList.length === 0 && rawList.length > 0) {
-                    tayangList = rawList;
-                }
-
-                if (tayangList.length > 0) {
+                const list = res.data || [];
+                if (res.status === 'success' && list.length > 0) {
                     let html = '';
-                    tayangList.forEach((item, index) => {
-                        let idGaleri = item.id_galeri || item.id || item.ID_Galeri || ('gal-' + index);
-                        let judul = item.judul || item.judul_kegiatan || 'Karya & Praktik Baik';
-                        let deskripsi = item.deskripsi || item.keterangan || '';
-                        let penulis = item.penulis || item.nama_guru || item.nama_pengunggah || item.guru || 'Pendidik SDN 1 Sukahaji';
-                        let tanggal = item.tanggal || item.tgl_kegiatan || item.tgl || '';
-                        let apresiasi = item.apresiasi || item.likes || item.jumlah_apresiasi || 0;
+                    list.forEach((item, index) => {
+                        let idGaleri = item.id_galeri || ('gal-' + index);
+                        let judul = item.judul_kegiatan || 'Karya & Praktik Baik';
+                        let deskripsi = item.deskripsi_kegiatan || '';
+                        let penulis = item.nama_pembuat || 'Guru SDN 1 Sukahaji';
+                        let tanggal = item.tanggal_kegiatan || '';
+                        let likes = item.likes || 0;
+                        let tipeMedia = String(item.tipe_media || 'Foto').trim();
+                        let links = Array.isArray(item.links) ? item.links.filter(Boolean) : [];
 
-                        let videoUrlRaw = '';
-                        let daftarFotoRaw = [];
-
-                        // Deteksi otomatis URL Media
-                        Object.keys(item).forEach(k => {
-                            let keyLower = k.toLowerCase();
-                            let val = item[k];
-                            if (!val) return;
-
-                            let urls = Array.isArray(val) ? val : [String(val)];
-                            urls.forEach(u => {
-                                let cleanU = String(u).trim();
-                                if (!cleanU.startsWith('http') && !cleanU.includes('youtu')) return;
-
-                                if (keyLower.includes('video')) {
-                                    if (!videoUrlRaw) videoUrlRaw = cleanU;
-                                } else if (keyLower.includes('foto') || keyLower.includes('img') || keyLower.includes('media') || keyLower.includes('gambar')) {
-                                    if (ekstrakIdYouTube(cleanU) && !videoUrlRaw) {
-                                        videoUrlRaw = cleanU;
-                                    } else {
-                                        daftarFotoRaw.push(cleanU);
-                                    }
-                                } else if (ekstrakIdYouTube(cleanU)) {
-                                    videoUrlRaw = cleanU; // Tangkap jika link youtube ditaruh di kolom acak
-                                }
-                            });
-                        });
-
-                        let ytId = ekstrakIdYouTube(videoUrlRaw);
-                        let driveVideoId = (!ytId && videoUrlRaw) ? ekstrakIdDrive(videoUrlRaw) : null;
-
-                        let daftarFoto = [];
-                        daftarFotoRaw.forEach(u => {
-                            let imgClean = konversiLinkGambar(u);
-                            if (imgClean && !daftarFoto.includes(imgClean)) daftarFoto.push(imgClean);
-                        });
+                        let firstLink = links[0] || '';
+                        let ytId = ekstrakIdYouTube(firstLink);
+                        let driveId = ekstrakIdDrive(firstLink);
+                        let isVideoMode = (tipeMedia.toLowerCase() === 'video') || Boolean(ytId);
 
                         let mediaHtml = '';
                         let badgeMedia = '';
                         let tombolLuarHtml = '';
 
+                        // KONDISI 1: Video YouTube
                         if (ytId) {
                             badgeMedia = `<span class="badge bg-danger position-absolute top-0 end-0 m-2 z-2 shadow-sm"><i class="fab fa-youtube me-1"></i> Video YouTube</span>`;
                             mediaHtml = `<iframe src="https://www.youtube.com/embed/${ytId}?rel=0" title="${judul}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>`;
                             tombolLuarHtml = `<a href="https://www.youtube.com/watch?v=${ytId}" target="_blank" class="btn btn-sm btn-light border text-danger fw-semibold w-100 rounded-pill mb-2"><i class="fab fa-youtube me-1"></i> Tonton di YouTube</a>`;
-                        } else if (driveVideoId) {
-                            badgeMedia = `<span class="badge bg-success position-absolute top-0 end-0 m-2 z-2 shadow-sm"><i class="fab fa-google-drive me-1"></i> Video Drive</span>`;
-                            mediaHtml = `<iframe src="https://drive.google.com/file/d/${driveVideoId}/preview" title="${judul}" allow="autoplay; fullscreen" allowfullscreen></iframe>`;
-                            tombolLuarHtml = `<a href="https://drive.google.com/file/d/${driveVideoId}/view" target="_blank" class="btn btn-sm btn-light border text-success fw-semibold w-100 rounded-pill mb-2"><i class="fab fa-google-drive me-1"></i> Buka Video Layar Penuh</a>`;
-                        } else if (videoUrlRaw) {
+                        }
+                        // KONDISI 2: Video dari Google Drive
+                        else if (isVideoMode && driveId) {
+                            badgeMedia = `<span class="badge bg-success position-absolute top-0 end-0 m-2 z-2 shadow-sm"><i class="fab fa-google-drive me-1"></i> Video Pembelajaran</span>`;
+                            mediaHtml = `<iframe src="https://drive.google.com/file/d/${driveId}/preview" title="${judul}" allow="autoplay; fullscreen" allowfullscreen></iframe>`;
+                            tombolLuarHtml = `<a href="https://drive.google.com/file/d/${driveId}/view" target="_blank" class="btn btn-sm btn-light border text-success fw-semibold w-100 rounded-pill mb-2"><i class="fab fa-google-drive me-1"></i> Buka Video di Google Drive</a>`;
+                        }
+                        // KONDISI 3: Video URL Langsung (.mp4)
+                        else if (isVideoMode && firstLink) {
                             badgeMedia = `<span class="badge bg-primary position-absolute top-0 end-0 m-2 z-2 shadow-sm"><i class="fas fa-video me-1"></i> Video</span>`;
-                            mediaHtml = `<video controls class="w-100 h-100" style="object-fit:cover;"><source src="${videoUrlRaw}"></video>`;
-                        } else if (daftarFoto.length > 1) {
-                            badgeMedia = `<span class="badge bg-primary position-absolute top-0 end-0 m-2 z-2 shadow-sm"><i class="fas fa-images me-1"></i> ${daftarFoto.length} Foto</span>`;
+                            mediaHtml = `<video controls class="w-100 h-100" style="object-fit:cover;"><source src="${firstLink}"></video>`;
+                        }
+                        // KONDISI 4: Album Foto (Lebih dari 1 Foto -> Auto-Slide Carousel)
+                        else if (links.length > 1) {
+                            badgeMedia = `<span class="badge bg-primary position-absolute top-0 end-0 m-2 z-2 shadow-sm"><i class="fas fa-images me-1"></i> ${links.length} Foto</span>`;
                             let carouselId = `carouselGaleri${index}`;
-                            let slides = daftarFoto.map((fUrl, sIdx) => `
-                                <div class="carousel-item ${sIdx === 0 ? 'active' : ''}" style="height:220px;">
-                                    <img src="${fUrl}" alt="${judul}" onerror="this.src='https://img.freepik.com/free-vector/children-painting-art-class_23-2148657526.jpg'">
-                                </div>
-                            `).join('');
+                            let slides = links.map((fUrl, sIdx) => {
+                                let cleanImg = konversiLinkGambar(fUrl);
+                                return `
+                                <div class="carousel-item ${sIdx === 0 ? 'active' : ''}" style="height:230px;">
+                                    <img src="${cleanImg}" alt="${judul}" onerror="this.src='https://img.freepik.com/free-vector/children-painting-art-class_23-2148657526.jpg'">
+                                </div>`;
+                            }).join('');
                             mediaHtml = `
                                 <div id="${carouselId}" class="carousel slide h-100" data-bs-ride="carousel">
                                     <div class="carousel-inner h-100">${slides}</div>
@@ -603,9 +570,11 @@
                                     <button class="carousel-control-next" type="button" data-bs-target="#${carouselId}" data-bs-slide="next"><span class="carousel-control-next-icon"></span></button>
                                 </div>
                             `;
-                        } else {
-                            let singleImg = daftarFoto[0] || 'https://img.freepik.com/free-vector/children-painting-art-class_23-2148657526.jpg';
-                            badgeMedia = `<span class="badge bg-dark bg-opacity-75 position-absolute top-0 end-0 m-2 z-2">Dokumentasi</span>`;
+                        }
+                        // KONDISI 5: 1 Foto Tunggal
+                        else {
+                            let singleImg = firstLink ? konversiLinkGambar(firstLink) : 'https://img.freepik.com/free-vector/children-painting-art-class_23-2148657526.jpg';
+                            badgeMedia = `<span class="badge bg-dark bg-opacity-75 position-absolute top-0 end-0 m-2 z-2"><i class="fas fa-camera me-1"></i> Foto Kegiatan</span>`;
                             mediaHtml = `<img src="${singleImg}" alt="${judul}" onerror="this.src='https://img.freepik.com/free-vector/children-painting-art-class_23-2148657526.jpg'">`;
                         }
 
@@ -622,14 +591,14 @@
                                         <div class="small text-success fw-semibold mb-2">
                                             <i class="fas fa-chalkboard-user me-1"></i> ${penulis}
                                         </div>
-                                        <p class="small text-secondary mb-3" style="line-height: 1.6;">${deskripsi}</p>
+                                        <p class="small text-secondary mb-3" style="line-height: 1.6; white-space: pre-wrap;">${deskripsi}</p>
                                     </div>
                                     <div>
                                         ${tombolLuarHtml}
                                         <div class="d-flex justify-content-between align-items-center border-top pt-2">
                                             <small class="text-muted"><i class="far fa-calendar-alt me-1"></i> ${tanggal}</small>
                                             <button class="btn btn-sm btn-outline-danger rounded-pill px-3" onclick="beriApresiasi('${idGaleri}', this)">
-                                                <i class="fas fa-heart me-1"></i> <span>${apresiasi}</span> Apresiasi
+                                                <i class="fas fa-heart me-1"></i> <span>${likes}</span> Apresiasi
                                             </button>
                                         </div>
                                     </div>
@@ -654,7 +623,7 @@
             .then(res => {
                 let span = btnEl.querySelector('span');
                 let currentVal = parseInt(span.innerText || '0', 10);
-                span.innerText = (res && res.apresiasi_baru !== undefined) ? res.apresiasi_baru : (currentVal + 1);
+                span.innerText = (res && res.likes !== undefined) ? res.likes : (currentVal + 1);
                 btnEl.classList.replace('btn-outline-danger', 'btn-danger');
             });
         }
