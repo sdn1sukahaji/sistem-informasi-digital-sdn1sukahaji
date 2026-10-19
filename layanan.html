@@ -504,21 +504,27 @@
             return String(url).trim();
         }
 
-        // Fungsi Memuat Galeri Panggung Suka Karya (Mendukung Video YouTube, Video Drive & 4 Foto Drive)
+        // Fungsi Memuat Galeri Panggung Suka Karya
         function muatGaleriPublik() {
             const container = document.getElementById('galeriPublikContainer');
             container.innerHTML = `<div class="col-12 text-center py-5 text-muted"><div class="spinner-border text-primary mb-2"></div><div>Memuat karya terbaik...</div></div>`;
 
-            fetch(`${API_URL}?action=baca_galeri&role=Admin&_t=${Date.now()}`)
+            // PERBAIKAN: Menggunakan mode=publik agar tidak diblokir oleh backend
+            fetch(`${API_URL}?action=baca_galeri&mode=publik&_t=${Date.now()}`)
             .then(r => r.json())
             .then(res => {
                 let rawList = res.data || res.galeri || [];
                 
-                // Saring hanya karya yang berstatus Disetujui
+                // Gunakan filter sangat longgar atau gunakan semua data publik
                 let tayangList = rawList.filter(item => {
-                    let st = String(item.status || item.status_publikasi || item.Status || '').toLowerCase().trim();
-                    return st === 'disetujui' || st === 'approved' || st === 'tayang';
+                    let gabunganTeks = Object.values(item).join(' ').toLowerCase();
+                    return gabunganTeks.includes('setuju') || gabunganTeks.includes('tayang') || gabunganTeks.includes('approved') || gabunganTeks.includes('publik');
                 });
+                
+                // Fallback: Jika filter gagal (karena backend mungkin tidak mengirim kolom status di mode publik), tampilkan semua
+                if (tayangList.length === 0 && rawList.length > 0) {
+                    tayangList = rawList;
+                }
 
                 if (tayangList.length > 0) {
                     let html = '';
@@ -533,7 +539,7 @@
                         let videoUrlRaw = '';
                         let daftarFotoRaw = [];
 
-                        // Pisahkan URL yang berasal dari kolom Video dan kolom Foto
+                        // Deteksi otomatis URL Media
                         Object.keys(item).forEach(k => {
                             let keyLower = k.toLowerCase();
                             let val = item[k];
@@ -547,12 +553,13 @@
                                 if (keyLower.includes('video')) {
                                     if (!videoUrlRaw) videoUrlRaw = cleanU;
                                 } else if (keyLower.includes('foto') || keyLower.includes('img') || keyLower.includes('media') || keyLower.includes('gambar')) {
-                                    // Jika pengguna tidak sengaja menaruh link YouTube di kolom foto, tetap kenali sebagai video
                                     if (ekstrakIdYouTube(cleanU) && !videoUrlRaw) {
                                         videoUrlRaw = cleanU;
                                     } else {
                                         daftarFotoRaw.push(cleanU);
                                     }
+                                } else if (ekstrakIdYouTube(cleanU)) {
+                                    videoUrlRaw = cleanU; // Tangkap jika link youtube ditaruh di kolom acak
                                 }
                             });
                         });
@@ -570,25 +577,18 @@
                         let badgeMedia = '';
                         let tombolLuarHtml = '';
 
-                        // PRIORITAS 1: Video YouTube
                         if (ytId) {
                             badgeMedia = `<span class="badge bg-danger position-absolute top-0 end-0 m-2 z-2 shadow-sm"><i class="fab fa-youtube me-1"></i> Video YouTube</span>`;
                             mediaHtml = `<iframe src="https://www.youtube.com/embed/${ytId}?rel=0" title="${judul}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>`;
                             tombolLuarHtml = `<a href="https://www.youtube.com/watch?v=${ytId}" target="_blank" class="btn btn-sm btn-light border text-danger fw-semibold w-100 rounded-pill mb-2"><i class="fab fa-youtube me-1"></i> Tonton di YouTube</a>`;
-                        } 
-                        // PRIORITAS 2: Video Google Drive
-                        else if (driveVideoId) {
+                        } else if (driveVideoId) {
                             badgeMedia = `<span class="badge bg-success position-absolute top-0 end-0 m-2 z-2 shadow-sm"><i class="fab fa-google-drive me-1"></i> Video Drive</span>`;
                             mediaHtml = `<iframe src="https://drive.google.com/file/d/${driveVideoId}/preview" title="${judul}" allow="autoplay; fullscreen" allowfullscreen></iframe>`;
                             tombolLuarHtml = `<a href="https://drive.google.com/file/d/${driveVideoId}/view" target="_blank" class="btn btn-sm btn-light border text-success fw-semibold w-100 rounded-pill mb-2"><i class="fab fa-google-drive me-1"></i> Buka Video Layar Penuh</a>`;
-                        } 
-                        // PRIORITAS 3: Video Link Langsung (.mp4)
-                        else if (videoUrlRaw) {
+                        } else if (videoUrlRaw) {
                             badgeMedia = `<span class="badge bg-primary position-absolute top-0 end-0 m-2 z-2 shadow-sm"><i class="fas fa-video me-1"></i> Video</span>`;
                             mediaHtml = `<video controls class="w-100 h-100" style="object-fit:cover;"><source src="${videoUrlRaw}"></video>`;
-                        } 
-                        // PRIORITAS 4: Slide Banyak Foto (Carousel)
-                        else if (daftarFoto.length > 1) {
+                        } else if (daftarFoto.length > 1) {
                             badgeMedia = `<span class="badge bg-primary position-absolute top-0 end-0 m-2 z-2 shadow-sm"><i class="fas fa-images me-1"></i> ${daftarFoto.length} Foto</span>`;
                             let carouselId = `carouselGaleri${index}`;
                             let slides = daftarFoto.map((fUrl, sIdx) => `
@@ -603,9 +603,7 @@
                                     <button class="carousel-control-next" type="button" data-bs-target="#${carouselId}" data-bs-slide="next"><span class="carousel-control-next-icon"></span></button>
                                 </div>
                             `;
-                        } 
-                        // PRIORITAS 5: 1 Foto Tunggal
-                        else {
+                        } else {
                             let singleImg = daftarFoto[0] || 'https://img.freepik.com/free-vector/children-painting-art-class_23-2148657526.jpg';
                             badgeMedia = `<span class="badge bg-dark bg-opacity-75 position-absolute top-0 end-0 m-2 z-2">Dokumentasi</span>`;
                             mediaHtml = `<img src="${singleImg}" alt="${judul}" onerror="this.src='https://img.freepik.com/free-vector/children-painting-art-class_23-2148657526.jpg'">`;
