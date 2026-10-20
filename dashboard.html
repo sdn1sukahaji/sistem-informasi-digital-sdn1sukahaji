@@ -15,6 +15,7 @@
         .timeline-box { border-left: 3px solid #0f4c81; padding-left: 12px; margin-top: 8px; background: #f8f9fa; border-radius: 0 8px 8px 0; padding: 8px 12px; }
         .timeline-kepsek { border-left-color: #dc3545; background: #fff5f5; }
         .thumb-mini { width: 56px; height: 42px; object-fit: cover; border-radius: 6px; border: 1px solid #dee2e6; background: #f8f9fa; }
+        .socmed-badge-mini { display: inline-flex; align-items: center; justify-content: center; width: 56px; height: 42px; border-radius: 6px; color: #fff; font-size: 18px; }
         
         .notif-dropdown-menu { width: 340px; max-height: 400px; overflow-y: auto; border-radius: 14px; }
         .notif-item { border-bottom: 1px solid #f1f1f1; padding: 10px 14px; cursor: pointer; transition: background 0.2s; white-space: normal; }
@@ -88,7 +89,6 @@
 
         <!-- Kartu Navigasi Modul Utama -->
         <div class="row g-3 mb-4">
-            <!-- Modul 1: Jurnal 7KAIH -->
             <div class="col-md-4">
                 <div class="card card-soft menu-card h-100 border-0 p-4 text-center rounded-4 shadow-sm d-flex flex-column" onclick="window.location.href='jurnal.html'">
                     <span class="badge bg-danger rounded-pill card-notif-badge d-none" id="badgeCardJurnal">0 Menunggu</span>
@@ -99,7 +99,6 @@
                 </div>
             </div>
 
-            <!-- Modul 2: Rumah Sarengseh -->
             <div class="col-md-4">
                 <div class="card card-soft menu-card h-100 border-0 p-4 text-center rounded-4 shadow-sm d-flex flex-column" id="cardMenuSarengseh" onclick="bukaPanel('SARENGSEH')">
                     <span class="badge bg-danger rounded-pill card-notif-badge d-none" id="badgeCardAduan">0 Aduan</span>
@@ -110,13 +109,12 @@
                 </div>
             </div>
 
-            <!-- Modul 3: Panggung Suka Karya (Guru, Kepsek, Admin) -->
             <div class="col-md-4 d-none" id="colMenuGaleri">
                 <div class="card card-soft menu-card h-100 border-0 p-4 text-center rounded-4 shadow-sm d-flex flex-column" id="cardMenuGaleri" onclick="bukaPanel('GALERI')">
                     <span class="badge bg-success rounded-pill card-notif-badge d-none" id="badgeCardGaleri">0 Karya</span>
                     <div class="fs-1 text-success mb-2"><i class="fas fa-photo-video"></i></div>
                     <h5 class="fw-bold text-primary-school">Panggung Suka Karya</h5>
-                    <p class="text-muted small mb-3">Input dokumentasi kegiatan (Slide 4 Foto / Video) & Persetujuan Publikasi.</p>
+                    <p class="text-muted small mb-3">Input dokumentasi kegiatan (Slide 4 Foto / Video Medsos & Drive) & Persetujuan Publikasi.</p>
                     <button class="btn btn-outline-success btn-sm w-100 mt-auto rounded-pill fw-semibold">Kelola Galeri Karya</button>
                 </div>
             </div>
@@ -207,7 +205,7 @@
                     <div>
                         <span class="badge bg-success-subtle text-success mb-1" id="badgeScopeGaleri">Unjuk Kreasi & Nalar Kritis</span>
                         <h4 class="fw-bold text-primary-school mb-0"><i class="fas fa-photo-video text-success me-2"></i>Manajemen Galeri Panggung Suka Karya</h4>
-                        <p class="text-muted small mb-0" id="subJudulGaleri">Input dokumentasi kegiatan (4 Link Foto Google Drive / Link Video YouTube atau Drive) dan kelola persetujuan tayang.</p>
+                        <p class="text-muted small mb-0" id="subJudulGaleri">Input dokumentasi kegiatan (4 Link Foto Google Drive / Link Video YouTube, TikTok, IG, FB, atau Drive) dan kelola persetujuan tayang.</p>
                     </div>
                     <div class="d-flex gap-2 mt-2 mt-md-0">
                         <button class="btn btn-success btn-sm rounded-pill px-3 fw-semibold" id="btnTambahGaleri" onclick="bukaModalFormGaleri()">
@@ -340,7 +338,7 @@
                             <label class="form-label fw-semibold small">Jenis Media Konten <span class="text-danger">*</span></label>
                             <select id="glrTipeMedia" class="form-select" onchange="toggleInputMediaGaleri()">
                                 <option value="Foto">Album Foto (Slide Otomatis 4 Foto)</option>
-                                <option value="Video">Video Dokumentasi (YouTube / Google Drive)</option>
+                                <option value="Video">Video (YouTube / TikTok / IG / FB / Drive)</option>
                             </select>
                         </div>
                         <div class="col-md-4">
@@ -351,13 +349,13 @@
 
                     <div class="p-3 bg-light rounded-3 border mb-3">
                         <div class="small fw-bold text-primary-school mb-2">
-                            <i class="fas fa-link me-1"></i> Tautan (Link) Media Google Drive / YouTube
-                            <span class="fw-normal text-muted d-block">Jika menggunakan Google Drive, pastikan akses file diatur ke <strong>"Siapa saja yang memiliki link" (Anyone with the link)</strong>.</span>
+                            <i class="fas fa-link me-1"></i> Tautan (Link) Media
+                            <span class="fw-normal text-muted d-block">Mendukung Link Foto/Video Google Drive (akses <em>Anyone with the link</em>), YouTube, TikTok, Instagram Reels/Post, dan Facebook Video.</span>
                         </div>
                         <div class="row g-2">
                             <div class="col-md-6">
                                 <label class="form-label small mb-1" id="lblLink1">Link Foto 1 (Sampul Utama) <span class="text-danger">*</span></label>
-                                <input type="url" id="glrLink1" class="form-control form-control-sm" placeholder="https://drive.google.com/... atau https://youtu.be/...">
+                                <input type="url" id="glrLink1" class="form-control form-control-sm" placeholder="https://...">
                             </div>
                             <div class="col-md-6" id="wrapLink2">
                                 <label class="form-label small mb-1">Link Foto 2 (Slide ke-2)</label>
@@ -481,7 +479,7 @@
         const modalFormGaleri = new bootstrap.Modal(document.getElementById('modalFormGaleri'));
         const modalValGaleri = new bootstrap.Modal(document.getElementById('modalValidasiGaleri'));
 
-        // Helper Media: Ekstrak ID YouTube & Google Drive
+        // Helper Media: YouTube, TikTok, Instagram, Facebook, Google Drive
         function ekstrakIdYouTube(url) {
             if (!url) return null;
             let str = String(url).trim();
@@ -490,20 +488,49 @@
             return (match && match[1]) ? match[1] : null;
         }
 
+        function ekstrakIdTikTok(url) {
+            if (!url) return null;
+            let str = String(url).trim();
+            let match = str.match(/tiktok\.com\/.*\/video\/(\d+)/i) || str.match(/tiktok\.com\/v\/(\d+)/i);
+            return (match && match[1]) ? match[1] : null;
+        }
+
+        function isTikTokUrl(url) {
+            return /tiktok\.com/i.test(String(url || ''));
+        }
+
+        function ekstrakInstagram(url) {
+            if (!url) return null;
+            let str = String(url).trim();
+            let match = str.match(/instagram\.com\/(?:[^\/]+\/)?(p|reel|reels|tv)\/([a-zA-Z0-9_-]+)/i);
+            if (match && match[2]) {
+                let tipe = match[1].toLowerCase() === 'reels' ? 'reel' : match[1].toLowerCase();
+                return { tipe: tipe, kode: match[2] };
+            }
+            return null;
+        }
+
+        function isFacebookVideo(url) {
+            return /(?:facebook\.com\/.*(?:videos|reel|watch|share\/v|share\/r)|fb\.watch\/)/i.test(String(url || ''));
+        }
+
         function ekstrakIdDrive(url) {
             if (!url) return null;
             let f = String(url).trim();
-            if (!f.includes('drive.google.com')) return null;
+            if (!f.includes('drive.google.com') && !f.includes('lh3.googleusercontent.com')) return null;
             let match = f.match(/\/d\/([a-zA-Z0-9_-]+)/) || f.match(/id=([a-zA-Z0-9_-]+)/);
             return (match && match[1]) ? match[1] : null;
         }
 
-        function buatUrlThumbnail(url) {
+        function buatElemenThumbTabel(url) {
             let ytId = ekstrakIdYouTube(url);
-            if (ytId) return `https://img.youtube.com/vi/${ytId}/hqdefault.jpg`;
+            if (ytId) return `<img src="https://img.youtube.com/vi/${ytId}/hqdefault.jpg" class="thumb-mini me-1 mb-1" alt="YouTube">`;
+            if (isTikTokUrl(url)) return `<span class="socmed-badge-mini bg-dark me-1 mb-1" title="Video TikTok"><i class="fab fa-tiktok"></i></span>`;
+            if (ekstrakInstagram(url)) return `<span class="socmed-badge-mini me-1 mb-1" style="background: linear-gradient(45deg, #f09433, #dc2743, #bc1888);" title="Instagram"><i class="fab fa-instagram"></i></span>`;
+            if (isFacebookVideo(url)) return `<span class="socmed-badge-mini bg-primary me-1 mb-1" title="Facebook Video"><i class="fab fa-facebook-f"></i></span>`;
             let driveId = ekstrakIdDrive(url);
-            if (driveId) return `https://drive.google.com/thumbnail?id=${driveId}&sz=w400`;
-            return url;
+            let src = driveId ? `https://drive.google.com/thumbnail?id=${driveId}&sz=w400` : url;
+            return `<img src="${src}" class="thumb-mini me-1 mb-1" alt="Media" onerror="this.src='https://img.freepik.com/free-vector/video-files-concept-illustration_114360-4758.jpg'">`;
         }
 
         // 1. SISTEM NOTIFIKASI REAL-TIME
@@ -769,11 +796,13 @@
             });
         }
 
-        // 3. LOGIKA PANGGUNG SUKA KARYA
+        // =========================================================================
+        // 3. LOGIKA PANGGUNG SUKA KARYA (MULTI-PLATFORM VIDEO & SLIDE 4 FOTO)
+        // =========================================================================
         function toggleInputMediaGaleri() {
             const tipe = document.getElementById('glrTipeMedia').value;
             const isVideo = (tipe === 'Video');
-            document.getElementById('lblLink1').innerHTML = isVideo ? 'Link Video (YouTube / Google Drive) <span class="text-danger">*</span>' : 'Link Foto 1 (Sampul Utama) <span class="text-danger">*</span>';
+            document.getElementById('lblLink1').innerHTML = isVideo ? 'Link Video (YouTube / TikTok / IG / FB / Drive) <span class="text-danger">*</span>' : 'Link Foto 1 (Sampul Utama) <span class="text-danger">*</span>';
             document.getElementById('wrapLink2').classList.toggle('d-none', isVideo);
             document.getElementById('wrapLink3').classList.toggle('d-none', isVideo);
             document.getElementById('wrapLink4').classList.toggle('d-none', isVideo);
@@ -834,8 +863,7 @@
 
                 let thumbsHtml = '';
                 item.links.forEach(l => {
-                    let thumbSrc = buatUrlThumbnail(l);
-                    thumbsHtml += `<img src="${thumbSrc}" class="thumb-mini me-1 mb-1" alt="Media" onerror="this.src='https://img.freepik.com/free-vector/video-files-concept-illustration_114360-4758.jpg'">`;
+                    thumbsHtml += buatElemenThumbTabel(l);
                 });
 
                 let catatanHtml = item.catatan_approver ? `<div class="small text-danger fst-italic mt-1"><i class="fas fa-comment-dots me-1"></i>Catatan Kepsek: "${item.catatan_approver}"</div>` : '';
@@ -968,28 +996,46 @@
 
             let firstUrl = item.links[0] || '';
             let ytId = ekstrakIdYouTube(firstUrl);
+            let ttId = ekstrakIdTikTok(firstUrl);
+            let igData = ekstrakInstagram(firstUrl);
+            let fbVideo = isFacebookVideo(firstUrl);
             let driveId = ekstrakIdDrive(firstUrl);
-            let isVideo = String(item.tipe_media || '').toLowerCase() === 'video' || Boolean(ytId);
+            let isVideo = (item.links.length === 1 && String(item.tipe_media || '').toLowerCase() === 'video') || Boolean(ytId || ttId || igData || fbVideo);
 
             if (ytId) {
                 mediaBox.innerHTML = `<div class="ratio ratio-16x9"><iframe src="https://www.youtube.com/embed/${ytId}?rel=0" allowfullscreen></iframe></div>`;
+            } else if (ttId) {
+                mediaBox.innerHTML = `<div class="ratio ratio-16x9"><iframe src="https://www.tiktok.com/embed/v2/${ttId}" allowfullscreen></iframe></div>`;
+            } else if (igData) {
+                mediaBox.innerHTML = `<div class="ratio ratio-16x9"><iframe src="https://www.instagram.com/${igData.tipe}/${igData.kode}/embed" allowfullscreen></iframe></div>`;
+            } else if (fbVideo) {
+                mediaBox.innerHTML = `<div class="ratio ratio-16x9"><iframe src="https://www.facebook.com/plugins/video.php?href=${encodeURIComponent(firstUrl)}&show_text=false&width=600" allowfullscreen></iframe></div>`;
             } else if (isVideo && driveId) {
                 mediaBox.innerHTML = `<div class="ratio ratio-16x9"><iframe src="https://drive.google.com/file/d/${driveId}/preview" allow="autoplay; fullscreen" allowfullscreen></iframe></div>`;
             } else if (item.links.length > 1) {
                 let inner = '';
                 item.links.forEach((url, i) => {
-                    let imgUrl = buatUrlThumbnail(url);
-                    inner += `<div class="carousel-item ${i===0?'active':''}"><img src="${imgUrl}" class="d-block w-100" style="max-height: 380px; object-fit: cover;"></div>`;
+                    let dId = ekstrakIdDrive(url);
+                    let imgUrl = dId ? `https://drive.google.com/thumbnail?id=${dId}&sz=w800` : url;
+                    inner += `<div class="carousel-item ${i===0?'active':''}" data-bs-interval="2800"><img src="${imgUrl}" class="d-block w-100" style="max-height: 380px; object-fit: cover;"></div>`;
                 });
                 mediaBox.innerHTML = `
-                    <div id="carouselValGaleri" class="carousel slide" data-bs-ride="carousel" data-bs-interval="3000">
+                    <div id="carouselValGaleri" class="carousel slide carousel-fade" data-bs-ride="carousel" data-bs-interval="2800">
                         <div class="carousel-inner">${inner}</div>
                         <button class="carousel-control-prev" type="button" data-bs-target="#carouselValGaleri" data-bs-slide="prev"><span class="carousel-control-prev-icon"></span></button>
                         <button class="carousel-control-next" type="button" data-bs-target="#carouselValGaleri" data-bs-slide="next"><span class="carousel-control-next-icon"></span></button>
                     </div>
                 `;
+                setTimeout(() => {
+                    const elCar = document.getElementById('carouselValGaleri');
+                    if (elCar) {
+                        const c = new bootstrap.Carousel(elCar, { interval: 2800, ride: 'carousel', pause: false });
+                        c.cycle();
+                    }
+                }, 150);
             } else if (item.links.length === 1) {
-                let singleUrl = buatUrlThumbnail(firstUrl);
+                let dId = ekstrakIdDrive(firstUrl);
+                let singleUrl = dId ? `https://drive.google.com/thumbnail?id=${dId}&sz=w800` : firstUrl;
                 mediaBox.innerHTML = `<img src="${singleUrl}" class="img-fluid w-100" style="max-height: 380px; object-fit: contain;">`;
             }
 
