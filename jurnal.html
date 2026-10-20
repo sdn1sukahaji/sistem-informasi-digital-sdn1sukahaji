@@ -660,7 +660,7 @@
 
             if (r === 'ADMIN') return { tipe: 'ADMIN', kelasAmpu: 'SEMUA', bisaValidasi: true, label: 'Admin' };
             if (r.includes('KEPSEK') || r.includes('KEPALA SEKOLAH')) return { tipe: 'KEPSEK', kelasAmpu: 'SEMUA', bisaValidasi: false, label: 'Kepala Sekolah' };
-            if (r === 'SISWA' || r === 'ORTU') return { tipe: 'SISWA', kelasAmpu: p || '', bisaValidasi: false, label: `${u.role}${p ? '('+p+')' : ''}` };
+            if (r === 'SISWA' || r === 'ORTU') return { tipe: 'SISWA', kelasAmpu: p || '', bisaValidasi: false, label: `${u.role}${p ? ' ('+p+')' : ''}` };
 
             if (r.includes('GURU')) {
                 let gabung = (r + " " + p).toUpperCase();
@@ -691,7 +691,7 @@
         let serverDataJurnal = {};
         let hariLiburMaster = {};
         let dataAntreanGuru = [];
-        let infoKepsekServer = { nama: user.kepsek_nama || "H. ABY SETIAWAN, S.Pd.SD", nip: user.kepsek_nip || "198610132025211115" };
+        let infoKepsekServer = { nama: user.kepsek_nama || "IIS GUSTINI RATNA NENGSIH, S.Pd.SD.", nip: user.kepsek_nip || "197108172014082002" };
         let activeValidationId = null;
         let isPrintInitialized = false;
 
@@ -1187,7 +1187,7 @@
         }
 
         // =========================================================
-        // 6. MESIN REKAPITULASI & CETAK LAPORAN BERJENJANG (11 FORMAT)
+        // 6. MESIN REKAPITULASI & CETAK LAPORAN (SELURUH SISWA KELAS)
         // =========================================================
         function setupCetakPage() {
             if (!isPrintInitialized) {
@@ -1203,7 +1203,6 @@
             const wrapMode = document.getElementById('wrapModeFormat');
 
             if (aktor.tipe === 'SISWA') {
-                // Siswa hanya memiliki Bulanan, Semesteran, Tahunan
                 optHarian.classList.add('d-none');
                 if (document.getElementById('printPeriode').value === 'harian') {
                     document.getElementById('printPeriode').value = 'bulanan';
@@ -1215,7 +1214,6 @@
                 wrapKelas.classList.remove('d-none');
                 wrapMode.classList.add('d-none');
             } else {
-                // Kepsek, Admin, Guru Mapel bisa memilih Mode Format Kepsek (Rekap Kelas) atau Mode Guru (Rincian Siswa)
                 optHarian.classList.remove('d-none');
                 wrapMode.classList.remove('d-none');
                 wrapKelas.classList.remove('d-none');
@@ -1227,7 +1225,7 @@
             let mode = document.getElementById('printModeFormat').value;
             let klsSelect = document.getElementById('printKelas');
             if (mode === 'GURU' && klsSelect.value === 'SEMUA') {
-                klsSelect.value = 'Kelas 1'; // Otomatis pilih Kelas 1 jika masuk ke mode rincian siswa per kelas
+                klsSelect.value = 'Kelas 1';
             } else if (mode === 'KEPSEK') {
                 klsSelect.value = 'SEMUA';
             }
@@ -1247,14 +1245,12 @@
             generatePrintPreview();
         }
 
-        // Fungsi Bantuan Format Tanggal DD/MM/YYYY
         function formatTglIndo(ymd) {
             if (!ymd) return '-';
             let p = ymd.split('-');
             return p.length === 3 ? `${p[2]}/${p[1]}/${p[0]}` : ymd;
         }
 
-        // Fungsi Bantuan Nama Hari Indonesia
         function getNamaHari(ymd) {
             if (!ymd) return '-';
             let d = new Date(ymd + 'T00:00:00');
@@ -1262,11 +1258,10 @@
             return isNaN(d) ? '-' : hari[d.getDay()];
         }
 
-        // Fungsi Bantuan Hitung Persentase Kumpulan Baris Jurnal untuk 11 Item
-        function hitungPersentaseGrup(records) {
+        function hitungPersentaseGrup(records, paksaValidJikaKosong = false) {
             let totalRec = records.length;
             if (totalRec === 0) {
-                let kosong = { valid: false, totalPct: 0 };
+                let kosong = { valid: paksaValidJikaKosong, totalPct: 0 };
                 ITEM_KEYS.forEach(k => kosong[k] = 0);
                 return kosong;
             }
@@ -1280,7 +1275,6 @@
             return hasil;
         }
 
-        // Fungsi Bantuan Render Header 7KAIH (Kolom Kiri Dinamis + 11 Item + Persentase)
         function buatHeaderTabel7KAIH(kolomKiriArray) {
             let thAtas = `<th rowspan="2" style="width: 32px;">No.</th>`;
             kolomKiriArray.forEach(kol => {
@@ -1306,7 +1300,6 @@
             return `<tr>${thAtas}</tr><tr>${thBawah}</tr>`;
         }
 
-        // Fungsi Bantuan Baris Rata-Rata PERSENTASE di Bawah Tabel
         function buatBarisFooterPersentase(colspanLabel, listObjekPersentase) {
             let validList = listObjekPersentase.filter(x => x && x.valid);
             let tds = '';
@@ -1314,7 +1307,6 @@
                 ITEM_KEYS.forEach(() => tds += `<td>0%</td>`);
                 tds += `<td class="cell-grey-highlight">0%</td>`;
             } else {
-                let sumTotal = 0;
                 ITEM_KEYS.forEach(k => {
                     let avg = Math.round(validList.reduce((acc, cur) => acc + (cur[k] || 0), 0) / validList.length);
                     tds += `<td>${avg}%</td>`;
@@ -1334,7 +1326,6 @@
                             ? aktor.kelasAmpu 
                             : (document.getElementById('printKelas').value || 'SEMUA');
 
-            // Tentukan Format Role Laporan yang akan dirender: 'SISWA', 'GURU', atau 'KEPSEK'
             let formatRole = 'KEPSEK';
             if (aktor.tipe === 'SISWA') {
                 formatRole = 'SISWA';
@@ -1356,8 +1347,8 @@
             }
 
             let tglVal = document.getElementById('printTgl').value;
-            let blnVal = document.getElementById('printBulan').value; // YYYY-MM
-            let semVal = document.getElementById('printSemester').value; // "1" atau "2"
+            let blnVal = document.getElementById('printBulan').value;
+            let semVal = document.getElementById('printSemester').value;
             let thnVal = document.getElementById('printTahun').value;
 
             if (periode === 'harian') {
@@ -1377,9 +1368,10 @@
                 loader.classList.add('d-none');
                 if (resData.kepsek) infoKepsekServer = resData.kepsek;
                 let list = resData.data || [];
+                let daftarSiswa = resData.daftar_siswa || [];
                 list.sort((a, b) => a.tanggal.localeCompare(b.tanggal));
 
-                renderDokumenCetak(formatRole, periode, list, { tglVal, blnVal, semVal, thnVal, klsFilter });
+                renderDokumenCetak(formatRole, periode, list, daftarSiswa, { tglVal, blnVal, semVal, thnVal, klsFilter });
                 setupTandaTanganCetak(formatRole, klsFilter, list);
             })
             .catch(err => {
@@ -1388,7 +1380,7 @@
             });
         }
 
-        function renderDokumenCetak(formatRole, periode, list, info) {
+        function renderDokumenCetak(formatRole, periode, list, daftarSiswa, info) {
             const thead = document.getElementById('printTableHead');
             const tbody = document.getElementById('printTableBody');
             const metaBox = document.getElementById('printMetaContainer');
@@ -1426,7 +1418,6 @@
                 `;
 
                 if (periode === 'bulanan') {
-                    // Format Bulanan Siswa: Baris per Tanggal (isi v / x)
                     thead.innerHTML = buatHeaderTabel7KAIH([{ label: 'Tanggal', width: '90px' }]);
                     footerNote.textContent = 'Keterangan: \u2713 = Melaksanakan (Ya), \u2717 = Tidak Melaksanakan (Tidak).';
 
@@ -1452,7 +1443,6 @@
                     tbody.innerHTML += buatBarisFooterPersentase(2, listPct);
 
                 } else if (periode === 'semester') {
-                    // Format Semester Siswa: Baris per Bulan sesuai semester (isi %)
                     thead.innerHTML = buatHeaderTabel7KAIH([{ label: 'Bulan', width: '110px' }]);
                     let idxBulanSem = info.semVal === '1' ? [6, 7, 8, 9, 10, 11] : [0, 1, 2, 3, 4, 5];
                     let listPct = [];
@@ -1472,7 +1462,6 @@
                     tbody.innerHTML += buatBarisFooterPersentase(2, listPct);
 
                 } else if (periode === 'tahunan') {
-                    // Format Tahunan Siswa: Baris Semester 1 & Semester 2 (isi %)
                     thead.innerHTML = buatHeaderTabel7KAIH([{ label: 'Semester', width: '120px' }]);
                     let semList = [
                         { label: 'Semester 1', filterFn: r => { let m = parseInt(r.tanggal.substring(5,7),10); return m >= 7 && m <= 12; } },
@@ -1493,7 +1482,7 @@
             }
 
             // =====================================================
-            // B. FORMAT LAPORAN ROLE GURU KELAS (ATAU ADMIN/KEPSEK MODE GURU)
+            // B. FORMAT LAPORAN ROLE GURU KELAS (MENAMPILKAN 100% SISWA KELAS)
             // =====================================================
             else if (formatRole === 'GURU') {
                 judulDok.textContent = `LAPORAN ${periode.toUpperCase()} JURNAL 7KAIH KELAS`;
@@ -1516,32 +1505,80 @@
                         { label: 'Tanggal', width: '85px' },
                         { label: 'Nama Siswa', width: '' }
                     ]);
-                    footerNote.textContent = 'Keterangan: \u2713 = Melaksanakan (Ya), \u2717 = Tidak Melaksanakan (Tidak).';
+                    footerNote.textContent = 'Keterangan: \u2713 = Melaksanakan (Ya), \u2717 = Tidak Melaksanakan (Tidak), - = Belum Mengisi Jurnal.';
 
-                    if (list.length === 0) {
-                        tbody.innerHTML = `<tr><td colspan="15" class="text-center py-4">Tidak ada data jurnal pada tanggal ini.</td></tr>`;
+                    // Gabungkan seluruh siswa di kelas tersebut dengan data jurnal tanggal terpilih
+                    let mapHariIni = {};
+                    list.forEach(item => { mapHariIni[item.nisn] = item; });
+
+                    let gabunganSiswa = [];
+                    let seenNisn = new Set();
+
+                    daftarSiswa.forEach(s => {
+                        seenNisn.add(s.nisn);
+                        gabunganSiswa.push({
+                            nisn: s.nisn,
+                            nama_siswa: s.nama_siswa,
+                            kelas: s.kelas,
+                            jurnal: mapHariIni[s.nisn] || null
+                        });
+                    });
+
+                    list.forEach(item => {
+                        if (!seenNisn.has(item.nisn)) {
+                            seenNisn.add(item.nisn);
+                            gabunganSiswa.push({
+                                nisn: item.nisn,
+                                nama_siswa: item.nama_siswa,
+                                kelas: item.kelas,
+                                jurnal: item
+                            });
+                        }
+                    });
+
+                    if (gabunganSiswa.length === 0) {
+                        tbody.innerHTML = `<tr><td colspan="15" class="text-center py-4">Tidak ditemukan daftar siswa pada kelas ini.</td></tr>`;
                         return;
                     }
 
-                    let listSorting = [...list].sort((a,b) => a.nama_siswa.localeCompare(b.nama_siswa));
+                    gabunganSiswa.sort((a, b) => {
+                        if (info.klsFilter === 'SEMUA' && a.kelas !== b.kelas) {
+                            return String(a.kelas).localeCompare(String(b.kelas));
+                        }
+                        return String(a.nama_siswa).localeCompare(String(b.nama_siswa));
+                    });
+
                     let listPct = [];
-                    listSorting.forEach((item, idx) => {
-                        let d = item.detail;
-                        let pctBaris = Math.round((item.jumlah_ya / 11) * 100);
-                        let objPct = { valid: true, totalPct: pctBaris };
-                        let tds = '';
-                        ITEM_KEYS.forEach(k => {
-                            let isYa = d[`${k}_status`] === 'Ya';
-                            objPct[k] = isYa ? 100 : 0;
-                            tds += `<td class="text-center fw-bold">${isYa ? '&#10003;' : '&#10007;'}</td>`;
-                        });
-                        listPct.push(objPct);
-                        tbody.innerHTML += `<tr><td class="text-center">${idx + 1}</td><td class="text-center">${formatTglIndo(item.tanggal)}</td><td>${item.nama_siswa}</td>${tds}<td class="text-center fw-bold">${pctBaris}%</td></tr>`;
+                    gabunganSiswa.forEach((s, idx) => {
+                        if (s.jurnal) {
+                            let item = s.jurnal;
+                            let d = item.detail;
+                            let pctBaris = Math.round((item.jumlah_ya / 11) * 100);
+                            let objPct = { valid: true, totalPct: pctBaris };
+                            let tds = '';
+                            ITEM_KEYS.forEach(k => {
+                                let isYa = d[`${k}_status`] === 'Ya';
+                                objPct[k] = isYa ? 100 : 0;
+                                tds += `<td class="text-center fw-bold">${isYa ? '&#10003;' : '&#10007;'}</td>`;
+                            });
+                            listPct.push(objPct);
+                            tbody.innerHTML += `<tr><td class="text-center">${idx + 1}</td><td class="text-center">${formatTglIndo(item.tanggal)}</td><td>${s.nama_siswa}</td>${tds}<td class="text-center fw-bold">${pctBaris}%</td></tr>`;
+                        } else {
+                            // Siswa belum mengisi jurnal pada tanggal tersebut tetap tampil
+                            let objPctKosong = { valid: true, totalPct: 0 };
+                            let tdsKosong = '';
+                            ITEM_KEYS.forEach(k => {
+                                objPctKosong[k] = 0;
+                                tdsKosong += `<td class="text-center text-muted">-</td>`;
+                            });
+                            listPct.push(objPctKosong);
+                            tbody.innerHTML += `<tr><td class="text-center">${idx + 1}</td><td class="text-center">${formatTglIndo(info.tglVal)}</td><td>${s.nama_siswa}</td>${tdsKosong}<td class="text-center fw-bold">0%</td></tr>`;
+                        }
                     });
                     tbody.innerHTML += buatBarisFooterPersentase(3, listPct);
 
                 } else if (periode === 'bulanan' || periode === 'semester') {
-                    // Format Bulanan & Semesteran Role Guru: Baris per Nama Siswa (isi %)
+                    // Format Bulanan & Semesteran Role Guru: Menampilkan seluruh siswa kelas (termasuk yang 0%)
                     let labelPeriodeKiri = periode === 'bulanan' ? 'Bulan' : 'Semester';
                     let valPeriodeKiri = periode === 'bulanan' ? `${namaBulanPilih} ${blnTahunY}` : `${labelSemester} - Tahun ${info.thnVal}`;
                     metaBox.innerHTML = `
@@ -1552,22 +1589,46 @@
                     `;
                     thead.innerHTML = buatHeaderTabel7KAIH([{ label: 'Nama Siswa', width: '' }]);
 
-                    if (list.length === 0) {
-                        tbody.innerHTML = `<tr><td colspan="14" class="text-center py-4">Belum ada data jurnal pada periode ini.</td></tr>`;
-                        return;
-                    }
-
-                    // Kelompokkan berdasarkan NISN / Nama Siswa
                     let mapSiswaGrup = {};
+                    // 1. Masukkan seluruh siswa dari daftar induk kelas terlebih dahulu
+                    daftarSiswa.forEach(s => {
+                        mapSiswaGrup[s.nisn] = {
+                            nisn: s.nisn,
+                            nama: s.nama_siswa,
+                            kelas: s.kelas,
+                            records: []
+                        };
+                    });
+
+                    // 2. Masukkan riwayat jurnal yang telah diisi siswa
                     list.forEach(r => {
-                        if (!mapSiswaGrup[r.nisn]) mapSiswaGrup[r.nisn] = { nama: r.nama_siswa, records: [] };
+                        if (!mapSiswaGrup[r.nisn]) {
+                            mapSiswaGrup[r.nisn] = {
+                                nisn: r.nisn,
+                                nama: r.nama_siswa,
+                                kelas: r.kelas,
+                                records: []
+                            };
+                        }
                         mapSiswaGrup[r.nisn].records.push(r);
                     });
 
-                    let arrSiswa = Object.values(mapSiswaGrup).sort((a,b) => a.nama.localeCompare(b.nama));
+                    let arrSiswa = Object.values(mapSiswaGrup).sort((a, b) => {
+                        if (info.klsFilter === 'SEMUA' && a.kelas !== b.kelas) {
+                            return String(a.kelas).localeCompare(String(b.kelas));
+                        }
+                        return String(a.nama).localeCompare(String(b.nama));
+                    });
+
+                    if (arrSiswa.length === 0) {
+                        tbody.innerHTML = `<tr><td colspan="14" class="text-center py-4">Tidak ditemukan daftar siswa pada kelas ini.</td></tr>`;
+                        return;
+                    }
+
                     let listPct = [];
                     arrSiswa.forEach((s, idx) => {
-                        let stat = hitungPersentaseGrup(s.records);
+                        // Parameter ke-2 = true agar siswa yang belum pernah mengisi (0%) tetap dihitung dalam rata-rata kelas
+                        let stat = hitungPersentaseGrup(s.records, true);
                         listPct.push(stat);
                         let tds = '';
                         ITEM_KEYS.forEach(k => tds += `<td class="text-center">${stat[k]}%</td>`);
@@ -1577,7 +1638,6 @@
                     tbody.innerHTML += buatBarisFooterPersentase(2, listPct);
 
                 } else if (periode === 'tahunan') {
-                    // Format Tahunan Role Guru: Baris Semester 1 & Semester 2 (isi %)
                     metaBox.innerHTML = `
                         <table class="meta-table">
                             <tr><td style="width:14%;"><strong>Kelas</strong></td><td>: ${labelKelas}</td></tr>
@@ -1658,7 +1718,6 @@
             document.getElementById('ttdKananTanggal').textContent = `Sukahaji, ${tglCetak}`;
 
             if (formatRole === 'SISWA') {
-                // Khusus Siswa: Ditandatangani Orang Tua & Siswa
                 document.getElementById('ttdKiriAtas').textContent = 'Mengetahui,';
                 document.getElementById('ttdKiriJabatan').textContent = 'Orang Tua / Wali Siswa';
                 document.getElementById('ttdKiriNama').textContent = '( ..................................................... )';
@@ -1668,7 +1727,6 @@
                 document.getElementById('ttdKananNama').textContent = user.nama;
                 document.getElementById('ttdKananNip').textContent = `NISN. ${user.id_relasi}`;
             } else if (aktor.tipe === 'KEPSEK' || (aktor.tipe === 'ADMIN' && formatRole === 'KEPSEK')) {
-                // Laporan Tingkat Sekolah (Kepsek / Admin): Ditandatangani Kepala Sekolah
                 document.getElementById('ttdKiriAtas').textContent = '';
                 document.getElementById('ttdKiriJabatan').textContent = '';
                 document.getElementById('ttdKiriNama').textContent = '';
@@ -1678,7 +1736,6 @@
                 document.getElementById('ttdKananNama').textContent = infoKepsekServer.nama;
                 document.getElementById('ttdKananNip').textContent = `NIP. ${infoKepsekServer.nip}`;
             } else {
-                // Guru Kelas / Admin Mode Guru: Kiri = Kepala Sekolah, Kanan = Wali Kelas / Pembuat Laporan
                 document.getElementById('ttdKiriAtas').textContent = 'Mengetahui,';
                 document.getElementById('ttdKiriJabatan').textContent = 'Kepala SDN 1 Sukahaji';
                 document.getElementById('ttdKiriNama').textContent = infoKepsekServer.nama;
@@ -1701,5 +1758,7 @@
         // Jalankan inisialisasi halaman
         buildNavTabs();
     </script>
+</body>
+</html>
 </body>
 </html>
