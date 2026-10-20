@@ -62,20 +62,25 @@
             box-shadow: 0 12px 24px rgba(0,0,0,0.08);
         }
         .gallery-img-wrapper {
-            height: 230px;
+            height: 260px;
             overflow: hidden;
-            background: #000;
+            background: #0f172a;
             position: relative;
         }
         .gallery-img-wrapper img {
             width: 100%;
-            height: 100%;
+            height: 260px;
             object-fit: cover;
         }
         .gallery-img-wrapper iframe {
             width: 100%;
-            height: 100%;
+            height: 260px;
             border: 0;
+        }
+        .carousel-indicators [data-bs-target] {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
         }
     </style>
 </head>
@@ -321,7 +326,7 @@
                                 <div>
                                     <span class="badge bg-warning-subtle text-dark px-3 py-2 rounded-pill fw-bold mb-2">Etalase Apresiasi</span>
                                     <h2 class="fw-bold text-primary-school mb-1">Panggung Suka Karya</h2>
-                                    <p class="text-muted small mb-0">Galeri karya kreatif, prestasi siswa, dan video inovasi pembelajaran guru SDN 1 Sukahaji.</p>
+                                    <p class="text-muted small mb-0">Galeri karya kreatif, album dokumentasi bergeser otomatis, dan video pembelajaran (YouTube, Drive, TikTok, IG, FB).</p>
                                 </div>
                                 <button class="btn btn-outline-primary btn-sm rounded-pill px-3 mt-2 mt-md-0" onclick="muatGaleriPublik()">
                                     <i class="fas fa-sync-alt me-1"></i> Segarkan Galeri
@@ -476,7 +481,9 @@
             } catch (e) {}
         }
 
-        // 1. Ekstrak ID Video YouTube
+        // =========================================================================
+        // PARSER MULTI-PLATFORM MEDIA (YOUTUBE, TIKTOK, INSTAGRAM, FACEBOOK, DRIVE)
+        // =========================================================================
         function ekstrakIdYouTube(url) {
             if (!url) return null;
             let str = String(url).trim();
@@ -485,16 +492,43 @@
             return (match && match[1]) ? match[1] : null;
         }
 
-        // 2. Ekstrak ID File Google Drive
+        function ekstrakIdTikTok(url) {
+            if (!url) return null;
+            let str = String(url).trim();
+            let match = str.match(/tiktok\.com\/.*\/video\/(\d+)/i) || str.match(/tiktok\.com\/v\/(\d+)/i);
+            return (match && match[1]) ? match[1] : null;
+        }
+
+        function isTikTokShortLink(url) {
+            if (!url) return false;
+            return /(?:vm|vt)\.tiktok\.com\//i.test(String(url));
+        }
+
+        function ekstrakInstagram(url) {
+            if (!url) return null;
+            let str = String(url).trim();
+            let match = str.match(/instagram\.com\/(?:[^\/]+\/)?(p|reel|reels|tv)\/([a-zA-Z0-9_-]+)/i);
+            if (match && match[2]) {
+                let tipe = match[1].toLowerCase() === 'reels' ? 'reel' : match[1].toLowerCase();
+                return { tipe: tipe, kode: match[2] };
+            }
+            return null;
+        }
+
+        function isFacebookVideo(url) {
+            if (!url) return false;
+            let str = String(url).trim();
+            return /(?:facebook\.com\/.*(?:videos|reel|watch|share\/v|share\/r)|fb\.watch\/)/i.test(str);
+        }
+
         function ekstrakIdDrive(url) {
             if (!url) return null;
             let f = String(url).trim();
-            if (!f.includes('drive.google.com')) return null;
+            if (!f.includes('drive.google.com') && !f.includes('lh3.googleusercontent.com')) return null;
             let match = f.match(/\/d\/([a-zA-Z0-9_-]+)/) || f.match(/id=([a-zA-Z0-9_-]+)/);
             return (match && match[1]) ? match[1] : null;
         }
 
-        // 3. Konversi Link Google Drive ke Gambar (Khusus Foto)
         function konversiLinkGambar(url) {
             if (!url) return '';
             let driveId = ekstrakIdDrive(url);
@@ -504,12 +538,11 @@
             return String(url).trim();
         }
 
-        // Fungsi Memuat Galeri Panggung Suka Karya (Sesuai Struktur prosesBacaGaleri.js)
+        // Fungsi Memuat Galeri Panggung Suka Karya
         function muatGaleriPublik() {
             const container = document.getElementById('galeriPublikContainer');
             container.innerHTML = `<div class="col-12 text-center py-5 text-muted"><div class="spinner-border text-primary mb-2"></div><div>Memuat karya terbaik...</div></div>`;
 
-            // WAJIB mode=PUBLIC (dengan huruf C sesuai prosesBacaGaleri.js)
             fetch(`${API_URL}?action=baca_galeri&mode=PUBLIC&_t=${Date.now()}`)
             .then(r => r.json())
             .then(res => {
@@ -524,54 +557,97 @@
                         let tanggal = item.tanggal_kegiatan || '';
                         let likes = item.likes || 0;
                         let tipeMedia = String(item.tipe_media || 'Foto').trim();
-                        let links = Array.isArray(item.links) ? item.links.filter(Boolean) : [];
+                        let links = Array.isArray(item.links) ? item.links.map(x => String(x).trim()).filter(Boolean) : [];
 
                         let firstLink = links[0] || '';
                         let ytId = ekstrakIdYouTube(firstLink);
+                        let ttId = ekstrakIdTikTok(firstLink);
+                        let ttShort = isTikTokShortLink(firstLink);
+                        let igData = ekstrakInstagram(firstLink);
+                        let fbVideo = isFacebookVideo(firstLink);
                         let driveId = ekstrakIdDrive(firstLink);
-                        let isVideoMode = (tipeMedia.toLowerCase() === 'video') || Boolean(ytId);
+
+                        // Jika terdapat lebih dari 1 link foto, paksa mode Album Slide Foto
+                        let isVideoMode = (links.length === 1 && tipeMedia.toLowerCase() === 'video') || Boolean(ytId || ttId || ttShort || igData || fbVideo);
 
                         let mediaHtml = '';
                         let badgeMedia = '';
                         let tombolLuarHtml = '';
 
-                        // KONDISI 1: Video YouTube
+                        // 1. Video YouTube
                         if (ytId) {
-                            badgeMedia = `<span class="badge bg-danger position-absolute top-0 end-0 m-2 z-2 shadow-sm"><i class="fab fa-youtube me-1"></i> Video YouTube</span>`;
+                            badgeMedia = `<span class="badge bg-danger position-absolute top-0 end-0 m-2 z-2 shadow-sm"><i class="fab fa-youtube me-1"></i> YouTube</span>`;
                             mediaHtml = `<iframe src="https://www.youtube.com/embed/${ytId}?rel=0" title="${judul}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>`;
                             tombolLuarHtml = `<a href="https://www.youtube.com/watch?v=${ytId}" target="_blank" class="btn btn-sm btn-light border text-danger fw-semibold w-100 rounded-pill mb-2"><i class="fab fa-youtube me-1"></i> Tonton di YouTube</a>`;
                         }
-                        // KONDISI 2: Video dari Google Drive
+                        // 2. Video TikTok (Link Penuh)
+                        else if (ttId) {
+                            badgeMedia = `<span class="badge bg-dark position-absolute top-0 end-0 m-2 z-2 shadow-sm"><i class="fab fa-tiktok me-1"></i> TikTok</span>`;
+                            mediaHtml = `<iframe src="https://www.tiktok.com/embed/v2/${ttId}" title="${judul}" allow="encrypted-media;" allowfullscreen></iframe>`;
+                            tombolLuarHtml = `<a href="${firstLink}" target="_blank" class="btn btn-sm btn-light border text-dark fw-semibold w-100 rounded-pill mb-2"><i class="fab fa-tiktok me-1"></i> Buka Video di TikTok</a>`;
+                        }
+                        // 3. Video TikTok (Short Link vt.tiktok.com)
+                        else if (ttShort) {
+                            badgeMedia = `<span class="badge bg-dark position-absolute top-0 end-0 m-2 z-2 shadow-sm"><i class="fab fa-tiktok me-1"></i> TikTok</span>`;
+                            mediaHtml = `
+                                <div class="d-flex flex-column align-items-center justify-content-center h-100 text-white p-4 text-center" style="background: linear-gradient(135deg, #000000 0%, #25f4ee 50%, #fe2c55 100%);">
+                                    <i class="fab fa-tiktok display-3 mb-2"></i>
+                                    <div class="fw-bold mb-2">Video TikTok</div>
+                                    <a href="${firstLink}" target="_blank" class="btn btn-light btn-sm rounded-pill px-4 fw-bold shadow"><i class="fas fa-play me-1 text-danger"></i> Putar Video TikTok</a>
+                                </div>`;
+                            tombolLuarHtml = `<a href="${firstLink}" target="_blank" class="btn btn-sm btn-light border text-dark fw-semibold w-100 rounded-pill mb-2"><i class="fab fa-tiktok me-1"></i> Buka di Aplikasi TikTok</a>`;
+                        }
+                        // 4. Video / Post Instagram (Reels & Post)
+                        else if (igData) {
+                            badgeMedia = `<span class="badge position-absolute top-0 end-0 m-2 z-2 shadow-sm" style="background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);"><i class="fab fa-instagram me-1"></i> Instagram</span>`;
+                            mediaHtml = `<iframe src="https://www.instagram.com/${igData.tipe}/${igData.kode}/embed" title="${judul}" allowtransparency="true" allowfullscreen scrolling="no"></iframe>`;
+                            tombolLuarHtml = `<a href="${firstLink}" target="_blank" class="btn btn-sm btn-light border text-danger fw-semibold w-100 rounded-pill mb-2"><i class="fab fa-instagram me-1"></i> Buka di Instagram</a>`;
+                        }
+                        // 5. Video / Reels Facebook
+                        else if (fbVideo) {
+                            badgeMedia = `<span class="badge bg-primary position-absolute top-0 end-0 m-2 z-2 shadow-sm"><i class="fab fa-facebook me-1"></i> Facebook</span>`;
+                            mediaHtml = `<iframe src="https://www.facebook.com/plugins/video.php?href=${encodeURIComponent(firstLink)}&show_text=false&width=500" title="${judul}" style="border:none;overflow:hidden" scrolling="no" frameborder="0" allowfullscreen="true" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"></iframe>`;
+                            tombolLuarHtml = `<a href="${firstLink}" target="_blank" class="btn btn-sm btn-light border text-primary fw-semibold w-100 rounded-pill mb-2"><i class="fab fa-facebook me-1"></i> Tonton di Facebook</a>`;
+                        }
+                        // 6. Video Google Drive
                         else if (isVideoMode && driveId) {
-                            badgeMedia = `<span class="badge bg-success position-absolute top-0 end-0 m-2 z-2 shadow-sm"><i class="fab fa-google-drive me-1"></i> Video Pembelajaran</span>`;
+                            badgeMedia = `<span class="badge bg-success position-absolute top-0 end-0 m-2 z-2 shadow-sm"><i class="fab fa-google-drive me-1"></i> Video Drive</span>`;
                             mediaHtml = `<iframe src="https://drive.google.com/file/d/${driveId}/preview" title="${judul}" allow="autoplay; fullscreen" allowfullscreen></iframe>`;
                             tombolLuarHtml = `<a href="https://drive.google.com/file/d/${driveId}/view" target="_blank" class="btn btn-sm btn-light border text-success fw-semibold w-100 rounded-pill mb-2"><i class="fab fa-google-drive me-1"></i> Buka Video di Google Drive</a>`;
                         }
-                        // KONDISI 3: Video URL Langsung (.mp4)
+                        // 7. Video Link Langsung (.mp4)
                         else if (isVideoMode && firstLink) {
                             badgeMedia = `<span class="badge bg-primary position-absolute top-0 end-0 m-2 z-2 shadow-sm"><i class="fas fa-video me-1"></i> Video</span>`;
                             mediaHtml = `<video controls class="w-100 h-100" style="object-fit:cover;"><source src="${firstLink}"></video>`;
                         }
-                        // KONDISI 4: Album Foto (Lebih dari 1 Foto -> Auto-Slide Carousel)
+                        // 8. Album Foto (Lebih dari 1 Foto -> Auto-Slide Carousel Satu per Satu)
                         else if (links.length > 1) {
-                            badgeMedia = `<span class="badge bg-primary position-absolute top-0 end-0 m-2 z-2 shadow-sm"><i class="fas fa-images me-1"></i> ${links.length} Foto</span>`;
-                            let carouselId = `carouselGaleri${index}`;
+                            badgeMedia = `<span class="badge bg-primary position-absolute top-0 end-0 m-2 z-2 shadow-sm"><i class="fas fa-images me-1"></i> Slide ${links.length} Foto</span>`;
+                            let carouselId = `carouselGaleriPublik_${index}`;
+                            
+                            let indicators = links.map((_, sIdx) => `
+                                <button type="button" data-bs-target="#${carouselId}" data-bs-slide-to="${sIdx}" class="${sIdx === 0 ? 'active' : ''}" aria-current="${sIdx === 0 ? 'true' : 'false'}"></button>
+                            `).join('');
+
                             let slides = links.map((fUrl, sIdx) => {
                                 let cleanImg = konversiLinkGambar(fUrl);
                                 return `
-                                <div class="carousel-item ${sIdx === 0 ? 'active' : ''}" style="height:230px;">
-                                    <img src="${cleanImg}" alt="${judul}" onerror="this.src='https://img.freepik.com/free-vector/children-painting-art-class_23-2148657526.jpg'">
+                                <div class="carousel-item ${sIdx === 0 ? 'active' : ''}" data-bs-interval="2800">
+                                    <img src="${cleanImg}" alt="${judul} - Foto ${sIdx + 1}" onerror="this.src='https://img.freepik.com/free-vector/children-painting-art-class_23-2148657526.jpg'">
+                                    <span class="badge bg-dark bg-opacity-75 position-absolute bottom-0 start-0 m-2 z-2">Foto ${sIdx + 1}/${links.length}</span>
                                 </div>`;
                             }).join('');
+
                             mediaHtml = `
-                                <div id="${carouselId}" class="carousel slide h-100" data-bs-ride="carousel">
+                                <div id="${carouselId}" class="carousel slide carousel-fade h-100" data-bs-ride="carousel" data-bs-interval="2800" data-bs-pause="false">
+                                    <div class="carousel-indicators mb-1">${indicators}</div>
                                     <div class="carousel-inner h-100">${slides}</div>
                                     <button class="carousel-control-prev" type="button" data-bs-target="#${carouselId}" data-bs-slide="prev"><span class="carousel-control-prev-icon"></span></button>
                                     <button class="carousel-control-next" type="button" data-bs-target="#${carouselId}" data-bs-slide="next"><span class="carousel-control-next-icon"></span></button>
                                 </div>
                             `;
                         }
-                        // KONDISI 5: 1 Foto Tunggal
+                        // 9. Foto Tunggal
                         else {
                             let singleImg = firstLink ? konversiLinkGambar(firstLink) : 'https://img.freepik.com/free-vector/children-painting-art-class_23-2148657526.jpg';
                             badgeMedia = `<span class="badge bg-dark bg-opacity-75 position-absolute top-0 end-0 m-2 z-2"><i class="fas fa-camera me-1"></i> Foto Kegiatan</span>`;
@@ -607,6 +683,21 @@
                         </div>`;
                     });
                     container.innerHTML = html;
+
+                    // WAJIB: Aktifkan efek Auto-Slide Bootstrap Carousel pada semua kartu yang memiliki >1 foto
+                    setTimeout(() => {
+                        const carousels = container.querySelectorAll('.carousel');
+                        carousels.forEach(carEl => {
+                            const instance = new bootstrap.Carousel(carEl, {
+                                interval: 2800,
+                                ride: 'carousel',
+                                pause: false,
+                                wrap: true
+                            });
+                            instance.cycle();
+                        });
+                    }, 150);
+
                 } else {
                     container.innerHTML = `<div class="col-12 text-center py-5 text-muted"><i class="fas fa-images fs-1 mb-2 opacity-50"></i><p class="mb-0">Belum ada karya yang dipublikasikan.</p></div>`;
                 }
