@@ -4,38 +4,191 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sistem Informasi Digital | SDN 1 Sukahaji</title>
-    
-    <!-- Bootstrap CSS -->
+    <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Leaflet JS (Library Peta Interaktif) -->
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
-    
+    <!-- Leaflet CSS untuk Peta Spasial Siswa -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+    <!-- Custom CSS Sekolah -->
     <link rel="stylesheet" href="css/style.css">
-    
+
     <style>
-        /* Desain Khusus Dropdown Menu */
-        .dropdown-menu { border-radius: 12px; border: none; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
-        .dropdown-item { padding: 10px 20px; font-weight: 500; color: #495057; transition: background 0.2s; }
-        .dropdown-item:hover { background-color: #f0f7ff; color: #0f4c81; }
-        
-        /* Wadah Peta Sebaran */
-        #mapContainer { height: 500px; width: 100%; border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); z-index: 1; }
-        .map-popup-title { font-weight: bold; color: #0f4c81; margin-bottom: 2px; }
-        
-        /* Footer Profesional */
-        .footer-pro { background-color: #0a3356; color: rgba(255,255,255,0.8); padding: 60px 0 30px 0; }
-        .footer-pro h5 { color: #fff; font-weight: bold; margin-bottom: 20px; }
-        .footer-pro a { color: rgba(255,255,255,0.8); text-decoration: none; transition: color 0.3s; }
-        .footer-pro a:hover { color: #ffc107; }
-        .footer-icon-box { width: 35px; height: 35px; background: rgba(255,255,255,0.1); border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; margin-right: 10px; transition: background 0.3s; }
-        .footer-icon-box:hover { background: #ffc107; color: #0a3356; }
+        /* Navigasi & Dropdown Modern */
+        .dropdown-menu {
+            border-radius: 12px;
+            border: none;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+        .dropdown-item {
+            padding: 10px 20px;
+            font-weight: 500;
+            color: #495057;
+            transition: background 0.2s;
+        }
+        .dropdown-item:hover {
+            background-color: #f0f7ff;
+            color: #0f4c81;
+        }
+
+        /* Seksi Hero Utama */
+        .hero-section {
+            padding: 115px 0 70px 0;
+            background: radial-gradient(circle at top right, #f0f7ff 0%, #ffffff 65%);
+            overflow: hidden;
+        }
+        .badge-hero {
+            background-color: #0f4c81;
+            color: #ffffff;
+            font-weight: 600;
+            padding: 8px 16px;
+            border-radius: 50px;
+            font-size: 0.82rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        /* Galeri Hero Dynamic Bento Trio (4 Foto Bergantian Lembut) */
+        .hero-bento-wrapper {
+            position: relative;
+            padding: 10px;
+        }
+        .hero-bento-Wrapper::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(15, 76, 129, 0.08), rgba(255, 193, 7, 0.12));
+            border-radius: 32px;
+            transform: rotate(-2deg);
+            z-index: 0;
+        }
+        .hero-bento-grid {
+            display: grid;
+            grid-template-columns: 1.35fr 1fr;
+            grid-template-rows: 205px 205px;
+            gap: 14px;
+            position: relative;
+            z-index: 1;
+        }
+        .bento-card {
+            position: relative;
+            border-radius: 22px;
+            overflow: hidden;
+            box-shadow: 0 14px 32px rgba(15, 76, 129, 0.14);
+            border: 4px solid #ffffff;
+            background: #e2e8f0;
+        }
+        .bento-main {
+            grid-row: 1 / span 2;
+        }
+        .bento-card img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: opacity 0.8s ease-in-out, transform 4.5s ease;
+            transform: scale(1.04);
+        }
+        .bento-card img.fade-out {
+            opacity: 0;
+            transform: scale(1);
+        }
+        .bento-badge-float {
+            position: absolute;
+            bottom: 14px;
+            left: 14px;
+            right: 14px;
+            background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(8px);
+            padding: 9px 14px;
+            border-radius: 14px;
+            font-size: 0.78rem;
+            font-weight: 700;
+            color: #0f4c81;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+            z-index: 5;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .bento-dots {
+            display: flex;
+            gap: 5px;
+        }
+        .bento-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: #cbd5e1;
+            transition: all 0.3s ease;
+        }
+        .bento-dot.active {
+            width: 18px;
+            border-radius: 10px;
+            background: #0f4c81;
+        }
+
+        /* Kartu Layanan Unggulan (Akselerasi Mutu) */
+        .feature-card {
+            border-radius: 20px;
+            border: 1px solid #eef2f6;
+            background: #ffffff;
+            transition: all 0.3s ease;
+            height: 100%;
+        }
+        .feature-card:hover {
+            transform: translateY(-7px);
+            box-shadow: 0 18px 35px rgba(15, 76, 129, 0.09);
+            border-color: #cfe2ff;
+        }
+        .icon-box-lg {
+            width: 60px;
+            height: 60px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 26px;
+            margin-bottom: 18px;
+        }
+
+        /* Kontainer Peta Spasial */
+        #mapSebaranSiswa {
+            width: 100%;
+            height: 460px;
+            border-radius: 20px;
+            z-index: 1;
+        }
+        .stat-map-pill {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 14px;
+            padding: 12px 16px;
+        }
+
+        @media (max-width: 768px) {
+            .hero-section {
+                padding: 95px 0 45px 0;
+            }
+            .hero-bento-grid {
+                grid-template-columns: 1fr 1fr;
+                grid-template-rows: 225px 140px;
+                gap: 10px;
+                margin-top: 20px;
+            }
+            .bento-main {
+                grid-column: 1 / span 2;
+                grid-row: 1;
+            }
+            #mapSebaranSiswa {
+                height: 360px;
+            }
+        }
     </style>
 </head>
-<body>
+<body class="bg-light">
 
-    <!-- Navbar Profesional -->
+    <!-- ==================== 1. NAVBAR UTAMA ==================== -->
     <nav class="navbar navbar-expand-lg navbar-light bg-white py-3 shadow-sm fixed-top">
         <div class="container">
             <a class="navbar-brand fw-bold text-primary-school" href="index.html">
@@ -46,9 +199,10 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto align-items-center">
-                    
-                    <li class="nav-item"><a class="nav-link" href="index.html">Beranda</a></li>
-                    
+                    <li class="nav-item">
+                        <a class="nav-link active fw-bold text-primary-school" href="index.html">Beranda</a>
+                    </li>
+
                     <!-- Dropdown: Profil Sekolah -->
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Profil Sekolah</a>
@@ -66,14 +220,24 @@
                             <li><a class="dropdown-item" href="akademik.html#kurikulum"><i class="fas fa-book-reader me-2 text-primary"></i> Kurikulum Satuan Pendidikan</a></li>
                             <li><a class="dropdown-item" href="akademik.html#ekskul"><i class="fas fa-running me-2 text-danger"></i> Ekstrakurikuler & Kokurikuler</a></li>
                             <li><a class="dropdown-item" href="akademik.html#kaldik"><i class="fas fa-calendar-check me-2 text-success"></i> Kalender Pendidikan</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item fw-semibold text-primary-school" href="#" onclick="bukaLMSDariBeranda(event)"><i class="fas fa-laptop-code me-2 text-info"></i> Portal Belajar Digital (LMS)</a></li>
                         </ul>
                     </li>
 
-                    <!-- Menu Langsung: Pusat Layanan Publik -->
+                    <!-- Pusat Layanan Publik -->
                     <li class="nav-item">
                         <a class="nav-link" href="layanan.html">Pusat Layanan Publik</a>
                     </li>
 
+                    <!-- Pintasan Langsung LMS -->
+                    <li class="nav-item">
+                        <a class="nav-link fw-semibold text-primary-school" href="#" onclick="bukaLMSDariBeranda(event)">
+                            <i class="fas fa-laptop-code me-1 text-info"></i> LMS
+                        </a>
+                    </li>
+
+                    <!-- Tombol Login / Ruang Kerja Dinamis -->
                     <li class="nav-item ms-lg-3 mt-2 mt-lg-0">
                         <a href="login.html" id="btnNavPortal" class="btn btn-school px-4 rounded-pill shadow-sm">
                             <i class="fas fa-sign-in-alt me-1"></i> Login Portal
@@ -84,144 +248,236 @@
         </div>
     </nav>
 
-    <!-- Hero Section -->
-    <section class="hero-section mt-5" style="padding-top: 60px;">
+    <!-- ==================== 2. HERO BANNER (DYNAMIC BENTO 4 FOTO) ==================== -->
+    <section class="hero-section">
         <div class="container">
-            <div class="row align-items-center">
+            <div class="row align-items-center g-4">
+                <!-- Kolom Kiri: Teks & Tombol Aksi -->
                 <div class="col-lg-6">
-                    <span class="badge bg-primary-school text-white mb-3 px-3 py-2 rounded-pill shadow-sm"><i class="fas fa-award me-1 text-warning"></i> Platform Pendidikan Digital</span>
-                    <h1 class="fw-bold mb-4" style="font-size: 3.2rem; line-height: 1.2;">Membangun Generasi <span class="text-warning position-relative">Hebat<svg class="position-absolute w-100 h-100 start-0 top-0" style="z-index:-1; opacity:0.3" viewBox="0 0 100 100" preserveAspectRatio="none"><path d="M0,80 Q50,40 100,80 L100,100 L0,100 Z" fill="#ffc107"/></svg></span> & Berkarakter</h1>
-                    <p class="lead text-muted mb-4">Selamat datang di portal cerdas SDN 1 Sukahaji. Pusat data, informasi spasial, dan kolaborasi antara Guru, Siswa, dan Orang Tua untuk mewujudkan pendidikan yang bermutu.</p>
+                    <div class="badge-hero mb-3 shadow-sm">
+                        <i class="fas fa-award text-warning"></i> Platform Pendidikan Digital
+                    </div>
+                    <h1 class="display-5 fw-bold text-primary-school mb-3" style="line-height: 1.2;">
+                        Membangun Generasi <span class="text-warning">Hebat</span> & Berkarakter
+                    </h1>
+                    <p class="text-secondary mb-4" style="font-size: 1.05rem; line-height: 1.7;">
+                        Selamat datang di portal cerdas SDN 1 Sukahaji. Pusat data, informasi spasial, dan kolaborasi antara Guru, Siswa, dan Orang Tua untuk mewujudkan pendidikan yang bermutu.
+                    </p>
                     <div class="d-flex flex-wrap gap-2">
-                        <a href="#petaSebaran" class="btn btn-school btn-lg px-4 py-3 shadow"><i class="fas fa-map-marked-alt me-2"></i> Lihat Peta Siswa</a>
-                        <a href="layanan.html" class="btn btn-outline-primary btn-lg px-4 py-3 rounded-3"><i class="fas fa-globe me-2"></i> Akses Layanan Publik</a>
+                        <a href="#petaSebaran" class="btn btn-school px-4 py-2 rounded-3 fw-semibold shadow-sm">
+                            <i class="fas fa-map-location-dot me-2"></i>Lihat Peta Siswa
+                        </a>
+                        <a href="layanan.html" class="btn btn-outline-primary px-4 py-2 rounded-3 fw-semibold">
+                            <i class="fas fa-globe me-2"></i>Akses Layanan Publik
+                        </a>
+                        <a href="#" onclick="bukaLMSDariBeranda(event)" class="btn btn-warning text-dark px-4 py-2 rounded-3 fw-bold shadow-sm">
+                            <i class="fas fa-laptop-code me-2"></i>Portal Belajar (LMS)
+                        </a>
                     </div>
                 </div>
-                <div class="col-lg-6 mt-5 mt-lg-0 text-center">
-                    <img src="https://img.freepik.com/free-vector/back-school-concept-with-students_23-2148589251.jpg" alt="Ilustrasi Sekolah" class="img-fluid rounded-4 shadow-lg w-100">
+
+                <!-- Kolom Kanan: Galeri Bento 3 Bingkai (Memutar 4 Foto Hero Secara Lembut) -->
+                <div class="col-lg-6">
+                    <div class="hero-bento-wrapper">
+                        <div class="hero-bento-grid">
+                            <!-- Bingkai 1: Utama Besar -->
+                            <div class="bento-card bento-main">
+                                <img id="heroSlot1" src="assets/hero1.png" alt="Kegiatan SDN 1 Sukahaji 1" onerror="this.src='https://img.freepik.com/free-vector/learning-concept-illustration_114360-6186.jpg'">
+                                <div class="bento-badge-float">
+                                    <span><i class="fas fa-star text-warning me-1"></i> Dokumentasi Kegiatan Sekolah</span>
+                                    <div class="bento-dots" id="heroBentoDots">
+                                        <span class="bento-dot active"></span>
+                                        <span class="bento-dot"></span>
+                                        <span class="bento-dot"></span>
+                                        <span class="bento-dot"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Bingkai 2: Kanan Atas -->
+                            <div class="bento-card">
+                                <img id="heroSlot2" src="assets/hero2.png" alt="Kegiatan SDN 1 Sukahaji 2" onerror="this.src='https://img.freepik.com/free-vector/children-painting-art-class_23-2148657526.jpg'">
+                            </div>
+                            <!-- Bingkai 3: Kanan Bawah -->
+                            <div class="bento-card">
+                                <img id="heroSlot3" src="assets/hero3.png" alt="Kegiatan SDN 1 Sukahaji 3" onerror="this.src='https://img.freepik.com/free-vector/kids-studying-from-home-concept-illustration_114360-1762.jpg'">
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Program Unggulan -->
-    <section id="fitur" class="py-5 bg-white">
-        <div class="container py-5">
+    <!-- ==================== 3. SEKSI AKSELERASI MUTU (4 PILAR DIGITAL) ==================== -->
+    <section class="py-5 bg-white border-top border-bottom">
+        <div class="container py-2">
             <div class="text-center mb-5">
-                <h6 class="text-warning fw-bold text-uppercase tracking-wider">Akselerasi Mutu</h6>
-                <h2 class="fw-bold text-primary-school">Layanan Program Unggulan Kami</h2>
+                <span class="text-warning fw-bold text-uppercase small" style="letter-spacing: 1.5px;">AKSELERASI MUTU</span>
+                <h2 class="fw-bold text-primary-school mt-1 mb-2">Ekosistem Layanan Digital Terpadu</h2>
+                <p class="text-muted small mx-auto mb-0" style="max-width: 640px;">
+                    Integrasi pemantauan karakter, perlindungan warga sekolah, apresiasi karya, dan pembelajaran interaktif dalam satu pintu akses.
+                </p>
             </div>
+
             <div class="row g-4">
-                <div class="col-md-4">
-                    <div class="card card-soft p-4 h-100 text-center" onclick="window.location.href='jurnal.html'" style="cursor:pointer;">
-                        <div class="display-4 text-warning mb-3"><i class="fas fa-star"></i></div>
-                        <h4 class="fw-bold">Jurnal 7KAIH</h4>
-                        <p class="text-muted small">Membangun 7 Kebiasaan Anak Indonesia Hebat melalui rekapitulasi kebiasaan harian secara digital.</p>
+                <!-- Pilar 1: Jurnal 7KAIH -->
+                <div class="col-md-6 col-lg-3">
+                    <div class="feature-card p-4 d-flex flex-column justify-content-between">
+                        <div>
+                            <div class="icon-box-lg bg-warning-subtle text-warning">
+                                <i class="fas fa-book-open"></i>
+                            </div>
+                            <h5 class="fw-bold text-primary-school mb-2">Jurnal 7KAIH</h5>
+                            <p class="text-muted small mb-4">
+                                Pemantauan harian 7 Kebiasaan Anak Indonesia Hebat secara berjenjang antara Siswa, Wali Kelas, dan Orang Tua.
+                            </p>
+                        </div>
+                        <a href="jurnal.html" class="btn btn-outline-primary btn-sm rounded-pill fw-semibold w-100">
+                            Buka Jurnal 7KAIH <i class="fas fa-arrow-right ms-1"></i>
+                        </a>
                     </div>
                 </div>
-                <div class="col-md-4">
-                    <div class="card card-soft p-4 h-100 text-center" onclick="window.location.href='layanan.html'" style="cursor:pointer;">
-                        <div class="display-4 text-danger mb-3"><i class="fas fa-shield-heart"></i></div>
-                        <h4 class="fw-bold">Rumah Sarengseh</h4>
-                        <p class="text-muted small">Portal pelaporan aman dan rahasia untuk layanan TPPK, Konseling, dan Keselamatan Sarpras.</p>
+
+                <!-- Pilar 2: Rumah Sarengseh -->
+                <div class="col-md-6 col-lg-3">
+                    <div class="feature-card p-4 d-flex flex-column justify-content-between">
+                        <div>
+                            <div class="icon-box-lg bg-danger-subtle text-danger">
+                                <i class="fas fa-shield-heart"></i>
+                            </div>
+                            <h5 class="fw-bold text-primary-school mb-2">Rumah Sarengseh</h5>
+                            <p class="text-muted small mb-4">
+                                Saluran perlindungan siswa (TPPK), layanan konseling, kotak aspirasi, dan pelaporan keselamatan sarpras.
+                            </p>
+                        </div>
+                        <a href="layanan.html#sarengseh" class="btn btn-outline-danger btn-sm rounded-pill fw-semibold w-100">
+                            Layanan Pengaduan <i class="fas fa-arrow-right ms-1"></i>
+                        </a>
                     </div>
                 </div>
-                <div class="col-md-4">
-                    <div class="card card-soft p-4 h-100 text-center" onclick="window.location.href='layanan.html#sukakarya'" style="cursor:pointer;">
-                        <div class="display-4 text-success mb-3"><i class="fas fa-photo-video"></i></div>
-                        <h4 class="fw-bold">Panggung Suka Karya</h4>
-                        <p class="text-muted small">CMS Galeri Unjuk Karya Guru dan Siswa, Pojok Buka Citra RKAS, PPDB & Layanan Informasi PPID.</p>
+
+                <!-- Pilar 3: Panggung Suka Karya -->
+                <div class="col-md-6 col-lg-3">
+                    <div class="feature-card p-4 d-flex flex-column justify-content-between">
+                        <div>
+                            <div class="icon-box-lg bg-success-subtle text-success">
+                                <i class="fas fa-photo-film"></i>
+                            </div>
+                            <h5 class="fw-bold text-primary-school mb-2">Panggung Suka Karya</h5>
+                            <p class="text-muted small mb-4">
+                                Etalase dokumentasi kegiatan sekolah, kreasi siswa, dan video praktik baik pembelajaran guru.
+                            </p>
+                        </div>
+                        <a href="layanan.html#sukakarya" class="btn btn-outline-success btn-sm rounded-pill fw-semibold w-100">
+                            Lihat Galeri Karya <i class="fas fa-arrow-right ms-1"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Pilar 4: Portal Belajar Digital (LMS) -->
+                <div class="col-md-6 col-lg-3">
+                    <div class="feature-card p-4 d-flex flex-column justify-content-between">
+                        <div>
+                            <div class="icon-box-lg bg-info-subtle text-info">
+                                <i class="fas fa-laptop-code"></i>
+                            </div>
+                            <h5 class="fw-bold text-primary-school mb-2">Portal Belajar (LMS)</h5>
+                            <p class="text-muted small mb-4">
+                                Lembar Kerja Peserta Didik (LKPD) interaktif 7 mata pelajaran, kolaborasi kelompok, dan evaluasi digital.
+                            </p>
+                        </div>
+                        <a href="#" onclick="bukaLMSDariBeranda(event)" class="btn btn-school btn-sm rounded-pill fw-semibold w-100">
+                            Masuk ke LMS <i class="fas fa-external-link-alt ms-1"></i>
+                        </a>
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Section Pemetaan WebGIS (Peta Sebaran Siswa) -->
+    <!-- ==================== 4. PETA SPASIAL SEBARAN SISWA (WEBGIS) ==================== -->
     <section id="petaSebaran" class="py-5 bg-light">
-        <div class="container py-4">
-            <div class="row align-items-center mb-4">
-                <div class="col-md-8">
-                    <span class="badge bg-success-subtle text-success px-3 py-2 rounded-pill mb-2 fw-bold"><i class="fas fa-satellite me-1"></i> Data Spasial Real-Time</span>
-                    <h2 class="fw-bold text-primary-school">Peta Zonasi & Sebaran Siswa</h2>
-                    <p class="text-muted mb-0">Pemetaan geografis domisili peserta didik SDN 1 Sukahaji. Data dihimpun dan dikelompokkan secara dinamis berdasarkan data referensi Dapodik sekolah.</p>
+        <div class="container py-2">
+            <div class="card border-0 shadow-sm rounded-4 p-4 p-md-5 bg-white">
+                <div class="row align-items-center mb-4 g-3">
+                    <div class="col-lg-7">
+                        <span class="badge bg-primary-subtle text-primary px-3 py-2 rounded-pill fw-bold mb-2">
+                            <i class="fas fa-map-marked-alt me-1"></i> Sistem Informasi Geografis (WebGIS)
+                        </span>
+                        <h3 class="fw-bold text-primary-school mb-1">Peta Spasial Sebaran Domisili Siswa</h3>
+                        <p class="text-muted small mb-0">
+                            Visualisasi titik klaster tempat tinggal peserta didik SDN 1 Sukahaji secara agregat di wilayah Desa Sukahaji, Desa Cijulang, Desa Sukamulya, dan sekitarnya.
+                        </p>
+                    </div>
+                    <div class="col-lg-5">
+                        <div class="row g-2 text-center">
+                            <div class="col-6">
+                                <div class="stat-map-pill">
+                                    <div class="small text-muted fw-semibold">Titik Klaster Dusun</div>
+                                    <div class="fs-4 fw-bold text-primary-school" id="statMapTitik">0</div>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="stat-map-pill">
+                                    <div class="small text-muted fw-semibold">Total Siswa Terpetakan</div>
+                                    <div class="fs-4 fw-bold text-success" id="statMapSiswa">0</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="col-md-4 text-md-end mt-3 mt-md-0">
-                    <button class="btn btn-outline-success rounded-pill" onclick="muatDataPeta()"><i class="fas fa-sync-alt me-1"></i> Perbarui Peta</button>
-                </div>
-            </div>
 
-            <!-- Wadah Leaflet Map -->
-            <div class="position-relative">
-                <div id="mapLoader" class="position-absolute top-50 start-50 translate-middle z-3 text-center bg-white p-4 rounded-4 shadow-sm">
-                    <div class="spinner-grow text-success mb-2" role="status"></div>
-                    <div class="fw-bold text-muted small">Memindai Satelit Geospasial...</div>
-                </div>
-                <div id="mapContainer"></div>
-            </div>
-            
-            <div class="mt-3 text-end">
-                <small class="text-muted fst-italic"><i class="fas fa-user-shield me-1 text-warning"></i> Perlindungan Privasi Anak: Peta hanya menampilkan agregat jumlah siswa per Dusun/Koordinat klaster tanpa menunjukkan identitas individu.</small>
+                <!-- Elemen Peta Leaflet -->
+                <div id="mapSebaranSiswa" class="border shadow-sm"></div>
             </div>
         </div>
     </section>
 
-    <!-- Footer Profesional -->
-    <footer class="footer-pro">
+    <!-- ==================== 5. FOOTER PROFESIONAL ==================== -->
+    <footer class="bg-primary-school text-white pt-5 pb-4 mt-4">
         <div class="container">
-            <div class="row g-4 mb-4">
-                <div class="col-lg-4 mb-4 mb-lg-0">
-                    <h4 class="text-white fw-bold mb-3"><i class="fas fa-graduation-cap me-2 text-warning"></i>SDN 1 Sukahaji</h4>
-                    <p class="small opacity-75 mb-4" style="line-height: 1.8;">Berkomitmen mewujudkan pendidikan dasar yang berkualitas, berkarakter, dan melek digital untuk mencetak generasi hebat penerus bangsa.</p>
-                    <div class="d-flex">
-                        <a href="#" class="footer-icon-box"><i class="fab fa-facebook-f"></i></a>
-                        <a href="#" class="footer-icon-box"><i class="fab fa-youtube"></i></a>
-                        <a href="#" class="footer-icon-box"><i class="fab fa-instagram"></i></a>
-                    </div>
+            <div class="row g-4 pb-4 border-bottom border-white border-opacity-10">
+                <div class="col-lg-5">
+                    <h5 class="fw-bold mb-3">
+                        <i class="fas fa-graduation-cap text-warning me-2"></i>SD Negeri 1 Sukahaji
+                    </h5>
+                    <p class="small text-white-50 mb-2">
+                        Jalan Raya Cihaurbeuti Nomor 86 Dusun Sukahaji, Desa Sukahaji, Kecamatan Cihaurbeuti, Kabupaten Ciamis, Jawa Barat 46262.
+                    </p>
+                    <div class="small text-warning fw-semibold">NPSN: 20212211 | Akreditasi: B</div>
                 </div>
-                <div class="col-lg-2 col-md-6 mb-4 mb-md-0">
-                    <h5>Navigasi</h5>
-                    <ul class="list-unstyled small lh-lg">
-                        <li><a href="index.html">Beranda Utama</a></li>
-                        <li><a href="#">Profil & Sejarah</a></li>
-                        <li><a href="#">Akademik</a></li>
-                        <li><a href="jurnal.html">Jurnal 7KAIH</a></li>
+                <div class="col-6 col-lg-3">
+                    <h6 class="fw-bold text-warning mb-3">Navigasi Utama</h6>
+                    <ul class="list-unstyled small lh-lg mb-0">
+                        <li><a href="profil.html" class="text-white-50 text-decoration-none">Profil & Direktori Guru</a></li>
+                        <li><a href="akademik.html" class="text-white-50 text-decoration-none">Kurikulum & Akademik</a></li>
+                        <li><a href="layanan.html" class="text-white-50 text-decoration-none">Pusat Layanan Publik</a></li>
+                        <li><a href="sop-layanan.html" class="text-white-50 text-decoration-none">Dokumen Regulasi & SOP</a></li>
                     </ul>
                 </div>
-                <div class="col-lg-3 col-md-6 mb-4 mb-md-0">
-                    <h5>Layanan Publik</h5>
-                    <ul class="list-unstyled small lh-lg">
-                        <li><a href="layanan.html#sarengseh">Pengaduan (Sarengseh)</a></li>
-                        <li><a href="layanan.html#sukakarya">Galeri (Suka Karya)</a></li>
-                        <li><a href="layanan.html#ppdb">Informasi PPDB</a></li>
-                        <li><a href="layanan.html#ppid">Layanan PPID & SOP</a></li>
-                    </ul>
-                </div>
-                <div class="col-lg-3">
-                    <h5>Hubungi Kami</h5>
-                    <ul class="list-unstyled small lh-lg opacity-75">
-                        <li class="d-flex align-items-start mb-2"><i class="fas fa-map-marker-alt mt-1 me-2 text-warning"></i> <div>Jln. Cihaurbeuti No. 86 Desa Sukahaji, Kec. Cihaurbeuti, Kab. Ciamis, Jawa Barat 46262</div></li>
-                        <li class="d-flex align-items-center mb-2"><i class="fas fa-envelope me-2 text-warning"></i> sdn1sukahaji@gmail.com</li>
-                        <li class="d-flex align-items-center"><i class="fas fa-id-badge me-2 text-warning"></i> NPSN: 20212211</li>
+                <div class="col-6 col-lg-4">
+                    <h6 class="fw-bold text-warning mb-3">Aplikasi Terintegrasi (SSO)</h6>
+                    <ul class="list-unstyled small lh-lg mb-0">
+                        <li><a href="dashboard.html" class="text-white-50 text-decoration-none"><i class="fas fa-th-large me-2"></i>Ruang Kerja Digital SIMS</a></li>
+                        <li><a href="jurnal.html" class="text-white-50 text-decoration-none"><i class="fas fa-book-open me-2"></i>Jurnal Karakter 7KAIH</a></li>
+                        <li><a href="#" onclick="bukaLMSDariBeranda(event)" class="text-white-50 text-decoration-none"><i class="fas fa-laptop-code me-2"></i>Portal Belajar Digital (LMS)</a></li>
                     </ul>
                 </div>
             </div>
-            <div class="border-top border-secondary pt-4 text-center text-md-start d-md-flex justify-content-between align-items-center small opacity-75">
-                <div>&copy; 2026 SDN 1 Sukahaji. Hak Cipta Dilindungi.</div>
-                <div class="mt-2 mt-md-0">Dikembangkan untuk Sistem Informasi Digital Sekolah</div>
+            <div class="text-center small text-white-50 pt-3">
+                &copy; 2026 Sistem Informasi Digital SD Negeri 1 Sukahaji. Dikembangkan untuk Kemajuan Pendidikan.
             </div>
         </div>
     </footer>
 
-    <!-- Bootstrap JS -->
+    <!-- Bootstrap & Leaflet JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <!-- Leaflet JS -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    
     <script>
         const API_URL = 'https://script.google.com/macros/s/AKfycbyfseRl94qmA0TaX1ODw3sr8Car6i0uf-3WEBKcJ8cDILdi459vW0CCqo28L3iGgHhVww/exec';
-        
-        // Deteksi Login untuk Navbar
+        const LMS_URL = 'https://sdn1sukahaji.github.io/lms-sdn1sukahaji/';
+
+        // 1. Deteksi Sesi Login untuk Tombol Ruang Kerja & SSO
         const activeSession = localStorage.getItem('userSession');
         if (activeSession) {
             try {
@@ -232,97 +488,123 @@
                     btnNav.href = 'dashboard.html';
                     btnNav.innerHTML = `<i class="fas fa-th-large me-1"></i> Ruang Kerja (${namaSingkat})`;
                 }
+                if (u.username || u.id_relasi) {
+                    localStorage.setItem('sdn1_sso_user', u.username || u.id_relasi);
+                }
+                if (u.sso_token) {
+                    localStorage.setItem('sdn1_sso_token', u.sso_token);
+                }
             } catch (e) {}
         }
 
-        // Variabel Global Peta
-        let map;
-        let mapMarkers = [];
-
-        function initMap() {
-            map = L.map('mapContainer').setView([-7.2660, 108.2010], 14);
-            
-            // Tampilan Peta Elegan: Esri Light Gray Canvas (Gratis, Bersih & Profesional)
-            L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}', {
-                attribution: '&copy; Esri &mdash; Esri, DeLorme, NAVTEQ | Data SDN 1 Sukahaji',
-                maxZoom: 16
-            }).addTo(map);
-
-            muatDataPeta();
+        // 2. Fungsi Membuka LMS dengan Membawa Sesi SSO Otomatis
+        function bukaLMSDariBeranda(event) {
+            if (event) event.preventDefault();
+            const rawSession = localStorage.getItem('userSession');
+            if (rawSession) {
+                try {
+                    const u = JSON.parse(rawSession);
+                    const usernameLogin = u.username || u.id_relasi || '';
+                    if (usernameLogin) {
+                        localStorage.setItem('sdn1_sso_user', usernameLogin);
+                        if (u.sso_token) localStorage.setItem('sdn1_sso_token', u.sso_token);
+                        const tokenParam = u.sso_token ? `&sso_token=${encodeURIComponent(u.sso_token)}` : '';
+                        window.location.href = `${LMS_URL}?sso_user=${encodeURIComponent(usernameLogin)}${tokenParam}`;
+                        return;
+                    }
+                } catch (e) {}
+            }
+            window.location.href = LMS_URL;
         }
 
-        function muatDataPeta() {
-            const loader = document.getElementById('mapLoader');
-            loader.classList.remove('d-none');
+        // 3. Animasi Rotasi Lembut 4 Foto Hero (hero1.png s.d. hero4.png) pada 3 Bingkai Bento
+        (function initHeroBentoRotator() {
+            const heroPhotos = [
+                'assets/hero1.png',
+                'assets/hero2.png',
+                'assets/hero3.png',
+                'assets/hero4.png'
+            ];
+            let startIdx = 0;
+            const s1 = document.getElementById('heroSlot1');
+            const s2 = document.getElementById('heroSlot2');
+            const s3 = document.getElementById('heroSlot3');
+            const dots = document.querySelectorAll('#heroBentoDots .bento-dot');
 
-            mapMarkers.forEach(m => map.removeLayer(m));
-            mapMarkers = [];
+            if (!s1 || !s2 || !s3) return;
+
+            setInterval(() => {
+                startIdx = (startIdx + 1) % heroPhotos.length;
+                const slots = [
+                    { el: s1, nextSrc: heroPhotos[startIdx % 4] },
+                    { el: s2, nextSrc: heroPhotos[(startIdx + 1) % 4] },
+                    { el: s3, nextSrc: heroPhotos[(startIdx + 2) % 4] }
+                ];
+
+                slots.forEach((item, i) => {
+                    setTimeout(() => {
+                        item.el.classList.add('fade-out');
+                        setTimeout(() => {
+                            item.el.src = item.nextSrc;
+                            item.el.classList.remove('fade-out');
+                        }, 420);
+                    }, i * 160);
+                });
+
+                dots.forEach((d, idx) => {
+                    d.classList.toggle('active', idx === startIdx);
+                });
+            }, 4500);
+        })();
+
+        // 4. Inisialisasi Peta Sebaran Siswa (Leaflet.js)
+        document.addEventListener("DOMContentLoaded", function() {
+            const map = L.map('mapSebaranSiswa').setView([-7.2065, 108.1965], 14);
+
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; OpenStreetMap contributors | SDN 1 Sukahaji'
+            }).addTo(map);
 
             fetch(`${API_URL}?action=baca_sebaran_siswa&_t=${Date.now()}`)
             .then(r => r.json())
             .then(res => {
-                loader.classList.add('d-none');
-                if(res.status === 'success' && res.data.length > 0) {
-                    
-                    let localLatLngs = [];
+                const list = res.data || [];
+                if (res.status === 'success' && list.length > 0) {
+                    let totalSiswa = 0;
+                    const bounds = [];
 
-                    res.data.forEach(item => {
-                        let radiusSize = Math.min(Math.max(item.jumlah * 2, 10), 45);
+                    list.forEach(item => {
+                        totalSiswa += (item.jumlah || 0);
+                        bounds.push([item.lat, item.lng]);
 
-                        let circle = L.circleMarker([item.lat, item.lng], {
-                            radius: radiusSize,
-                            fillColor: "#0f4c81",
-                            color: "#ffc107",
-                            weight: 2,
+                        const radiusDinamis = Math.min(24, Math.max(9, 7 + (item.jumlah * 1.4)));
+                        const marker = L.circleMarker([item.lat, item.lng], {
+                            radius: radiusDinamis,
+                            fillColor: '#0f4c81',
+                            color: '#ffc107',
+                            weight: 3,
                             opacity: 1,
-                            fillOpacity: 0.65
+                            fillOpacity: 0.82
                         }).addTo(map);
-                        
-                        let popUpHtml = `
-                            <div class="text-center p-1" style="min-width: 140px;">
-                                <div class="map-popup-title"><i class="fas fa-map-marker-alt text-danger me-1"></i> ${item.dusun}</div>
+
+                        marker.bindPopup(`
+                            <div style="min-width: 160px;">
+                                <div class="fw-bold text-primary-school mb-1"><i class="fas fa-map-pin text-danger me-1"></i> Dusun ${item.dusun}</div>
                                 <div class="small text-muted mb-2">Desa ${item.desa}</div>
-                                <div class="badge bg-warning text-dark px-3 py-2 w-100 shadow-sm" style="font-size:14px;">
-                                    <i class="fas fa-users me-1"></i> ${item.jumlah} Siswa
-                                </div>
+                                <span class="badge bg-success w-100 py-1">${item.jumlah} Peserta Didik</span>
                             </div>
-                        `;
-                        circle.bindPopup(popUpHtml);
-
-                        circle.on('mouseover', function (e) {
-                            this.setStyle({ fillColor: '#dc3545', color: '#dc3545', weight: 3, fillOpacity: 0.9 });
-                            this.openPopup();
-                        });
-
-                        circle.on('mouseout', function (e) {
-                            this.setStyle({ fillColor: '#0f4c81', color: '#ffc107', weight: 2, fillOpacity: 0.65 });
-                            this.closePopup();
-                        });
-
-                        mapMarkers.push(circle);
-
-                        let namaDesa = String(item.desa).toLowerCase();
-                        if (namaDesa.includes('sukahaji') || namaDesa.includes('cijulang') || namaDesa.includes('sukamulya')) {
-                            localLatLngs.push([item.lat, item.lng]);
-                        }
+                        `);
                     });
 
-                    if (localLatLngs.length > 0) {
-                        const bounds = L.latLngBounds(localLatLngs);
-                        map.fitBounds(bounds, { padding: [50, 50], maxZoom: 15 });
-                    }
+                    document.getElementById('statMapTitik').textContent = list.length;
+                    document.getElementById('statMapSiswa').textContent = totalSiswa;
 
-                } else {
-                    loader.innerHTML = '<div class="text-danger fw-bold"><i class="fas fa-exclamation-triangle me-1"></i> Koordinat belum tersedia di Database</div>';
+                    if (bounds.length > 0) {
+                        map.fitBounds(bounds, { padding: [35, 35], maxZoom: 16 });
+                    }
                 }
             })
-            .catch(err => {
-                loader.innerHTML = '<div class="text-danger fw-bold"><i class="fas fa-times-circle me-1"></i> Gagal memuat satelit</div>';
-            });
-        }
-
-        document.addEventListener("DOMContentLoaded", function() {
-            initMap();
+            .catch(err => console.error("Gagal memuat peta:", err));
         });
     </script>
 </body>
