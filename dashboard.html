@@ -80,16 +80,17 @@
                     <h4 class="fw-bold text-primary-school mb-1">Selamat Datang, <span id="welcomeName"></span>!</h4>
                     <p class="text-muted small mb-0">Ruang Kerja Terpadu SDN 1 Sukahaji | Otoritas Akses: <strong id="welcomeRole" class="text-warning bg-dark px-2 py-1 rounded"></strong></p>
                 </div>
-                <div class="mt-2 mt-md-0 d-flex gap-2">
+                <div class="mt-2 mt-md-0 d-flex flex-wrap gap-2">
                     <a href="index.html" class="btn btn-outline-primary btn-sm rounded-pill px-3"><i class="fas fa-home me-1"></i> Beranda Web</a>
                     <a href="layanan.html" class="btn btn-primary btn-sm rounded-pill px-3"><i class="fas fa-globe me-1"></i> Lihat Galeri & Layanan Publik</a>
                 </div>
             </div>
         </div>
 
-        <!-- Kartu Navigasi Modul Utama -->
+        <!-- Kartu Navigasi Modul Utama (4 Modul Terpadu) -->
         <div class="row g-3 mb-4">
-            <div class="col-md-4">
+            <!-- Modul 1: Jurnal 7KAIH -->
+            <div class="col-md-6 col-lg-3">
                 <div class="card card-soft menu-card h-100 border-0 p-4 text-center rounded-4 shadow-sm d-flex flex-column" onclick="window.location.href='jurnal.html'">
                     <span class="badge bg-danger rounded-pill card-notif-badge d-none" id="badgeCardJurnal">0 Menunggu</span>
                     <div class="fs-1 text-warning mb-2"><i class="fas fa-book-open"></i></div>
@@ -99,7 +100,8 @@
                 </div>
             </div>
 
-            <div class="col-md-4">
+            <!-- Modul 2: Rumah Sarengseh -->
+            <div class="col-md-6 col-lg-3">
                 <div class="card card-soft menu-card h-100 border-0 p-4 text-center rounded-4 shadow-sm d-flex flex-column" id="cardMenuSarengseh" onclick="bukaPanel('SARENGSEH')">
                     <span class="badge bg-danger rounded-pill card-notif-badge d-none" id="badgeCardAduan">0 Aduan</span>
                     <div class="fs-1 text-danger mb-2"><i class="fas fa-shield-heart"></i></div>
@@ -109,13 +111,25 @@
                 </div>
             </div>
 
-            <div class="col-md-4 d-none" id="colMenuGaleri">
+            <!-- Modul 3: Panggung Suka Karya (Guru, Kepsek, Admin) -->
+            <div class="col-md-6 col-lg-3 d-none" id="colMenuGaleri">
                 <div class="card card-soft menu-card h-100 border-0 p-4 text-center rounded-4 shadow-sm d-flex flex-column" id="cardMenuGaleri" onclick="bukaPanel('GALERI')">
                     <span class="badge bg-success rounded-pill card-notif-badge d-none" id="badgeCardGaleri">0 Karya</span>
                     <div class="fs-1 text-success mb-2"><i class="fas fa-photo-video"></i></div>
                     <h5 class="fw-bold text-primary-school">Panggung Suka Karya</h5>
                     <p class="text-muted small mb-3">Input dokumentasi kegiatan (Slide 4 Foto / Video Medsos & Drive) & Persetujuan Publikasi.</p>
                     <button class="btn btn-outline-success btn-sm w-100 mt-auto rounded-pill fw-semibold">Kelola Galeri Karya</button>
+                </div>
+            </div>
+
+            <!-- Modul 4: LMS Portal Belajar Digital (Semua Role) -->
+            <div class="col-md-6 col-lg-3">
+                <div class="card card-soft menu-card h-100 border-0 p-4 text-center rounded-4 shadow-sm d-flex flex-column" onclick="bukaPortalLMS()">
+                    <span class="badge bg-info text-dark rounded-pill card-notif-badge">SSO Aktif</span>
+                    <div class="fs-1 text-info mb-2"><i class="fas fa-laptop-code"></i></div>
+                    <h5 class="fw-bold text-primary-school">LMS Portal Belajar</h5>
+                    <p class="text-muted small mb-3">Misi LKPD interaktif 7 mata pelajaran, penugasan kelompok, & evaluasi digital.</p>
+                    <button class="btn btn-outline-primary btn-sm w-100 mt-auto rounded-pill fw-semibold">Buka LMS <i class="fas fa-external-link-alt ms-1"></i></button>
                 </div>
             </div>
         </div>
@@ -439,6 +453,20 @@
         const penugasanUser = String(user.penugasan || '').trim();
         const myNip = String(user.id_relasi || '').replace(/^'/, '').trim();
         const myName = String(user.nama || '').trim();
+
+        // Sinkronisasi otomatis SSO untuk pengguna yang sudah login
+        if (user && (user.username || myNip)) {
+            localStorage.setItem('sdn1_sso_user', user.username || myNip);
+            if (user.sso_token) localStorage.setItem('sdn1_sso_token', user.sso_token);
+        }
+
+        function bukaPortalLMS() {
+            const usernameYangLogin = user.username || myNip;
+            localStorage.setItem('sdn1_sso_user', usernameYangLogin);
+            if (user.sso_token) localStorage.setItem('sdn1_sso_token', user.sso_token);
+            const tokenParam = user.sso_token ? `&sso_token=${encodeURIComponent(user.sso_token)}` : '';
+            window.location.href = `https://sdn1sukahaji.github.io/lms-sdn1sukahaji/?sso_user=${encodeURIComponent(usernameYangLogin)}${tokenParam}`;
+        }
 
         const isSiswa = (roleUpper === 'SISWA' || roleUpper === 'ORTU');
         const isKepsek = (roleUpper.includes('KEPSEK') || roleUpper.includes('KEPALA SEKOLAH'));
@@ -796,9 +824,7 @@
             });
         }
 
-        // =========================================================================
-        // 3. LOGIKA PANGGUNG SUKA KARYA (MULTI-PLATFORM VIDEO & SLIDE 4 FOTO)
-        // =========================================================================
+        // 3. LOGIKA PANGGUNG SUKA KARYA
         function toggleInputMediaGaleri() {
             const tipe = document.getElementById('glrTipeMedia').value;
             const isVideo = (tipe === 'Video');
@@ -1072,6 +1098,9 @@
 
         function logout() {
             localStorage.removeItem('userSession');
+            localStorage.removeItem('sdn1_sso_user');
+            localStorage.removeItem('sdn1_sso_token');
+            localStorage.removeItem('sdn1_sukahaji_lms_session');
             window.location.href = 'login.html';
         }
 
