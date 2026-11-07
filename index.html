@@ -31,10 +31,12 @@
             color: #0f4c81;
         }
 
-        /* Seksi Hero Utama */
+        /* ========================================================
+           SEKSI HERO AWAL + GLASSY CAROUSEL V2
+           ======================================================== */
         .hero-section {
-            padding: 115px 0 70px 0;
-            background: radial-gradient(circle at top right, #f0f7ff 0%, #ffffff 65%);
+            padding: 110px 0 65px 0;
+            background: radial-gradient(circle at 80% 35%, #e2eefc 0%, #f8fbff 45%, #ffffff 100%);
             overflow: hidden;
         }
         .badge-hero {
@@ -49,83 +51,259 @@
             gap: 6px;
         }
 
-        /* Galeri Hero Dynamic Bento Trio (4 Foto Bergantian Lembut) */
-        .hero-bento-wrapper {
+        /* Panggung Utama Glassy Carousel V2 */
+        .glassy-carousel-stage {
             position: relative;
-            padding: 10px;
+            width: 100%;
+            height: 460px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            user-select: none;
+            perspective: 1200px;
         }
-        .hero-bento-Wrapper::before {
-            content: "";
+
+        /* Efek Cahaya Latar Lembut di Belakang Carousel */
+        .glassy-ambient-glow {
             position: absolute;
-            inset: 0;
-            background: linear-gradient(135deg, rgba(15, 76, 129, 0.08), rgba(255, 193, 7, 0.12));
-            border-radius: 32px;
-            transform: rotate(-2deg);
+            width: 78%;
+            height: 75%;
+            background: radial-gradient(circle, rgba(15, 76, 129, 0.22) 0%, rgba(2, 132, 199, 0.08) 55%, transparent 75%);
+            filter: blur(28px);
             z-index: 0;
+            pointer-events: none;
         }
-        .hero-bento-grid {
-            display: grid;
-            grid-template-columns: 1.35fr 1fr;
-            grid-template-rows: 205px 205px;
-            gap: 14px;
+
+        .glassy-track {
             position: relative;
-            z-index: 1;
+            width: 100%;
+            height: 390px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2;
         }
-        .bento-card {
-            position: relative;
-            border-radius: 22px;
+
+        /* Kartu Slide Glassy */
+        .glassy-slide {
+            position: absolute;
+            width: 245px;
+            height: 365px;
+            border-radius: 24px;
             overflow: hidden;
-            box-shadow: 0 14px 32px rgba(15, 76, 129, 0.14);
-            border: 4px solid #ffffff;
-            background: #e2e8f0;
+            cursor: pointer;
+            transition: all 0.65s cubic-bezier(0.22, 1, 0.36, 1);
+            background: #1e293b;
+            border: 1.5px solid rgba(255, 255, 255, 0.65);
+            box-shadow: 0 20px 45px rgba(15, 23, 42, 0.22);
+            will-change: transform, opacity, filter;
         }
-        .bento-main {
-            grid-row: 1 / span 2;
-        }
-        .bento-card img {
+
+        .glassy-slide img {
             width: 100%;
             height: 100%;
             object-fit: cover;
-            transition: opacity 0.8s ease-in-out, transform 4.5s ease;
+            /* Fokus di bagian atas-tengah agar kepala/mahkota tidak terpotong */
+            object-position: top center;
+            transition: transform 0.65s ease;
+        }
+        .glassy-slide.is-center:hover img {
             transform: scale(1.04);
         }
-        .bento-card img.fade-out {
-            opacity: 0;
-            transform: scale(1);
-        }
-        .bento-badge-float {
+
+        /* Lapisan Gelap Halus di Bawah Kartu untuk Teks Glass */
+        .glassy-slide::after {
+            content: "";
             position: absolute;
-            bottom: 14px;
-            left: 14px;
-            right: 14px;
-            background: rgba(255, 255, 255, 0.92);
-            backdrop-filter: blur(8px);
-            padding: 9px 14px;
-            border-radius: 14px;
-            font-size: 0.78rem;
-            font-weight: 700;
-            color: #0f4c81;
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
-            z-index: 5;
+            inset: 0;
+            background: linear-gradient(180deg, rgba(15, 23, 42, 0.15) 0%, rgba(15, 23, 42, 0) 35%, rgba(15, 23, 42, 0.82) 100%);
+            pointer-events: none;
+        }
+
+        /* Tombol Expand Kaca di Kiri Atas Kartu */
+        .glassy-expand-btn {
+            position: absolute;
+            top: 12px;
+            left: 12px;
+            z-index: 4;
+            background: rgba(15, 23, 42, 0.45);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.35);
+            color: #ffffff;
+            font-size: 0.7rem;
+            font-weight: 600;
+            padding: 5px 11px;
+            border-radius: 50px;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            opacity: 0;
+            transform: translateY(-5px);
+            transition: all 0.35s ease;
+        }
+        .glassy-slide.is-center .glassy-expand-btn {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .glassy-expand-btn:hover {
+            background: rgba(15, 76, 129, 0.85);
+        }
+
+        /* Panel Informasi Glassmorphism di Bagian Bawah Kartu */
+        .glassy-card-info {
+            position: absolute;
+            bottom: 12px;
+            left: 12px;
+            right: 12px;
+            z-index: 4;
+            background: rgba(15, 23, 42, 0.52);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            border-radius: 16px;
+            padding: 10px 13px;
+            color: #ffffff;
+            transition: all 0.4s ease;
+        }
+        .glassy-card-head {
             display: flex;
             align-items: center;
             justify-content: space-between;
+            gap: 6px;
+            margin-bottom: 3px;
         }
-        .bento-dots {
-            display: flex;
-            gap: 5px;
+        .glassy-card-title {
+            font-size: 0.85rem;
+            font-weight: 700;
+            margin: 0;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
-        .bento-dot {
-            width: 7px;
-            height: 7px;
+        .glassy-card-count {
+            font-size: 0.68rem;
+            font-weight: 700;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 2px 7px;
+            border-radius: 50px;
+            flex-shrink: 0;
+        }
+        .glassy-card-desc {
+            font-size: 0.71rem;
+            color: rgba(255, 255, 255, 0.82);
+            margin: 0;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            line-height: 1.35;
+        }
+
+        /* Posisi 5 Kartu Berlapis (Tengah, Kiri 1-2, Kanan 1-2) */
+        .glassy-slide.is-center {
+            transform: translate3d(0, 0, 0) scale(1);
+            opacity: 1;
+            z-index: 10;
+            border-color: rgba(255, 255, 255, 0.95);
+            box-shadow: 0 24px 50px rgba(15, 76, 129, 0.28);
+        }
+        .glassy-slide.is-left-1 {
+            transform: translate3d(-125px, 12px, -90px) scale(0.86) rotateY(8deg);
+            opacity: 0.88;
+            z-index: 8;
+            filter: brightness(0.88);
+        }
+        .glassy-slide.is-right-1 {
+            transform: translate3d(125px, 12px, -90px) scale(0.86) rotateY(-8deg);
+            opacity: 0.88;
+            z-index: 8;
+            filter: brightness(0.88);
+        }
+        .glassy-slide.is-left-2 {
+            transform: translate3d(-215px, 24px, -180px) scale(0.73) rotateY(14deg);
+            opacity: 0.62;
+            z-index: 6;
+            filter: brightness(0.75) blur(1px);
+        }
+        .glassy-slide.is-right-2 {
+            transform: translate3d(215px, 24px, -180px) scale(0.73) rotateY(-14deg);
+            opacity: 0.62;
+            z-index: 6;
+            filter: brightness(0.75) blur(1px);
+        }
+        .glassy-slide.is-hidden {
+            transform: translate3d(0, 30px, -260px) scale(0.55);
+            opacity: 0;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        /* Sembunyikan deskripsi panjang pada kartu samping agar rapi */
+        .glassy-slide:not(.is-center) .glassy-card-desc,
+        .glassy-slide:not(.is-center) .glassy-card-count {
+            display: none;
+        }
+        .glassy-slide:not(.is-center) .glassy-card-info {
+            padding: 7px 10px;
+            background: rgba(15, 23, 42, 0.42);
+        }
+
+        /* Dock Kontrol Kapsul Kaca di Bagian Bawah (Glassy Pill Bar) */
+        .glassy-dock {
+            position: relative;
+            z-index: 12;
+            margin-top: 8px;
+            background: rgba(15, 23, 42, 0.82);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.22);
+            padding: 6px 10px;
+            border-radius: 50px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 12px 28px rgba(15, 23, 42, 0.18);
+            color: #ffffff;
+        }
+        .glassy-dock-btn {
+            width: 30px;
+            height: 30px;
             border-radius: 50%;
-            background: #cbd5e1;
-            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.1);
+            color: #ffffff;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
         }
-        .bento-dot.active {
-            width: 18px;
-            border-radius: 10px;
-            background: #0f4c81;
+        .glassy-dock-btn:hover {
+            background: #ffc107;
+            color: #0f172a;
+            border-color: #ffc107;
+        }
+        .glassy-dock-status {
+            padding: 0 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.78rem;
+            font-weight: 600;
+            min-width: 175px;
+            justify-content: center;
+        }
+        .glassy-dock-badge {
+            background: rgba(255, 193, 7, 0.2);
+            color: #ffc107;
+            border: 1px solid rgba(255, 193, 7, 0.4);
+            padding: 1px 8px;
+            border-radius: 50px;
+            font-size: 0.7rem;
+            font-weight: 700;
         }
 
         /* Kartu Layanan Unggulan (Akselerasi Mutu) */
@@ -166,22 +344,41 @@
             padding: 12px 16px;
         }
 
-        @media (max-width: 768px) {
+        /* Responsif untuk Tablet & HP */
+        @media (max-width: 991px) {
             .hero-section {
                 padding: 95px 0 45px 0;
             }
-            .hero-bento-grid {
-                grid-template-columns: 1fr 1fr;
-                grid-template-rows: 225px 140px;
-                gap: 10px;
-                margin-top: 20px;
+            .glassy-carousel-stage {
+                margin-top: 15px;
+                height: 430px;
             }
-            .bento-main {
-                grid-column: 1 / span 2;
-                grid-row: 1;
+        }
+        @media (max-width: 576px) {
+            .glassy-carousel-stage {
+                height: 400px;
+            }
+            .glassy-track {
+                height: 340px;
+            }
+            .glassy-slide {
+                width: 210px;
+                height: 315px;
+            }
+            .glassy-slide.is-left-1 {
+                transform: translate3d(-85px, 10px, -90px) scale(0.84) rotateY(8deg);
+            }
+            .glassy-slide.is-right-1 {
+                transform: translate3d(85px, 10px, -90px) scale(0.84) rotateY(-8deg);
+            }
+            .glassy-slide.is-left-2 {
+                transform: translate3d(-140px, 20px, -170px) scale(0.7) rotateY(12deg);
+            }
+            .glassy-slide.is-right-2 {
+                transform: translate3d(140px, 20px, -170px) scale(0.7) rotateY(-12deg);
             }
             #mapSebaranSiswa {
-                height: 360px;
+                height: 350px;
             }
         }
     </style>
@@ -248,19 +445,19 @@
         </div>
     </nav>
 
-    <!-- ==================== 2. HERO BANNER (DYNAMIC BENTO 4 FOTO) ==================== -->
+    <!-- ==================== 2. HERO BANNER (TATA LETAK AWAL + GLASSY CAROUSEL V2) ==================== -->
     <section class="hero-section">
         <div class="container">
             <div class="row align-items-center g-4">
-                <!-- Kolom Kiri: Teks & Tombol Aksi -->
-                <div class="col-lg-6">
+                <!-- Kolom Kiri: Teks & Tombol Aksi (Desain Awal) -->
+                <div class="col-lg-5">
                     <div class="badge-hero mb-3 shadow-sm">
                         <i class="fas fa-award text-warning"></i> Platform Pendidikan Digital
                     </div>
                     <h1 class="display-5 fw-bold text-primary-school mb-3" style="line-height: 1.2;">
                         Membangun Generasi <span class="text-warning">Hebat</span> & Berkarakter
                     </h1>
-                    <p class="text-secondary mb-4" style="font-size: 1.05rem; line-height: 1.7;">
+                    <p class="text-secondary mb-4" style="font-size: 1.03rem; line-height: 1.7;">
                         Selamat datang di portal cerdas SDN 1 Sukahaji. Pusat data, informasi spasial, dan kolaborasi antara Guru, Siswa, dan Orang Tua untuk mewujudkan pendidikan yang bermutu.
                     </p>
                     <div class="d-flex flex-wrap gap-2">
@@ -276,31 +473,29 @@
                     </div>
                 </div>
 
-                <!-- Kolom Kanan: Galeri Bento 3 Bingkai (Memutar 4 Foto Hero Secara Lembut) -->
-                <div class="col-lg-6">
-                    <div class="hero-bento-wrapper">
-                        <div class="hero-bento-grid">
-                            <!-- Bingkai 1: Utama Besar -->
-                            <div class="bento-card bento-main">
-                                <img id="heroSlot1" src="assets/hero1.png" alt="Kegiatan SDN 1 Sukahaji 1" onerror="this.src='https://img.freepik.com/free-vector/learning-concept-illustration_114360-6186.jpg'">
-                                <div class="bento-badge-float">
-                                    <span><i class="fas fa-star text-warning me-1"></i> Dokumentasi Kegiatan Sekolah</span>
-                                    <div class="bento-dots" id="heroBentoDots">
-                                        <span class="bento-dot active"></span>
-                                        <span class="bento-dot"></span>
-                                        <span class="bento-dot"></span>
-                                        <span class="bento-dot"></span>
-                                    </div>
-                                </div>
+                <!-- Kolom Kanan: Glassy Carousel V2 -->
+                <div class="col-lg-7">
+                    <div class="glassy-carousel-stage" id="glassyCarouselStage">
+                        <div class="glassy-ambient-glow"></div>
+
+                        <!-- Track 3D Kartu Glassy (Diisi otomatis oleh JS dari 11 foto Hero) -->
+                        <div class="glassy-track" id="glassyTrack"></div>
+
+                        <!-- Dock Kontrol Kapsul Bawah -->
+                        <div class="glassy-dock">
+                            <button type="button" class="glassy-dock-btn" id="btnGlassyPrev" title="Sebelumnya">
+                                <i class="fas fa-chevron-left"></i>
+                            </button>
+                            <button type="button" class="glassy-dock-btn" id="btnGlassyPlay" title="Jeda / Putar Otomatis">
+                                <i class="fas fa-pause" id="iconGlassyPlay"></i>
+                            </button>
+                            <div class="glassy-dock-status">
+                                <span id="glassyDockTitle" class="text-truncate" style="max-width: 130px;">Dokumentasi</span>
+                                <span class="glassy-dock-badge" id="glassyDockCounter">1/11</span>
                             </div>
-                            <!-- Bingkai 2: Kanan Atas -->
-                            <div class="bento-card">
-                                <img id="heroSlot2" src="assets/hero2.png" alt="Kegiatan SDN 1 Sukahaji 2" onerror="this.src='https://img.freepik.com/free-vector/children-painting-art-class_23-2148657526.jpg'">
-                            </div>
-                            <!-- Bingkai 3: Kanan Bawah -->
-                            <div class="bento-card">
-                                <img id="heroSlot3" src="assets/hero3.png" alt="Kegiatan SDN 1 Sukahaji 3" onerror="this.src='https://img.freepik.com/free-vector/kids-studying-from-home-concept-illustration_114360-1762.jpg'">
-                            </div>
+                            <button type="button" class="glassy-dock-btn" id="btnGlassyNext" title="Berikutnya">
+                                <i class="fas fa-chevron-right"></i>
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -433,7 +628,22 @@
         </div>
     </section>
 
-    <!-- ==================== 5. FOOTER PROFESIONAL ==================== -->
+    <!-- ==================== 5. MODAL PRATINJAU FOTO PENUH (EXPAND) ==================== -->
+    <div class="modal fade" id="modalExpandHero" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content bg-dark text-white border-0 rounded-4 overflow-hidden shadow-lg">
+                <div class="modal-header border-0 pb-0">
+                    <h6 class="modal-title fw-bold" id="modalExpandTitle">Dokumentasi SDN 1 Sukahaji</h6>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body text-center p-3">
+                    <img id="modalExpandImg" src="" alt="Pratinjau Penuh" class="img-fluid rounded-3" style="max-height: 78vh; object-fit: contain;">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== 6. FOOTER PROFESIONAL ==================== -->
     <footer class="bg-primary-school text-white pt-5 pb-4 mt-4">
         <div class="container">
             <div class="row g-4 pb-4 border-bottom border-white border-opacity-10">
@@ -488,12 +698,8 @@
                     btnNav.href = 'dashboard.html';
                     btnNav.innerHTML = `<i class="fas fa-th-large me-1"></i> Ruang Kerja (${namaSingkat})`;
                 }
-                if (u.username || u.id_relasi) {
-                    localStorage.setItem('sdn1_sso_user', u.username || u.id_relasi);
-                }
-                if (u.sso_token) {
-                    localStorage.setItem('sdn1_sso_token', u.sso_token);
-                }
+                if (u.username || u.id_relasi) localStorage.setItem('sdn1_sso_user', u.username || u.id_relasi);
+                if (u.sso_token) localStorage.setItem('sdn1_sso_token', u.sso_token);
             } catch (e) {}
         }
 
@@ -517,44 +723,152 @@
             window.location.href = LMS_URL;
         }
 
-        // 3. Animasi Rotasi Lembut 4 Foto Hero (hero1.png s.d. hero4.png) pada 3 Bingkai Bento
-        (function initHeroBentoRotator() {
-            const heroPhotos = [
-                'assets/hero1.png',
-                'assets/hero2.png',
-                'assets/hero3.png',
-                'assets/hero4.png'
+        // 3. Mesin Interaktif Glassy Carousel V2 (11 Foto Hero)
+        (function initGlassyCarouselV2() {
+            const slidesData = [
+                { src: 'assets/hero1.png', fallback: 'assets/hero1.png', title: 'Generasi Berbudaya', desc: 'Pelestarian seni dan busana adat Nusantara siswa SDN 1 Sukahaji.' },
+                { src: 'assets/hero2.png', fallback: 'assets/hero2.png', title: 'Kreasi & Seni Siswa', desc: 'Menumbuhkan rasa percaya diri dan bakat estetika peserta didik.' },
+                { src: 'assets/hero3.png', fallback: 'assets/hero3.png', title: 'Karakter Luhur', desc: 'Pembiasaan nilai sopan santun, profil pelajar, dan kearifan lokal.' },
+                { src: 'assets/hero4.png', fallback: 'assets/hero1.png', title: 'Semangat Berprestasi', desc: 'Kolaborasi aktif antara guru, siswa, dan orang tua di sekolah.' },
+                { src: 'assets/hero5.jpg', fallback: 'assets/hero2.png', title: 'Pembelajaran Aktif', desc: 'Eksplorasi ilmu pengetahuan secara menyenangkan dan interaktif.' },
+                { src: 'assets/hero6.jpg', fallback: 'assets/hero3.png', title: 'Kebersamaan & Gotong Royong', desc: 'Membangun iklim sekolah yang aman, nyaman, dan silih asih.' },
+                { src: 'assets/hero7.jpg', fallback: 'assets/hero1.png', title: 'Inovasi Digital Sekolah', desc: 'Transformasi pembelajaran berbasis teknologi di SDN 1 Sukahaji.' },
+                { src: 'assets/hero8.jpg', fallback: 'assets/hero2.png', title: 'Penguatan Literasi', desc: 'Membentuk generasi pembelajar sepanjang hayat yang bernalar kritis.' },
+                { src: 'assets/hero9.jpg', fallback: 'assets/hero3.png', title: 'Kebugaran & Olahraga', desc: 'Menjaga kesehatan jasmani melalui gerak dan permainan tradisional.' },
+                { src: 'assets/hero10.jpg', fallback: 'assets/hero1.png', title: 'Panggung Suka Karya', desc: 'Apresiasi terhadap setiap karya dan potensi unik peserta didik.' },
+                { src: 'assets/hero11.jpg', fallback: 'assets/hero2.png', title: 'Warga Sekolah Harmonis', desc: 'Sinergi seluruh pendidik dan tenaga kependidikan SDN 1 Sukahaji.' }
             ];
-            let startIdx = 0;
-            const s1 = document.getElementById('heroSlot1');
-            const s2 = document.getElementById('heroSlot2');
-            const s3 = document.getElementById('heroSlot3');
-            const dots = document.querySelectorAll('#heroBentoDots .bento-dot');
 
-            if (!s1 || !s2 || !s3) return;
+            const track = document.getElementById('glassyTrack');
+            const dockTitle = document.getElementById('glassyDockTitle');
+            const dockCounter = document.getElementById('glassyDockCounter');
+            const btnPrev = document.getElementById('btnGlassyPrev');
+            const btnNext = document.getElementById('btnGlassyNext');
+            const btnPlay = document.getElementById('btnGlassyPlay');
+            const iconPlay = document.getElementById('iconGlassyPlay');
 
-            setInterval(() => {
-                startIdx = (startIdx + 1) % heroPhotos.length;
-                const slots = [
-                    { el: s1, nextSrc: heroPhotos[startIdx % 4] },
-                    { el: s2, nextSrc: heroPhotos[(startIdx + 1) % 4] },
-                    { el: s3, nextSrc: heroPhotos[(startIdx + 2) % 4] }
-                ];
+            if (!track) return;
 
-                slots.forEach((item, i) => {
-                    setTimeout(() => {
-                        item.el.classList.add('fade-out');
-                        setTimeout(() => {
-                            item.el.src = item.nextSrc;
-                            item.el.classList.remove('fade-out');
-                        }, 420);
-                    }, i * 160);
+            let currentIndex = 0;
+            let isPlaying = true;
+            let timer = null;
+            const total = slidesData.length;
+
+            // Render elemen kartu ke dalam track
+            slidesData.forEach((item, idx) => {
+                const card = document.createElement('div');
+                card.className = 'glassy-slide';
+                card.innerHTML = `
+                    <span class="glassy-expand-btn" data-expand-idx="${idx}">
+                        <i class="fas fa-expand-alt"></i> Expand
+                    </span>
+                    <img src="${item.src}" alt="${item.title}" onerror="this.onerror=null; this.src='${item.fallback}';">
+                    <div class="glassy-card-info">
+                        <div class="glassy-card-head">
+                            <h6 class="glassy-card-title">${item.title}</h6>
+                            <span class="glassy-card-count">${idx + 1}/${total}</span>
+                        </div>
+                        <p class="glassy-card-desc">${item.desc}</p>
+                    </div>
+                `;
+
+                card.addEventListener('click', (e) => {
+                    // Jika tombol Expand diklik atau kartu tengah diklik, buka pratinjau penuh
+                    if (e.target.closest('.glassy-expand-btn') || idx === currentIndex) {
+                        const imgEl = card.querySelector('img');
+                        document.getElementById('modalExpandTitle').textContent = `${item.title} (${idx + 1}/${total})`;
+                        document.getElementById('modalExpandImg').src = imgEl ? imgEl.src : item.src;
+                        new bootstrap.Modal(document.getElementById('modalExpandHero')).show();
+                    } else {
+                        currentIndex = idx;
+                        updateCarousel();
+                        resetAutoPlay();
+                    }
                 });
 
-                dots.forEach((d, idx) => {
-                    d.classList.toggle('active', idx === startIdx);
+                track.appendChild(card);
+            });
+
+            const cards = Array.from(track.querySelectorAll('.glassy-slide'));
+
+            function updateCarousel() {
+                cards.forEach((card, idx) => {
+                    card.classList.remove('is-center', 'is-left-1', 'is-right-1', 'is-left-2', 'is-right-2', 'is-hidden');
+
+                    let diff = (idx - currentIndex) % total;
+                    if (diff < 0) diff += total;
+                    if (diff > total / 2) diff -= total;
+
+                    if (diff === 0) {
+                        card.classList.add('is-center');
+                    } else if (diff === -1) {
+                        card.classList.add('is-left-1');
+                    } else if (diff === 1) {
+                        card.classList.add('is-right-1');
+                    } else if (diff === -2) {
+                        card.classList.add('is-left-2');
+                    } else if (diff === 2) {
+                        card.classList.add('is-right-2');
+                    } else {
+                        card.classList.add('is-hidden');
+                    }
                 });
-            }, 4500);
+
+                const activeItem = slidesData[currentIndex];
+                if (dockTitle) dockTitle.textContent = activeItem.title;
+                if (dockCounter) dockCounter.textContent = `${currentIndex + 1}/${total}`;
+            }
+
+            function nextSlide() {
+                currentIndex = (currentIndex + 1) % total;
+                updateCarousel();
+            }
+
+            function prevSlide() {
+                currentIndex = (currentIndex - 1 + total) % total;
+                updateCarousel();
+            }
+
+            function startAutoPlay() {
+                stopAutoPlay();
+                if (isPlaying) {
+                    timer = setInterval(nextSlide, 3800);
+                }
+            }
+
+            function stopAutoPlay() {
+                if (timer) clearInterval(timer);
+            }
+
+            function resetAutoPlay() {
+                if (isPlaying) startAutoPlay();
+            }
+
+            btnNext.addEventListener('click', () => { nextSlide(); resetAutoPlay(); });
+            btnPrev.addEventListener('click', () => { prevSlide(); resetAutoPlay(); });
+            btnPlay.addEventListener('click', () => {
+                isPlaying = !isPlaying;
+                iconPlay.className = isPlaying ? 'fas fa-pause' : 'fas fa-play';
+                if (isPlaying) startAutoPlay();
+                else stopAutoPlay();
+            });
+
+            // Dukungan Geser Sentuh (Swipe) untuk Layar HP
+            let touchStartX = 0;
+            track.addEventListener('touchstart', e => {
+                touchStartX = e.changedTouches[0].screenX;
+            }, { passive: true });
+            track.addEventListener('touchend', e => {
+                const diffX = e.changedTouches[0].screenX - touchStartX;
+                if (Math.abs(diffX) > 40) {
+                    if (diffX < 0) nextSlide();
+                    else prevSlide();
+                    resetAutoPlay();
+                }
+            }, { passive: true });
+
+            updateCarousel();
+            startAutoPlay();
         })();
 
         // 4. Inisialisasi Peta Sebaran Siswa (Leaflet.js)
