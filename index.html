@@ -31,78 +31,12 @@
             color: #0f4c81;
         }
 
-        /* ========================================================
-           SEKSI HERO - FULL PAGE MASONRY COLLAGE (10 FRAME)
-           ======================================================== */
-        .hero-section-collage {
-            position: relative;
-            min-height: 95vh;
-            display: flex;
-            align-items: center;
+        /* Seksi Hero Utama */
+        .hero-section {
+            padding: 115px 0 70px 0;
+            background: radial-gradient(circle at top right, #f0f7ff 0%, #ffffff 65%);
             overflow: hidden;
-            background: #0f4c81;
-            padding-top: 76px; /* Jarak aman untuk Navbar */
         }
-        
-        /* Grid 10 Frame Bento Latar Belakang */
-        .hero-bento-bg {
-            position: absolute;
-            inset: -15px; /* Sedikit meluap agar efek zoom transisi mulus */
-            display: grid;
-            grid-template-columns: repeat(5, 1fr);
-            grid-template-rows: repeat(3, 1fr);
-            gap: 12px;
-            z-index: 1;
-            padding: 12px;
-            opacity: 0.85; /* Sedikit diredupkan agar teks terbaca */
-        }
-
-        .bento-frame {
-            border-radius: 20px;
-            overflow: hidden;
-            background: #cbd5e1;
-            position: relative;
-            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
-        }
-
-        .bento-frame img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            /* KUNCI ANTI-TERPOTONG: Fokus pemotongan di kepala/atas, bukan tengah */
-            object-position: top center; 
-            transition: opacity 1.2s ease-in-out, transform 8s ease-out;
-            transform: scale(1.05);
-        }
-        .bento-frame img.fade-out {
-            opacity: 0;
-            transform: scale(1);
-        }
-
-        /* Pengaturan Variasi Ukuran Bingkai (Estetika Masonry) */
-        .frame-1 { grid-column: span 2; grid-row: span 2; } /* Besar Utama */
-        .frame-3 { grid-column: span 1; grid-row: span 2; } /* Berdiri / Portrait */
-        .frame-9 { grid-column: span 2; grid-row: span 1; } /* Memanjang / Landscape */
-
-        /* Gradien Overlay untuk memastikan teks terbaca jelas */
-        .hero-overlay {
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(90deg, rgba(255,255,255,1) 0%, rgba(255,255,255,0.75) 45%, rgba(255,255,255,0) 100%);
-            z-index: 2;
-        }
-
-        /* Kotak Teks Glassmorphism (Kaca Buram) */
-        .glass-hero-content {
-            background: rgba(255, 255, 255, 0.75);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border: 1px solid rgba(255, 255, 255, 0.6);
-            border-radius: 32px;
-            padding: 45px;
-            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.1);
-        }
-
         .badge-hero {
             background-color: #0f4c81;
             color: #ffffff;
@@ -115,22 +49,83 @@
             gap: 6px;
         }
 
-        /* Responsif Layar HP */
-        @media (max-width: 992px) {
-            .hero-overlay {
-                background: linear-gradient(180deg, rgba(255,255,255,1) 0%, rgba(255,255,255,0.85) 60%, rgba(255,255,255,0.2) 100%);
-            }
-            .hero-bento-bg {
-                grid-template-columns: repeat(3, 1fr);
-                grid-auto-rows: 140px;
-            }
-            .frame-1 { grid-column: span 2; grid-row: span 2; }
-            .frame-9 { grid-column: span 2; grid-row: span 1; }
-            .frame-8, .frame-10 { display: none; } /* Sembunyikan 2 frame di layar kecil agar tidak sesak */
+        /* Galeri Hero Dynamic Bento Trio (4 Foto Bergantian Lembut) */
+        .hero-bento-wrapper {
+            position: relative;
+            padding: 10px;
         }
-        @media (max-width: 576px) {
-            .glass-hero-content { padding: 30px 24px; border-radius: 24px; }
-            .hero-section-collage { min-height: 100vh; }
+        .hero-bento-Wrapper::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(15, 76, 129, 0.08), rgba(255, 193, 7, 0.12));
+            border-radius: 32px;
+            transform: rotate(-2deg);
+            z-index: 0;
+        }
+        .hero-bento-grid {
+            display: grid;
+            grid-template-columns: 1.35fr 1fr;
+            grid-template-rows: 205px 205px;
+            gap: 14px;
+            position: relative;
+            z-index: 1;
+        }
+        .bento-card {
+            position: relative;
+            border-radius: 22px;
+            overflow: hidden;
+            box-shadow: 0 14px 32px rgba(15, 76, 129, 0.14);
+            border: 4px solid #ffffff;
+            background: #e2e8f0;
+        }
+        .bento-main {
+            grid-row: 1 / span 2;
+        }
+        .bento-card img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: opacity 0.8s ease-in-out, transform 4.5s ease;
+            transform: scale(1.04);
+        }
+        .bento-card img.fade-out {
+            opacity: 0;
+            transform: scale(1);
+        }
+        .bento-badge-float {
+            position: absolute;
+            bottom: 14px;
+            left: 14px;
+            right: 14px;
+            background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(8px);
+            padding: 9px 14px;
+            border-radius: 14px;
+            font-size: 0.78rem;
+            font-weight: 700;
+            color: #0f4c81;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+            z-index: 5;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .bento-dots {
+            display: flex;
+            gap: 5px;
+        }
+        .bento-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: #cbd5e1;
+            transition: all 0.3s ease;
+        }
+        .bento-dot.active {
+            width: 18px;
+            border-radius: 10px;
+            background: #0f4c81;
         }
 
         /* Kartu Layanan Unggulan (Akselerasi Mutu) */
@@ -170,6 +165,25 @@
             border-radius: 14px;
             padding: 12px 16px;
         }
+
+        @media (max-width: 768px) {
+            .hero-section {
+                padding: 95px 0 45px 0;
+            }
+            .hero-bento-grid {
+                grid-template-columns: 1fr 1fr;
+                grid-template-rows: 225px 140px;
+                gap: 10px;
+                margin-top: 20px;
+            }
+            .bento-main {
+                grid-column: 1 / span 2;
+                grid-row: 1;
+            }
+            #mapSebaranSiswa {
+                height: 360px;
+            }
+        }
     </style>
 </head>
 <body class="bg-light">
@@ -189,6 +203,7 @@
                         <a class="nav-link active fw-bold text-primary-school" href="index.html">Beranda</a>
                     </li>
 
+                    <!-- Dropdown: Profil Sekolah -->
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Profil Sekolah</a>
                         <ul class="dropdown-menu">
@@ -198,6 +213,7 @@
                         </ul>
                     </li>
 
+                    <!-- Dropdown: Akademik -->
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Akademik</a>
                         <ul class="dropdown-menu">
@@ -209,16 +225,19 @@
                         </ul>
                     </li>
 
+                    <!-- Pusat Layanan Publik -->
                     <li class="nav-item">
                         <a class="nav-link" href="layanan.html">Pusat Layanan Publik</a>
                     </li>
 
+                    <!-- Pintasan Langsung LMS -->
                     <li class="nav-item">
                         <a class="nav-link fw-semibold text-primary-school" href="#" onclick="bukaLMSDariBeranda(event)">
                             <i class="fas fa-laptop-code me-1 text-info"></i> LMS
                         </a>
                     </li>
 
+                    <!-- Tombol Login / Ruang Kerja Dinamis -->
                     <li class="nav-item ms-lg-3 mt-2 mt-lg-0">
                         <a href="login.html" id="btnNavPortal" class="btn btn-school px-4 rounded-pill shadow-sm">
                             <i class="fas fa-sign-in-alt me-1"></i> Login Portal
@@ -229,55 +248,68 @@
         </div>
     </nav>
 
-    <!-- ==================== 2. HERO BANNER (FULL-PAGE MASONRY COLLAGE) ==================== -->
-    <section class="hero-section-collage">
-        
-        <!-- Background 10 Frame (Grid Bento) -->
-        <div class="hero-bento-bg" id="heroCollageBg">
-            <div class="bento-frame frame-1"><img src="assets/hero1.png" alt="SDN 1 Sukahaji"></div>
-            <div class="bento-frame frame-2"><img src="assets/hero5.jpeg" onerror="this.src='assets/hero2.png'" alt="SDN 1 Sukahaji"></div>
-            <div class="bento-frame frame-3"><img src="assets/hero6.jpeg" onerror="this.src='assets/hero3.png'" alt="SDN 1 Sukahaji"></div>
-            <div class="bento-frame frame-4"><img src="assets/hero7.jpeg" onerror="this.src='assets/hero4.png'" alt="SDN 1 Sukahaji"></div>
-            <div class="bento-frame frame-5"><img src="assets/hero8.jpeg" onerror="this.src='assets/hero1.png'" alt="SDN 1 Sukahaji"></div>
-            <div class="bento-frame frame-6"><img src="assets/hero9.jpeg" onerror="this.src='assets/hero2.png'" alt="SDN 1 Sukahaji"></div>
-            <div class="bento-frame frame-7"><img src="assets/hero10.jpeg" onerror="this.src='assets/hero3.png'" alt="SDN 1 Sukahaji"></div>
-            <div class="bento-frame frame-8"><img src="assets/hero11.jpeg" onerror="this.src='assets/hero4.png'" alt="SDN 1 Sukahaji"></div>
-            <div class="bento-frame frame-9"><img src="assets/hero3.png" alt="SDN 1 Sukahaji"></div>
-            <div class="bento-frame frame-10"><img src="assets/hero4.png" alt="SDN 1 Sukahaji"></div>
-        </div>
-
-        <!-- Gradien Pemisah Transparan -->
-        <div class="hero-overlay"></div>
-
-        <!-- Panel Teks (Glassmorphism) Mengambang di atas Grid -->
-        <div class="container position-relative z-3">
-            <div class="glass-hero-content col-lg-7 col-md-10">
-                <div class="badge-hero mb-3">
-                    <i class="fas fa-award text-warning"></i> Platform Pendidikan Digital
+    <!-- ==================== 2. HERO BANNER (DYNAMIC BENTO 4 FOTO) ==================== -->
+    <section class="hero-section">
+        <div class="container">
+            <div class="row align-items-center g-4">
+                <!-- Kolom Kiri: Teks & Tombol Aksi -->
+                <div class="col-lg-6">
+                    <div class="badge-hero mb-3 shadow-sm">
+                        <i class="fas fa-award text-warning"></i> Platform Pendidikan Digital
+                    </div>
+                    <h1 class="display-5 fw-bold text-primary-school mb-3" style="line-height: 1.2;">
+                        Membangun Generasi <span class="text-warning">Hebat</span> & Berkarakter
+                    </h1>
+                    <p class="text-secondary mb-4" style="font-size: 1.05rem; line-height: 1.7;">
+                        Selamat datang di portal cerdas SDN 1 Sukahaji. Pusat data, informasi spasial, dan kolaborasi antara Guru, Siswa, dan Orang Tua untuk mewujudkan pendidikan yang bermutu.
+                    </p>
+                    <div class="d-flex flex-wrap gap-2">
+                        <a href="#petaSebaran" class="btn btn-school px-4 py-2 rounded-3 fw-semibold shadow-sm">
+                            <i class="fas fa-map-location-dot me-2"></i>Lihat Peta Siswa
+                        </a>
+                        <a href="layanan.html" class="btn btn-outline-primary px-4 py-2 rounded-3 fw-semibold">
+                            <i class="fas fa-globe me-2"></i>Akses Layanan Publik
+                        </a>
+                        <a href="#" onclick="bukaLMSDariBeranda(event)" class="btn btn-warning text-dark px-4 py-2 rounded-3 fw-bold shadow-sm">
+                            <i class="fas fa-laptop-code me-2"></i>Portal Belajar (LMS)
+                        </a>
+                    </div>
                 </div>
-                <h1 class="display-5 fw-bold text-primary-school mb-3" style="line-height: 1.2;">
-                    Membangun Generasi <span class="text-warning">Hebat</span> & Berkarakter
-                </h1>
-                <p class="text-dark mb-4 fw-medium" style="font-size: 1.08rem; line-height: 1.7;">
-                    Selamat datang di portal cerdas SDN 1 Sukahaji. Pusat data, informasi spasial, dan kolaborasi antara Guru, Siswa, dan Orang Tua untuk mewujudkan pendidikan yang bermutu.
-                </p>
-                <div class="d-flex flex-wrap gap-2">
-                    <a href="#petaSebaran" class="btn btn-school px-4 py-2 rounded-3 fw-semibold shadow-sm">
-                        <i class="fas fa-map-location-dot me-2"></i>Lihat Peta Siswa
-                    </a>
-                    <a href="layanan.html" class="btn btn-outline-primary px-4 py-2 rounded-3 fw-semibold bg-white bg-opacity-75">
-                        <i class="fas fa-globe me-2"></i>Akses Layanan Publik
-                    </a>
-                    <a href="#" onclick="bukaLMSDariBeranda(event)" class="btn btn-warning text-dark px-4 py-2 rounded-3 fw-bold shadow-sm">
-                        <i class="fas fa-laptop-code me-2"></i>Portal Belajar (LMS)
-                    </a>
+
+                <!-- Kolom Kanan: Galeri Bento 3 Bingkai (Memutar 4 Foto Hero Secara Lembut) -->
+                <div class="col-lg-6">
+                    <div class="hero-bento-wrapper">
+                        <div class="hero-bento-grid">
+                            <!-- Bingkai 1: Utama Besar -->
+                            <div class="bento-card bento-main">
+                                <img id="heroSlot1" src="assets/hero1.png" alt="Kegiatan SDN 1 Sukahaji 1" onerror="this.src='https://img.freepik.com/free-vector/learning-concept-illustration_114360-6186.jpg'">
+                                <div class="bento-badge-float">
+                                    <span><i class="fas fa-star text-warning me-1"></i> Dokumentasi Kegiatan Sekolah</span>
+                                    <div class="bento-dots" id="heroBentoDots">
+                                        <span class="bento-dot active"></span>
+                                        <span class="bento-dot"></span>
+                                        <span class="bento-dot"></span>
+                                        <span class="bento-dot"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Bingkai 2: Kanan Atas -->
+                            <div class="bento-card">
+                                <img id="heroSlot2" src="assets/hero2.png" alt="Kegiatan SDN 1 Sukahaji 2" onerror="this.src='https://img.freepik.com/free-vector/children-painting-art-class_23-2148657526.jpg'">
+                            </div>
+                            <!-- Bingkai 3: Kanan Bawah -->
+                            <div class="bento-card">
+                                <img id="heroSlot3" src="assets/hero3.png" alt="Kegiatan SDN 1 Sukahaji 3" onerror="this.src='https://img.freepik.com/free-vector/kids-studying-from-home-concept-illustration_114360-1762.jpg'">
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- ==================== 3. SEKSI AKSELERASI MUTU ==================== -->
-    <section class="py-5 bg-white border-bottom">
+    <!-- ==================== 3. SEKSI AKSELERASI MUTU (4 PILAR DIGITAL) ==================== -->
+    <section class="py-5 bg-white border-top border-bottom">
         <div class="container py-2">
             <div class="text-center mb-5">
                 <span class="text-warning fw-bold text-uppercase small" style="letter-spacing: 1.5px;">AKSELERASI MUTU</span>
@@ -288,64 +320,94 @@
             </div>
 
             <div class="row g-4">
+                <!-- Pilar 1: Jurnal 7KAIH -->
                 <div class="col-md-6 col-lg-3">
                     <div class="feature-card p-4 d-flex flex-column justify-content-between">
                         <div>
-                            <div class="icon-box-lg bg-warning-subtle text-warning"><i class="fas fa-book-open"></i></div>
+                            <div class="icon-box-lg bg-warning-subtle text-warning">
+                                <i class="fas fa-book-open"></i>
+                            </div>
                             <h5 class="fw-bold text-primary-school mb-2">Jurnal 7KAIH</h5>
-                            <p class="text-muted small mb-4">Pemantauan harian 7 Kebiasaan Anak Indonesia Hebat secara berjenjang.</p>
+                            <p class="text-muted small mb-4">
+                                Pemantauan harian 7 Kebiasaan Anak Indonesia Hebat secara berjenjang antara Siswa, Wali Kelas, dan Orang Tua.
+                            </p>
                         </div>
-                        <a href="jurnal.html" class="btn btn-outline-primary btn-sm rounded-pill fw-semibold w-100">Buka Jurnal <i class="fas fa-arrow-right ms-1"></i></a>
+                        <a href="jurnal.html" class="btn btn-outline-primary btn-sm rounded-pill fw-semibold w-100">
+                            Buka Jurnal 7KAIH <i class="fas fa-arrow-right ms-1"></i>
+                        </a>
                     </div>
                 </div>
 
+                <!-- Pilar 2: Rumah Sarengseh -->
                 <div class="col-md-6 col-lg-3">
                     <div class="feature-card p-4 d-flex flex-column justify-content-between">
                         <div>
-                            <div class="icon-box-lg bg-danger-subtle text-danger"><i class="fas fa-shield-heart"></i></div>
+                            <div class="icon-box-lg bg-danger-subtle text-danger">
+                                <i class="fas fa-shield-heart"></i>
+                            </div>
                             <h5 class="fw-bold text-primary-school mb-2">Rumah Sarengseh</h5>
-                            <p class="text-muted small mb-4">Saluran perlindungan siswa (TPPK), layanan konseling, dan kotak aspirasi.</p>
+                            <p class="text-muted small mb-4">
+                                Saluran perlindungan siswa (TPPK), layanan konseling, kotak aspirasi, dan pelaporan keselamatan sarpras.
+                            </p>
                         </div>
-                        <a href="layanan.html#sarengseh" class="btn btn-outline-danger btn-sm rounded-pill fw-semibold w-100">Pengaduan <i class="fas fa-arrow-right ms-1"></i></a>
+                        <a href="layanan.html#sarengseh" class="btn btn-outline-danger btn-sm rounded-pill fw-semibold w-100">
+                            Layanan Pengaduan <i class="fas fa-arrow-right ms-1"></i>
+                        </a>
                     </div>
                 </div>
 
+                <!-- Pilar 3: Panggung Suka Karya -->
                 <div class="col-md-6 col-lg-3">
                     <div class="feature-card p-4 d-flex flex-column justify-content-between">
                         <div>
-                            <div class="icon-box-lg bg-success-subtle text-success"><i class="fas fa-photo-film"></i></div>
+                            <div class="icon-box-lg bg-success-subtle text-success">
+                                <i class="fas fa-photo-film"></i>
+                            </div>
                             <h5 class="fw-bold text-primary-school mb-2">Panggung Suka Karya</h5>
-                            <p class="text-muted small mb-4">Etalase dokumentasi kegiatan sekolah, kreasi siswa, dan praktik baik guru.</p>
+                            <p class="text-muted small mb-4">
+                                Etalase dokumentasi kegiatan sekolah, kreasi siswa, dan video praktik baik pembelajaran guru.
+                            </p>
                         </div>
-                        <a href="layanan.html#sukakarya" class="btn btn-outline-success btn-sm rounded-pill fw-semibold w-100">Lihat Galeri <i class="fas fa-arrow-right ms-1"></i></a>
+                        <a href="layanan.html#sukakarya" class="btn btn-outline-success btn-sm rounded-pill fw-semibold w-100">
+                            Lihat Galeri Karya <i class="fas fa-arrow-right ms-1"></i>
+                        </a>
                     </div>
                 </div>
 
+                <!-- Pilar 4: Portal Belajar Digital (LMS) -->
                 <div class="col-md-6 col-lg-3">
                     <div class="feature-card p-4 d-flex flex-column justify-content-between">
                         <div>
-                            <div class="icon-box-lg bg-info-subtle text-info"><i class="fas fa-laptop-code"></i></div>
+                            <div class="icon-box-lg bg-info-subtle text-info">
+                                <i class="fas fa-laptop-code"></i>
+                            </div>
                             <h5 class="fw-bold text-primary-school mb-2">Portal Belajar (LMS)</h5>
-                            <p class="text-muted small mb-4">Misi LKPD interaktif 7 mata pelajaran, kolaborasi, dan evaluasi digital.</p>
+                            <p class="text-muted small mb-4">
+                                Lembar Kerja Peserta Didik (LKPD) interaktif 7 mata pelajaran, kolaborasi kelompok, dan evaluasi digital.
+                            </p>
                         </div>
-                        <a href="#" onclick="bukaLMSDariBeranda(event)" class="btn btn-school btn-sm rounded-pill fw-semibold w-100">Masuk LMS <i class="fas fa-external-link-alt ms-1"></i></a>
+                        <a href="#" onclick="bukaLMSDariBeranda(event)" class="btn btn-school btn-sm rounded-pill fw-semibold w-100">
+                            Masuk ke LMS <i class="fas fa-external-link-alt ms-1"></i>
+                        </a>
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- ==================== 4. PETA SPASIAL SEBARAN SISWA ==================== -->
+    <!-- ==================== 4. PETA SPASIAL SEBARAN SISWA (WEBGIS) ==================== -->
     <section id="petaSebaran" class="py-5 bg-light">
         <div class="container py-2">
             <div class="card border-0 shadow-sm rounded-4 p-4 p-md-5 bg-white">
                 <div class="row align-items-center mb-4 g-3">
                     <div class="col-lg-7">
                         <span class="badge bg-primary-subtle text-primary px-3 py-2 rounded-pill fw-bold mb-2">
-                            <i class="fas fa-map-marked-alt me-1"></i> Sistem Informasi Geografis
+                            <i class="fas fa-map-marked-alt me-1"></i> Sistem Informasi Geografis (WebGIS)
                         </span>
                         <h3 class="fw-bold text-primary-school mb-1">Peta Spasial Sebaran Domisili Siswa</h3>
-                        <p class="text-muted small mb-0">Visualisasi titik klaster tempat tinggal peserta didik secara agregat di wilayah Desa Sukahaji, Cijulang, Sukamulya, dan sekitarnya.</p>
+                        <p class="text-muted small mb-0">
+                            Visualisasi titik klaster tempat tinggal peserta didik SDN 1 Sukahaji secara agregat di wilayah Desa Sukahaji, Desa Cijulang, Desa Sukamulya, dan sekitarnya.
+                        </p>
                     </div>
                     <div class="col-lg-5">
                         <div class="row g-2 text-center">
@@ -364,18 +426,24 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- Elemen Peta Leaflet -->
                 <div id="mapSebaranSiswa" class="border shadow-sm"></div>
             </div>
         </div>
     </section>
 
-    <!-- ==================== 5. FOOTER ==================== -->
+    <!-- ==================== 5. FOOTER PROFESIONAL ==================== -->
     <footer class="bg-primary-school text-white pt-5 pb-4 mt-4">
         <div class="container">
             <div class="row g-4 pb-4 border-bottom border-white border-opacity-10">
                 <div class="col-lg-5">
-                    <h5 class="fw-bold mb-3"><i class="fas fa-graduation-cap text-warning me-2"></i>SD Negeri 1 Sukahaji</h5>
-                    <p class="small text-white-50 mb-2">Jalan Raya Cihaurbeuti Nomor 86 Dusun Sukahaji, Desa Sukahaji, Kec. Cihaurbeuti, Ciamis 46262.</p>
+                    <h5 class="fw-bold mb-3">
+                        <i class="fas fa-graduation-cap text-warning me-2"></i>SD Negeri 1 Sukahaji
+                    </h5>
+                    <p class="small text-white-50 mb-2">
+                        Jalan Raya Cihaurbeuti Nomor 86 Dusun Sukahaji, Desa Sukahaji, Kecamatan Cihaurbeuti, Kabupaten Ciamis, Jawa Barat 46262.
+                    </p>
                     <div class="small text-warning fw-semibold">NPSN: 20212211 | Akreditasi: B</div>
                 </div>
                 <div class="col-6 col-lg-3">
@@ -384,6 +452,7 @@
                         <li><a href="profil.html" class="text-white-50 text-decoration-none">Profil & Direktori Guru</a></li>
                         <li><a href="akademik.html" class="text-white-50 text-decoration-none">Kurikulum & Akademik</a></li>
                         <li><a href="layanan.html" class="text-white-50 text-decoration-none">Pusat Layanan Publik</a></li>
+                        <li><a href="sop-layanan.html" class="text-white-50 text-decoration-none">Dokumen Regulasi & SOP</a></li>
                     </ul>
                 </div>
                 <div class="col-6 col-lg-4">
@@ -396,7 +465,7 @@
                 </div>
             </div>
             <div class="text-center small text-white-50 pt-3">
-                &copy; 2026 Sistem Informasi Digital SD Negeri 1 Sukahaji.
+                &copy; 2026 Sistem Informasi Digital SD Negeri 1 Sukahaji. Dikembangkan untuk Kemajuan Pendidikan.
             </div>
         </div>
     </footer>
@@ -408,7 +477,7 @@
         const API_URL = 'https://script.google.com/macros/s/AKfycbyfseRl94qmA0TaX1ODw3sr8Car6i0uf-3WEBKcJ8cDILdi459vW0CCqo28L3iGgHhVww/exec';
         const LMS_URL = 'https://sdn1sukahaji.github.io/lms-sdn1sukahaji/';
 
-        // 1. Deteksi Sesi Login SSO
+        // 1. Deteksi Sesi Login untuk Tombol Ruang Kerja & SSO
         const activeSession = localStorage.getItem('userSession');
         if (activeSession) {
             try {
@@ -419,11 +488,16 @@
                     btnNav.href = 'dashboard.html';
                     btnNav.innerHTML = `<i class="fas fa-th-large me-1"></i> Ruang Kerja (${namaSingkat})`;
                 }
-                if (u.username || u.id_relasi) localStorage.setItem('sdn1_sso_user', u.username || u.id_relasi);
-                if (u.sso_token) localStorage.setItem('sdn1_sso_token', u.sso_token);
+                if (u.username || u.id_relasi) {
+                    localStorage.setItem('sdn1_sso_user', u.username || u.id_relasi);
+                }
+                if (u.sso_token) {
+                    localStorage.setItem('sdn1_sso_token', u.sso_token);
+                }
             } catch (e) {}
         }
 
+        // 2. Fungsi Membuka LMS dengan Membawa Sesi SSO Otomatis
         function bukaLMSDariBeranda(event) {
             if (event) event.preventDefault();
             const rawSession = localStorage.getItem('userSession');
@@ -443,43 +517,52 @@
             window.location.href = LMS_URL;
         }
 
-        // 2. Animasi Rotasi Kolase 10 Frame (11 Foto)
-        (function initFullPageCollage() {
-            // Semua foto yang Anda upload
-            const allImages = [
-                'assets/hero1.png', 'assets/hero2.png', 'assets/hero3.png', 'assets/hero4.png',
-                'assets/hero5.jpg', 'assets/hero6.jpg', 'assets/hero7.jpg', 'assets/hero8.jpg',
-                'assets/hero9.jpg', 'assets/hero10.jpg', 'assets/hero11.jpg'
+        // 3. Animasi Rotasi Lembut 4 Foto Hero (hero1.png s.d. hero4.png) pada 3 Bingkai Bento
+        (function initHeroBentoRotator() {
+            const heroPhotos = [
+                'assets/hero1.png',
+                'assets/hero2.png',
+                'assets/hero3.png',
+                'assets/hero4.png'
             ];
-            const frames = document.querySelectorAll('#heroCollageBg .bento-frame img');
-            if (frames.length === 0) return;
+            let startIdx = 0;
+            const s1 = document.getElementById('heroSlot1');
+            const s2 = document.getElementById('heroSlot2');
+            const s3 = document.getElementById('heroSlot3');
+            const dots = document.querySelectorAll('#heroBentoDots .bento-dot');
 
-            // Setiap 2.5 detik, ubah 1 frame secara acak dengan gambar yang sedang tidak tampil
+            if (!s1 || !s2 || !s3) return;
+
             setInterval(() => {
-                const randomFrame = frames[Math.floor(Math.random() * frames.length)];
-                
-                // Cari daftar gambar yang sedang tampil
-                const currentlyShown = Array.from(frames).map(img => img.getAttribute('src'));
-                
-                // Filter gambar yang tersisa (yang belum tampil)
-                const availableImages = allImages.filter(src => !currentlyShown.includes(src));
-                
-                if (availableImages.length > 0) {
-                    const nextImg = availableImages[Math.floor(Math.random() * availableImages.length)];
-                    randomFrame.classList.add('fade-out');
+                startIdx = (startIdx + 1) % heroPhotos.length;
+                const slots = [
+                    { el: s1, nextSrc: heroPhotos[startIdx % 4] },
+                    { el: s2, nextSrc: heroPhotos[(startIdx + 1) % 4] },
+                    { el: s3, nextSrc: heroPhotos[(startIdx + 2) % 4] }
+                ];
+
+                slots.forEach((item, i) => {
                     setTimeout(() => {
-                        randomFrame.src = nextImg;
-                        randomFrame.classList.remove('fade-out');
-                    }, 800); // Tunggu proses memudar
-                }
-            }, 2500);
+                        item.el.classList.add('fade-out');
+                        setTimeout(() => {
+                            item.el.src = item.nextSrc;
+                            item.el.classList.remove('fade-out');
+                        }, 420);
+                    }, i * 160);
+                });
+
+                dots.forEach((d, idx) => {
+                    d.classList.toggle('active', idx === startIdx);
+                });
+            }, 4500);
         })();
 
-        // 3. Peta Spasial Siswa (Leaflet)
+        // 4. Inisialisasi Peta Sebaran Siswa (Leaflet.js)
         document.addEventListener("DOMContentLoaded", function() {
             const map = L.map('mapSebaranSiswa').setView([-7.2065, 108.1965], 14);
+
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                attribution: '&copy; OpenStreetMap | SDN 1 Sukahaji'
+                attribution: '&copy; OpenStreetMap contributors | SDN 1 Sukahaji'
             }).addTo(map);
 
             fetch(`${API_URL}?action=baca_sebaran_siswa&_t=${Date.now()}`)
@@ -489,13 +572,21 @@
                 if (res.status === 'success' && list.length > 0) {
                     let totalSiswa = 0;
                     const bounds = [];
+
                     list.forEach(item => {
                         totalSiswa += (item.jumlah || 0);
                         bounds.push([item.lat, item.lng]);
+
                         const radiusDinamis = Math.min(24, Math.max(9, 7 + (item.jumlah * 1.4)));
                         const marker = L.circleMarker([item.lat, item.lng], {
-                            radius: radiusDinamis, fillColor: '#0f4c81', color: '#ffc107', weight: 3, opacity: 1, fillOpacity: 0.82
+                            radius: radiusDinamis,
+                            fillColor: '#0f4c81',
+                            color: '#ffc107',
+                            weight: 3,
+                            opacity: 1,
+                            fillOpacity: 0.82
                         }).addTo(map);
+
                         marker.bindPopup(`
                             <div style="min-width: 160px;">
                                 <div class="fw-bold text-primary-school mb-1"><i class="fas fa-map-pin text-danger me-1"></i> Dusun ${item.dusun}</div>
@@ -504,11 +595,16 @@
                             </div>
                         `);
                     });
+
                     document.getElementById('statMapTitik').textContent = list.length;
                     document.getElementById('statMapSiswa').textContent = totalSiswa;
-                    if (bounds.length > 0) map.fitBounds(bounds, { padding: [35, 35], maxZoom: 16 });
+
+                    if (bounds.length > 0) {
+                        map.fitBounds(bounds, { padding: [35, 35], maxZoom: 16 });
+                    }
                 }
-            }).catch(err => console.error(err));
+            })
+            .catch(err => console.error("Gagal memuat peta:", err));
         });
     </script>
 </body>
